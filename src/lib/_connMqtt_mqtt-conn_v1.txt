@@ -1,0 +1,76 @@
+/** @ts-expect-error - no types existing! */
+import mqttCon from 'mqtt-connection';
+import net from 'net';
+import { FullyMqtt } from '../main';
+
+/**
+ * Main MQTT function
+ * @param this - this adapter's class instance
+ * @returns void
+ */
+export async function mainMqtt(this: FullyMqtt): Promise<void> {
+    try {
+        //const port = this.config.mqttPort;
+        const port = 1887;
+        this.log.debug(`🚀 MQTT: ...trying to establish MQTT connection, user: ${this.config.mqttUser}, port: ${port}`);
+
+        const server = new net.Server();
+        server.on('connection', (stream) => {
+            const client = mqttCon(stream);
+
+            // client connected
+            client.on('connect', (packet: any) => {
+                // acknowledge the connect packet
+                client.connack({ returnCode: 0 });
+            });
+
+            // client published
+            // https://github.com/ioBroker/ioBroker.sonoff/blob/e2a0d9b854a4d655906099af07a1792934cc2375/lib/server.js#L1513
+            client.on('publish', (packet: { messageId: any }) => {
+                // send a puback with messageId (for QoS > 0)
+                client.puback({ messageId: packet.messageId });
+
+                //receivedTopic(FullyMqtt, packet);
+            });
+
+            // connection error handling
+            client.on('close', (status: any) => {
+                this.log.debug(`[MQTT] Client Close: ${status}}`);
+                client.destroy();
+            });
+            client.on('error', (error: any) => {
+                this.log.debug(`[MQTT] Client Error: ${error}`);
+                client.destroy();
+            });
+            client.on('disconnect', () => {
+                this.log.debug(`[MQTT] Client Disconnected`);
+                client.destroy();
+            });
+        });
+        server.listen(port, undefined, () => {
+            this.log.info(`Starting MQTT server on port ${port}`);
+        });
+
+        server.on('error', (e: any) => {
+            if (e instanceof Error && e.message.startsWith('listen EADDRINUSE')) {
+                this.log.debug(`[MQTT] Cannot start server - ${e.message}`);
+                this.log.error(`🔥[MQTT] Cannot start server - Port ${port} is already in use. Try a different port!`);
+            } else {
+                this.log.error(`🔥[MQTT] Cannot start server - ${e.message}`);
+            }
+        });
+/*
+        // https://github.com/ioBroker/ioBroker.sonoff/blob/e2a0d9b854a4d655906099af07a1792934cc2375/lib/server.js#L1115
+        function receivedTopic(packet: any): void {
+            if (!packet) {
+                this.log.warn(`Empty packet received: ${JSON.stringify(packet)}`);
+                return;
+            }
+            this.log.warn(`Packet received: ${JSON.stringify(packet)}`);
+        }
+*/
+    } catch (e) {
+        this.log.error(this.err2Str(e));
+        return;
+    }
+}

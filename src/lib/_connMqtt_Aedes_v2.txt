@@ -1,0 +1,151 @@
+import Aedes from 'aedes';
+import net from 'net';
+import { FullyMqtt } from '../main';
+//import { inspect } from 'util';
+
+export class MqttServer {
+    private readonly adapter: FullyMqtt;
+    private server: net.Server;
+    private aedes: Aedes;
+    private devices: any; // {}
+    private port = -1; // {}
+
+    /**
+     * Constructor
+     */
+    public constructor(adapter: FullyMqtt) {
+        this.adapter = adapter;
+        //this.server = new net.Server();
+        this.aedes = new Aedes();
+        /** @ts-expect-error - https://github.com/moscajs/aedes/issues/801 */
+        this.server = net.createServer(undefined, this.aedes.handle);
+        this.devices = {};
+    }
+
+    /**
+     * Listen
+     */
+    public start(): void {
+        try {
+            /**
+             * Port
+             */
+            this.port = this.adapter.config.mqttPort;
+            this.port = 1900;
+
+            /**
+             * Start Listening
+             */
+            this.server.listen(this.port, () => {
+                this.adapter.log.info(`[MQTT] 🚀 server started and listening on port ${this.port}`);
+            });
+
+            /**
+             * fired when a client connects
+             */
+            this.aedes.on('client', (client) => {
+                if (!client) {
+                    this.adapter.log.error(`[MQTT] Unknown client connected`);
+                    return;
+                }
+                this.adapter.log.info('[MQTT] 🔗 Client Connected: \x1b[33m' + client.id + '\x1b[0m' + ' to broker ' + this.aedes.id);
+                //this.adapter.log.debug(inspect(client)); //https://stackoverflow.com/a/31557814
+
+                // New device object
+                if (!this.devices || !(client.id in this.devices)) {
+                    this.devices[client.id] = {};
+                }
+                // Save client's last seen
+                this.devices[client.id].lastSeen = Date.now();
+            });
+
+            /**
+             * Verify authorization
+             * https://github.com/moscajs/aedes/blob/main/docs/Aedes.md#handler-authenticate-client-username-password-callback
+             */
+            this.aedes.authenticate = (client, username, password, callback) => {
+                this.adapter.log.error(`MQTT - new message from ${client.id}`);
+                if (username !== this.adapter.config.mqttUser) {
+                    this.adapter.log.warn(`   ... new message rejected: received user name '${username}' does not match '${this.adapter.config.mqttUser}' in adapter settings.`);
+                    callback(null, false);
+                }
+                if (password.toString() !== this.adapter.config.mqttPassword) {
+                    this.adapter.log.error(`   ... new message rejected: received password does not match with password in adapter settings.`);
+                    callback(null, false);
+                }
+                this.adapter.log.warn(`   ... message successfully authorized, user ${username}`);
+                callback(null, true);
+            };
+
+            /**
+             * fired when a client publishes a message packet on the topic
+             */
+            this.aedes.on('publish', (packet, client) => {
+                if (client) {
+                    // Save client's last seen
+                    this.devices[client.id].lastSeen = Date.now();
+                    // Log
+                    //this.adapter.log.debug(`[MQTT] Client ${client.id} published message, topic: "${packet.topic}", payload: "${packet.payload}" on ${packet.topic}`);
+                    //this.adapter.log.debug(`[MQTT] Client ${client.id} published message, topic: "${packet.topic}"`);
+                }
+            });
+
+            /**
+             * on server error
+             */
+            this.server.on('error', (e: any) => {
+                if (e instanceof Error && e.message.startsWith('listen EADDRINUSE')) {
+                    this.adapter.log.debug(`[MQTT] Cannot start server - ${e.message}`);
+                    this.adapter.log.error(`🔥[MQTT] Cannot start server - Port ${this.port} is already in use. Try a different port!`);
+                } else {
+                    this.adapter.log.error(`🔥[MQTT] Cannot start server - ${e.message}`);
+                }
+                this.destroyAll();
+            });
+        } catch (e) {
+            this.adapter.log.error(this.adapter.err2Str(e));
+            return;
+        }
+    }
+
+    /**
+     * check if number like 600 is in [100, 200, 300, 400, 500, 600, 700, (unlimited)]
+     * @param num - given number
+     * @param everyX - every x number
+     */
+    private isNumberEveryX(num: number, everyX: number): boolean {
+        if (num % everyX == 0 && num != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Check if Client is allowed
+     */
+    private verifyClient(stream: net.Socket): string | null {
+        if (stream.remoteAddress) {
+            const ipMatch = stream.remoteAddress.match(/.*:(.*)$/); // get IP '192.168.10.10' from '::ffff:192.168.10.10'
+            if (ipMatch !== null && ipMatch[0]) {
+                const ip = ipMatch[1];
+                this.adapter.log.debug('[MQTT] Finale IP = [' + ip + ']');
+                if (this.adapter.activeDeviceIPs.includes(ip)) {
+                    return ip;
+                }
+            }
+        }
+        return null;
+    }
+
+    public destroyAll(): void {
+        /*
+        for (const ip in this.clients) {
+            this.clients[ip].destroy();
+            this.adapter.log.debug(`[MQTT] Client ${ip} Destroying`);
+        }
+        */
+        this.adapter.log.debug(`[MQTT] Server Destroying`);
+        if (this.server) this.server.close();
+    }
+}

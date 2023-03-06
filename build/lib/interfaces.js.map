@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/lib/interfaces.ts"],
+  "sourcesContent": ["export interface IDevice {\n    name: string;\n    id: string;\n    ip: string;\n    restProtocol: 'http' | 'https';\n    restPort: number;\n    restPassword: string;\n    lastSeen: number; // timestamp\n    restRequestTimeout: NodeJS.Timeout | undefined;\n}\n\nexport interface ICmds {\n    readonly id: string;\n    readonly name: string;\n    readonly type: 'number' | 'boolean' | 'string';\n    readonly cmdOn?: string;\n    readonly cmdOff?: string;\n    readonly mqttOn?: string;\n    readonly mqttOff?: string;\n}\n"],
+  "mappings": ";;;;;;;;;;;;;AAAA;AAAA;",
+  "names": []
+}

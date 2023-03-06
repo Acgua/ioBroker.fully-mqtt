@@ -1,0 +1,237 @@
+{
+    "_ignore_Acgua1": "The following '_ignore_' are just there to be able to add comments to this json file.",
+    "_ignore_Acgua2": "See https://github.com/ioBroker/ioBroker.admin/blob/master/src/src/components/JsonConfigComponent/SCHEMA.md",
+    "i18n": true,
+    "type": "tabs",
+    "items": {
+        "_tab_Options": {
+            "type": "panel",
+            "label": "Options",
+            "items": {
+                "link_Github": {
+                    "type": "staticLink",
+                    "newLine": "true",
+                    "href": "https://github.com/Acgua/ioBroker.fully-mqtt",
+                    "label": "Documentation: Acgua/iobroker.fully-mqtt",
+                    "icon": "web",
+                    "style": {
+                        "fontSize": 16,
+                        "fontWeight": "bold"
+                    }                    
+                },
+                "header_Devices": {
+                    "newLine": "true",
+                    "type": "header",
+                    "text": "Fully Browser Devices",
+                    "size": 2
+                },
+                "text_DevicesInfo": {
+                    "type": "staticText",
+                    "label": "Add new devices by clicking the plus (+) symbol...",
+                    "newLine": "true",
+                    "style": {
+                        "fontSize": 16
+                    }
+                },
+                "tableDevices": {
+                    "type": "table",
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "items": [
+                        {
+                            "type": "text",
+                            "title": "Device Name",
+                            "attr": "name",
+                            "maxLength": 50,
+                            "trim": false,
+                            "width": "55%",
+                            "filter": true,
+                            "sort": true,
+                            "validator": "data.name.length > 2",
+                            "validatorNoSaveOnError": true
+                        },
+                        {
+                            "type": "select",
+                            "title": "Protocol",
+                            "attr": "restProtocol",
+                            "default": "http",
+                            "width": "5%",
+                            "validator": "data.restProtocol.length > 3",
+                            "validatorNoSaveOnError": true,
+                            "options": [
+                                {
+                                    "label": "http",
+                                    "value": "http"
+                                },
+                                {
+                                    "label": "https",
+                                    "value": "https"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "text",
+                            "title": "IP Address",
+                            "attr": "ip",
+                            "maxLength": 15,
+                            "trim": true,
+                            "width": "15%",
+                            "validator": "data.ip != null && data.ip != undefined && data.ip.length > 5",
+                            "validatorNoSaveOnError": true
+                        },
+                        {
+                            "type": "number",
+                            "title": "Port",
+                            "attr": "restPort",
+                            "min": 1,
+                            "max": 65535,
+                            "default": 2323,
+                            "width": "10%"
+                        },
+                        {
+                            "type": "password",
+                            "title": "Remote Admin Password",
+                            "attr": "restPassword",
+                            "width": "15%",
+                            "validator": "data.restPassword.length > 0",
+                            "validatorNoSaveOnError": true               
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "useMQTT",
+                            "width": "50px",
+                            "title": "Use MQTT",
+                            "default": true
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "isActive",
+                            "width": "50px",
+                            "title": "Enabled",
+                            "default": true
+                        }
+                    ]
+                },
+                "header_MQTT": {
+                    "newLine": "true",
+                    "type": "header",
+                    "text": "MQTT Configuration",
+                    "size": 2
+                },
+                "text_MQTT-info": {
+                    "type": "staticText",
+                    "label": "You can leave user name and password empty, port is always required. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                    "style": {
+                        "fontSize": 16
+                    }
+                },
+                "mqttUser": {
+                    "newLine": "true",
+                    "type": "text",
+                    "label": "User name",
+                    "help": "MQTT User name"
+                },
+                "mqttPassword": {
+                    "type": "password",
+                    "label": "Password",
+                    "help": "MQTT Password"
+                },
+                "mqttPort": {
+                    "type": "number",
+                    "label": "Port",
+                    "min": 1,
+                    "max": 65535,
+                    "default": 1886,
+                    "help": "MQTT Port (1-65535)"
+                }
+            }
+        },
+        "_tab_Expert Settings": {
+            "type": "panel",
+            "label": "Expert Settings",
+            "items": {
+                "link_Github": {
+                    "type": "staticLink",
+                    "newLine": "true",
+                    "href": "https://github.com/Acgua/ioBroker.fully-mqtt",
+                    "label": "Documentation: Acgua/iobroker.fully-mqtt",
+                    "icon": "web",
+                    "style": {
+                        "fontSize": 16,
+                        "fontWeight": "bold"
+                    }                    
+                },
+                "header_RESTAPI": {
+                    "newLine": "true",
+                    "type": "header",
+                    "text": "Remote Admin (REST API)",
+                    "size": 2
+                },
+                "restTimeout": {
+                    "type": "number",
+                    "min": 500,
+                    "max": 10000,
+                    "default": 2000,
+                    "label": "Request Timeout",
+                    "help": "in milliseconds (500-10000, default: 2000)",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3                    
+                },
+                "restInterval": {
+                    "type": "number",
+                    "min": 5,
+                    "label": "Request Interval",
+                    "default": 60,
+                    "help": "in seconds (min: 5, default: 60); ignored if MQTT is used",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3                    
+                },
+                "restUpdateUnchangedObjects": {
+                    "type": "checkbox",
+                    "label": "Always update info objects",
+                    "help": "Always update info objects, even if value did not change",
+                    "default": false,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3
+                },
+                "header_MQTT": {
+                    "type": "header",
+                    "text": "MQTT",
+                    "size": 2
+                },
+                "mqttPublishedInfoDelay": {
+                    "type": "number",
+                    "min": 2,
+                    "max": 120,
+                    "label": "Do not process published info more than every x seconds",
+                    "help": "in seconds (2-120, default: 30)",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3
+                },
+                "mqttDoNotVerifyUserPw": {
+                    "type": "checkbox",
+                    "label": "Do not verify user and password",
+                    "help": "Any user/password will be accepted if activated",
+                    "default": false,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3
+                },
+                "mqttUpdateUnchangedObjects": {
+                    "type": "checkbox",
+                    "label": "Always update info objects",
+                    "help": "Always update info objects, even if value did not change",
+                    "default": false,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3
+                }            
+            }
+        }
+    }
+}

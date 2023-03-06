@@ -1,0 +1,116 @@
+import Aedes from 'aedes';
+import { createServer } from 'net';
+import { FullyMqtt } from '../main';
+
+/**
+ * Main MQTT function
+ * @param this - this adapter's class instance
+ * @returns void
+ */
+export async function mainMqtt(this: FullyMqtt): Promise<void> {
+    try {
+        this.log.debug(`MQTT: ...trying to establish MQTT connection, user: ${this.config.mqttUser}, port: ${this.config.mqttPort}`);
+
+        const aedes = new Aedes();
+        /** @ts-expect-error - https://github.com/moscajs/aedes/issues/801 */
+        const netServer = createServer(undefined, aedes.handle);
+
+        /**
+         * Verify authorization
+         * https://github.com/moscajs/aedes/blob/main/docs/Aedes.md#handler-authenticate-client-username-password-callback
+         */
+        aedes.authenticate = (client, username, password, callback) => {
+            this.log.error(`MQTT - new message from ${client.id}`);
+            if (username !== this.config.mqttUser) {
+                this.log.warn(`   ... new message rejected: received user name '${username}' does not match '${this.config.mqttUser}' in adapter settings.`);
+                callback(null, false);
+            }
+            if (password.toString() !== this.config.mqttPassword) {
+                this.log.error(`   ... new message rejected: received password does not match with password in adapter settings.`);
+                callback(null, false);
+            }
+            this.log.warn(`   ... message successfully authorized, user ${username}`);
+            callback(null, true);
+        };
+
+        /*
+            Start a server listening for connections. A net.Server can be a TCP or an IPC server depending on what it listens to.
+
+            Possible signatures:
+
+            server.listen(handle[, backlog][, callback])
+            server.listen(options[, callback])
+            server.listen(path[, backlog][, callback]) for IPC servers
+            server.listen([port[, host[, backlog]]][, callback]) for TCP servers
+            This function is asynchronous. When the server starts listening, the 'listening' event will be emitted. The last parameter callbackwill be added as a listener for the 'listening' event.
+
+            All listen() methods can take a backlog parameter to specify the maximum length of the queue of pending connections. The actual length will be determined by the OS through sysctl settings such as tcp_max_syn_backlog and somaxconnon Linux. The default value of this parameter is 511 (not 512).
+
+            All Socket are set to SO_REUSEADDR (see socket(7) for details).
+
+            The server.listen() method can be called again if and only if there was an error during the first server.listen() call or server.close() has been called. Otherwise, an ERR_SERVER_ALREADY_LISTEN error will be thrown.
+
+            One of the most common errors raised when listening is EADDRINUSE. This happens when another server is already listening on the requestedport/path/handle. One way to handle this would be to retry after a certain amount of time:
+
+            server.on('error', (e) => {
+            if (e.code === 'EADDRINUSE') {
+                console.log('Address in use, retrying...');
+                setTimeout(() => {
+                server.close();
+                server.listen(PORT, HOST);
+                }, 1000);
+            }
+            });
+        */
+        try {
+            const port = 1887;
+            netServer.listen(port, () => {
+                this.log.warn('MQTT: Server started and is listening on port ' + port);
+            });
+        } catch (e) {
+            if (e instanceof Error && e.message) this.log.error(`MESSAGE: [${e.message}]`);
+            this.log.error(this.err2Str(e));
+            return;
+        }
+
+        netServer.on('error', (e) => {
+            const xx = e;
+            /*
+            if (e && 'code' in e && e.code === 'EADDRINUSE') {
+                console.log('Address in use, retrying...');
+                setTimeout(() => {
+                    netServer.close();
+                }, 1000);
+            }
+            */
+        });
+
+        // https://github.com/moscajs/aedes/blob/main/docs/Aedes.md#aedessubscribe-topic-deliverfunc-callback
+        aedes.subscribe(
+            '#',
+            (packet, cb) => {
+                const deviceId = packet.brokerId;
+                const topic = packet.topic;
+                const msg = packet.payload.toString('utf8');
+                this.log.error('Broker id: ' + deviceId + ', Topic: ' + topic);
+                //this.log.error('Published ' + JSON.stringify(msg));
+            },
+            () => {
+                /* callback */
+            },
+        );
+
+        /*
+        // subscribe
+        aedes.on('subscribe', (subscriptions, client) => {
+            if (client) {
+                this.log.error('XXXXXXXXXXXXXXXXXXXXXXX' + client.id);
+                //log.info('', 'Client', client.id, 'with teamID', team.id, 'subscribed:', subscriptions);
+            }
+        });
+*/
+    } catch (e) {
+        this.log.error(this.err2Str(e));
+        return;
+    }
+}

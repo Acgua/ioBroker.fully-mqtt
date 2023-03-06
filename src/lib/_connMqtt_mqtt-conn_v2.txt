@@ -1,0 +1,202 @@
+/** @ts-expect-error - no types existing! */
+import mqttCon from 'mqtt-connection';
+//import net from 'net';
+import net from 'net';
+import { FullyMqtt } from '../main';
+
+export class MqttServer {
+    private readonly adapter: FullyMqtt;
+    private server: net.Server;
+    private clients: any; // {}
+    private port = -1; // {}
+
+    /**
+     * Constructor
+     */
+    public constructor(adapter: FullyMqtt) {
+        this.adapter = adapter;
+        this.server = new net.Server();
+        this.clients = {};
+    }
+
+    /**
+     * Listen
+     */
+    public start(): void {
+        try {
+            /**
+             * Listen on according port
+             */
+            this.port = this.adapter.config.mqttPort;
+            this.port = 1893;
+
+            this.server.listen(this.port, undefined, () => {
+                this.adapter.log.info(`[MQTT] net server starts listening at port ${this.port}`);
+            });
+
+            /**
+             * on server connection
+             */
+            this.server.on('connection', (stream) => {
+                this.onConnection(stream);
+            });
+
+            /**
+             * on server error
+             */
+            this.server.on('error', (e: any) => {
+                if (e instanceof Error && e.message.startsWith('listen EADDRINUSE')) {
+                    this.adapter.log.debug(`[MQTT] Cannot start server - ${e.message}`);
+                    this.adapter.log.error(`🔥[MQTT] Cannot start server - Port ${this.port} is already in use. Try a different port!`);
+                } else {
+                    this.adapter.log.error(`🔥[MQTT] Cannot start server - ${e.message}`);
+                }
+                this.destroyAll();
+            });
+        } catch (e) {
+            this.adapter.log.error(this.adapter.err2Str(e));
+            return;
+        }
+    }
+
+    /**
+     * MQTT
+     * On Connection of Client to Server
+     */
+    private onConnection(stream: net.Socket): void {
+        try {
+            this.adapter.log.debug(`[MQTT] New connection from ${stream.remoteAddress}`);
+
+            // check if client is accepted (per adapter settings)
+            const ip = this.verifyClient(stream);
+            if (!ip) {
+                // Client is not accepted !!!
+                this.adapter.log.error(`[MQTT] Client rejected - IP could not be determined and/or not matches with Adapter Config.`);
+                return;
+            }
+            this.adapter.log.info(`[MQTT] Client IP ${ip} accepted...`);
+
+            /***
+             * Init MQTT !
+             */
+            this.clients[ip] = mqttCon(stream);
+
+            // client connected
+            this.clients[ip].on('connect', (/* packet: any */) => {
+                this.adapter.log.debug(`[MQTT] Client ${ip} connected via MQTT`);
+
+                // Save client's last seen
+                this.clients[ip].last_seen = Date.now();
+
+                // acknowledge the connect packet
+                this.clients[ip].connack({ returnCode: 0 });
+            });
+
+            // client published
+            this.clients[ip].on('publish', (packet: any) => {
+                //this.adapter.log.silly(`[MQTT] Client ${ip} Publish: ${JSON.stringify(packet)}`);
+
+                // Save client's last seen
+                this.clients[ip].last_seen = Date.now();
+
+                // https://www.hivemq.com/blog/mqtt-essentials-part-6-mqtt-quality-of-service-levels/
+                // https://github.com/ioBroker/ioBroker.sonoff/blob/e2a0d9b854a4d655906099af07a1792934cc2375/lib/server.js#LL1523C17-L1523C40
+                if (packet.qos === 1) {
+                    //this.adapter.log.debug(`[MQTT] Client ${ip} Publish: topic: ${packet.topic}, qos: ${packet.qos}, payload: ${packet.payload.toString()}`);
+                    // send PUBACKk to client
+                    this.clients[ip].puback({ messageId: packet.messageId });
+                }
+                if (packet.qos === 2) {
+                    // send PUBREC to client
+                    this.clients[ip].pubrec({ messageId: packet.messageId });
+                    this.adapter.log.info(`= QOS2== ${ip} - MEW Message received`);
+                }
+
+                if (packet.qos === 1 && packet.payload) {
+                    this.adapter.log.debug(`[MQTT] Client ${ip} Publish: topic: ${packet.topic}, qos: ${packet.qos}, payload: ${packet.payload.toString()}`);
+                    ///////////////////////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////////////////////
+                    // Counter
+                    if (this.clients[ip].messageCounter) {
+                        this.clients[ip].messageCounter++;
+                    } else {
+                        this.clients[ip].messageCounter = 1;
+                    }
+                    if (this.isNumberEveryX(this.clients[ip].messageCounter, 10)) {
+                        this.adapter.log.info(`= QOS2== ${ip} - Message # ${this.clients[ip].messageCounter} received`);
+                    }
+                    ///////////////////////////////////////////////////////////////////////////
+                    ///////////////////////////////////////////////////////////////////////////
+                }
+            });
+
+            // client pinged
+            this.clients[ip].on('pingreq', () => {
+                // Save client's last seen
+                this.clients[ip].last_seen = Date.now();
+
+                // send a ping response
+                this.clients[ip].pingresp();
+            });
+
+            this.clients[ip].on('close', (status: any) => {
+                this.adapter.log.debug(`[MQTT] Client ${ip} closed connection: ${status}`);
+                this.clients[ip].destroy();
+            });
+            this.clients[ip].on('error', (error: any) => {
+                this.adapter.log.debug(`[MQTT] Client ${ip} Error: ${error}`);
+                this.clients[ip].destroy();
+            });
+            this.clients[ip].on('disconnect', () => {
+                this.adapter.log.debug(`[MQTT] Client ${ip} disconnected.`);
+                this.clients[ip].destroy();
+            });
+            this.clients[ip].on('timeout', () => {
+                this.adapter.log.info(`[MQTT] Client ${ip} Timeout.`);
+            });
+        } catch (e) {
+            this.adapter.log.error(this.adapter.err2Str(e));
+            return;
+        }
+    }
+
+    /**
+     * check if number like 600 is in [100, 200, 300, 400, 500, 600, 700, (unlimited)]
+     * @param num - given number
+     * @param everyX - every x number
+     */
+    private isNumberEveryX(num: number, everyX: number) {
+        if (num % everyX == 0 && num != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Check if Client is allowed
+     */
+    private verifyClient(stream: net.Socket): string | null {
+        if (stream.remoteAddress) {
+            const ipMatch = stream.remoteAddress.match(/.*:(.*)$/); // get IP '192.168.10.10' from '::ffff:192.168.10.10'
+            if (ipMatch !== null && ipMatch[0]) {
+                const ip = ipMatch[1];
+                this.adapter.log.debug('[MQTT] Finale IP = [' + ip + ']');
+                if (this.adapter.activeDeviceIPs.includes(ip)) {
+                    return ip;
+                }
+            }
+        }
+        return null;
+    }
+
+    public destroyAll(): void {
+        for (const ip in this.clients) {
+            this.clients[ip].destroy();
+            this.adapter.log.debug(`[MQTT] Client ${ip} Destroying`);
+        }
+
+        this.adapter.log.debug(`[MQTT] Server Destroying`);
+        if (this.server) this.server.close();
+    }
+}
