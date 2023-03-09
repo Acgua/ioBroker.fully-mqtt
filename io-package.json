@@ -1,0 +1,110 @@
+{
+    "common": {
+        "name": "fully-mqtt",
+        "version": "0.0.1-alpha",
+        "news": {
+            "0.0.1-alpha": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Fully Kiosk Browser (MQTT)",
+        "titleLang": {
+            "en": "Fully Kiosk Browser (MQTT)",
+            "de": "Fully Kiosk Browser (MQTT)",
+            "ru": "Fully Kiosk Browser (MQTT)",
+            "pt": "Fully Kiosk Browser (MQTT)",
+            "nl": "Fully Kiosk Browser (MQTT)",
+            "fr": "Fully Kiosk Browser (MQTT)",
+            "it": "Fully Kiosk Browser (MQTT)",
+            "es": "Fully Kiosk Browser (MQTT)",
+            "pl": "Fully Kiosk Browser (MQTT)",
+            "zh-cn": "Fully Kiosk Browser (MQTT)"
+        },
+        "desc": {
+            "en": "Control Fully Kiosk Browser",
+            "de": "Kontrollieren Sie den Kiosk-Browser vollständig",
+            "ru": "Полный контроль браузера киоска",
+            "pt": "Controle totalmente o navegador de quiosque",
+            "nl": "Controle Volledig Kiosk Browser",
+            "fr": "Contrôlez entièrement le navigateur Kiosk",
+            "it": "Controlla completamente il browser Kiosk",
+            "es": "Navegador de quiosco de control completo",
+            "pl": "Kontroluj w pełni przeglądarkę kiosku",
+            "zh-cn": "完全控制 Kiosk 浏览器"
+        },
+        "authors": ["Acgua <no@mail.com>"],
+        "keywords": ["fully", "kiosk", "browser", "tablet"],
+        "license": "Apache-2.0",
+        "platform": "Javascript/Node.js",
+        "main": "build/main.js",
+        "icon": "fully-mqtt.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/Acgua/ioBroker.fully-mqtt/main/admin/fully-mqtt.png",
+        "readme": "https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "multimedia",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=4.0.15"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=6.0.0"
+            }
+        ]
+    },
+    "native": {
+        "tableDevices": [],
+        "restUseHttps": false,
+        "restInterval": 60,
+        "restTimeout": 2000,
+        "restUpdateUnchangedObjects": false,
+        "mqttUser": "",
+        "mqttPassword": "",
+        "mqttPort": 1886,
+        "mqttPublishedInfoDelay": 30,
+        "mqttDoNotVerifyUserPw": false,
+        "mqttUpdateUnchangedObjects": false
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
+}
