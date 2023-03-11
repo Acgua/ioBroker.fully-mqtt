@@ -262,7 +262,7 @@ export class FullyMqtt extends utils.Adapter {
     private async setInfoStates(source: 'mqtt' | 'restApi', infoObj: { [k: string]: any }, ip: string): Promise<void> {
         try {
             for (const key in infoObj) {
-                const val = infoObj[key];
+                const newVal = typeof infoObj[key] === 'object' ? JSON.stringify(infoObj[key]) : infoObj[key]; // https://forum.iobroker.net/post/628870 - https://forum.iobroker.net/post/960260
                 let isKeyUnknown = true;
                 let updateUnchanged = false;
                 if (source === 'mqtt') {
@@ -277,9 +277,9 @@ export class FullyMqtt extends utils.Adapter {
                     continue;
                 }
                 if (updateUnchanged) {
-                    this.setState(`${this.fullys[ip].id}.Info.${key}`, { val: val, ack: true });
+                    this.setState(`${this.fullys[ip].id}.Info.${key}`, { val: newVal, ack: true });
                 } else {
-                    this.setStateChanged(`${this.fullys[ip].id}.Info.${key}`, { val: val, ack: true });
+                    this.setStateChanged(`${this.fullys[ip].id}.Info.${key}`, { val: newVal, ack: true });
                 }
             }
             this.setState(this.fullys[ip].id + '.lastInfoUpdate', { val: Date.now(), ack: true });
@@ -439,13 +439,7 @@ export class FullyMqtt extends utils.Adapter {
                 }
 
                 this.log.debug(`Final Config: ${JSON.stringify(finalDevice)}`);
-
-                if (!lpDevice.isActive) {
-                    // Skip if not active. (but we did verification anyway!)
-                    this.disabledDeviceIds.push(finalDevice.id);
-                    this.log.debug(`Device ${finalDevice.name} (${finalDevice.ip}) is not enabled, so skip it.`);
-                    continue;
-                } else {
+                if (lpDevice.isActive) {
                     // Is Active
 
                     // if MQTT is activated, set variable to true
@@ -459,6 +453,11 @@ export class FullyMqtt extends utils.Adapter {
                     // Finalize
                     this.fullys[finalDevice.ip] = finalDevice;
                     this.log.info(`🗸 ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);
+                } else {
+                    // Skip if not active. (but we did verification anyway!)
+                    this.disabledDeviceIds.push(finalDevice.id);
+                    this.log.debug(`Device ${finalDevice.name} (${finalDevice.ip}) is not enabled, so skip it.`);
+                    continue;
                 }
             }
 

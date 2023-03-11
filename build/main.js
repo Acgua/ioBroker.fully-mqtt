@@ -177,7 +177,7 @@ class FullyMqtt extends utils.Adapter {
   async setInfoStates(source, infoObj, ip) {
     try {
       for (const key in infoObj) {
-        const val = infoObj[key];
+        const newVal = typeof infoObj[key] === "object" ? JSON.stringify(infoObj[key]) : infoObj[key];
         let isKeyUnknown = true;
         let updateUnchanged = false;
         if (source === "mqtt") {
@@ -196,9 +196,9 @@ class FullyMqtt extends utils.Adapter {
           continue;
         }
         if (updateUnchanged) {
-          this.setState(`${this.fullys[ip].id}.Info.${key}`, { val, ack: true });
+          this.setState(`${this.fullys[ip].id}.Info.${key}`, { val: newVal, ack: true });
         } else {
-          this.setStateChanged(`${this.fullys[ip].id}.Info.${key}`, { val, ack: true });
+          this.setStateChanged(`${this.fullys[ip].id}.Info.${key}`, { val: newVal, ack: true });
         }
       }
       this.setState(this.fullys[ip].id + ".lastInfoUpdate", { val: Date.now(), ack: true });
@@ -319,11 +319,7 @@ class FullyMqtt extends utils.Adapter {
           finalDevice.restPassword = lpDevice.restPassword;
         }
         this.log.debug(`Final Config: ${JSON.stringify(finalDevice)}`);
-        if (!lpDevice.isActive) {
-          this.disabledDeviceIds.push(finalDevice.id);
-          this.log.debug(`Device ${finalDevice.name} (${finalDevice.ip}) is not enabled, so skip it.`);
-          continue;
-        } else {
+        if (lpDevice.isActive) {
           if (lpDevice.useMQTT) {
             this.mqtt_useMqtt = true;
             this.log.info(`${finalDevice.name} (${finalDevice.ip}) MQTT is activated in adapter instance settings.`);
@@ -332,6 +328,10 @@ class FullyMqtt extends utils.Adapter {
           }
           this.fullys[finalDevice.ip] = finalDevice;
           this.log.info(`\u{1F5F8} ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);
+        } else {
+          this.disabledDeviceIds.push(finalDevice.id);
+          this.log.debug(`Device ${finalDevice.name} (${finalDevice.ip}) is not enabled, so skip it.`);
+          continue;
         }
       }
       if (this.activeDeviceIPs.length == 0) {
