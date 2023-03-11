@@ -40,7 +40,14 @@ export class MqttServer {
              * Port
              */
             this.port = this.adapter.config.mqttPort;
-            //this.port = 3004; // #############################################################
+            /**
+             * #############################################################
+             * For Developer only: change port if specific adapter directory
+             */
+            if (this.adapter.adapterDir === 'C:/iobroker/DEV1/node_modules/ioBroker.fully-mqtt/.dev-server/default/node_modules/iobroker.fully-mqtt') {
+                this.port = 3011;
+                this.adapter.log.warn(`DEVELOPER: Port changed to ${this.port} as we are in DEV Environment! If you see this log message, please open an issue on Github.`);
+            }
 
             /**
              * Start Listening
@@ -317,7 +324,7 @@ export class MqttServer {
     }
 
     /**
-     * Schedule: REST API get info through timeout
+     * Schedule: Check if MQTT topic was sent last x seconds ago
      * @param ip IP Address
      * @returns void
      */

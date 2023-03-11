@@ -11,6 +11,13 @@
 
 **Tests:** ![Test and Release](https://github.com/Acgua/ioBroker.fully-mqtt/workflows/Test%20and%20Release/badge.svg)
 
+## ioBroker Forum Threads
+* [TEST - Adapter Fully Browser mit MQTT](https://forum.iobroker.net/topic/63705/)
+
+## IMPORTANT - WICHTIG
+Many thanks to @arteck (https://github.com/arteck) for [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser). 
+Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I would love to merge ioBroker.fully-mqtt into [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser) to just have one single adapter.
+
 ## About this ioBroker Adapter
 
 This adapter controls your [Fully Kiosk Browser](https://www.fully-kiosk.com) (a Plus License is required). It provides you with a bunch of possibilites to control your tablet through ioBroker, like turning the display on/off, launch any tablet app, launch the screensaver etc. Also, it provides various information in states, like battery level of your tablet, etc. which you can use e.g. for Visualization.

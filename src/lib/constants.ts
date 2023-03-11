@@ -1,10 +1,4 @@
-import { ICmds } from './interfaces';
-
-interface IConst {
-    readonly mqttEvents: string[];
-    readonly cmds: ICmds[];
-    readonly cmdsSwitches: ICmds[];
-}
+import { IConst } from './interfaces';
 
 export const CONST: IConst = {
     // MQTT events per https://www.fully-kiosk.com/en/#mqtt
@@ -25,34 +19,34 @@ export const CONST: IConst = {
 
     cmds: [
         // buttons - boolean
-        { id: 'loadStartURL', name: 'Load Start URL', type: 'boolean' },
         { id: 'clearCache', name: 'Clear Cache', type: 'boolean' },
-        { id: 'clearWebstorage', name: 'Clear Webstorage', type: 'boolean' },
         { id: 'clearCookies', name: 'Clear Cookies', type: 'boolean' },
-        { id: 'restartApp', name: 'Restart App', type: 'boolean' },
+        { id: 'clearWebstorage', name: 'Clear Webstorage', type: 'boolean' },
+        { id: 'disableLockedMode', name: 'Disable Locked Mode', type: 'boolean' },
+        { id: 'enableLockedMode', name: 'Enable Locked Mode', type: 'boolean' },
         { id: 'exitApp', name: 'Exit App', type: 'boolean' },
         { id: 'forceSleep', name: 'Force Sleep', type: 'boolean' },
-        { id: 'triggerMotion', name: 'Trigger Motion', type: 'boolean' },
+        { id: 'loadStartURL', name: 'Load Start URL', type: 'boolean' },
+        { id: 'popFragment', name: 'Pop Fragment', type: 'boolean' },
+        { id: 'restartApp', name: 'Restart App', type: 'boolean' },
+        { id: 'screenOff', name: 'Screen Off', type: 'boolean' },
+        { id: 'screenOn', name: 'Screen On', type: 'boolean' },
+        { id: 'startDaydream', name: 'Start Daydream', type: 'boolean' },
+        { id: 'startScreensaver', name: 'Start Screensaver', type: 'boolean' },
+        { id: 'stopDaydream', name: 'Stop Daydream', type: 'boolean' },
+        { id: 'stopScreensaver', name: 'Stop Screensaver', type: 'boolean' },
         { id: 'toBackground', name: 'Bring Fully to Background', type: 'boolean' },
         { id: 'toForeground', name: 'Bring Fully to Foreground', type: 'boolean' },
-        { id: 'popFragment', name: 'Pop Fragment', type: 'boolean' },
-        { id: 'screenOn', name: 'Screen On', type: 'boolean' },
-        { id: 'screenOff', name: 'Screen Off', type: 'boolean' },
-        { id: 'startScreensaver', name: 'Start Screensaver', type: 'boolean' },
-        { id: 'stopScreensaver', name: 'Stop Screensaver', type: 'boolean' },
-        { id: 'startDaydream', name: 'Start Daydream', type: 'boolean' },
-        { id: 'stopDaydream', name: 'Stop Daydream', type: 'boolean' },
-        { id: 'enableLockedMode', name: 'Enable Locked Mode', type: 'boolean' },
-        { id: 'disableLockedMode', name: 'Disable Locked Mode', type: 'boolean' },
+        { id: 'triggerMotion', name: 'Trigger Motion', type: 'boolean' },
 
         // strings
-        { id: 'startApplication', name: 'Start Application', type: 'string' },
         { id: 'loadURL', name: 'Load URL', type: 'string' },
-        { id: 'textToSpeech', name: 'Text To Speech', type: 'string' },
         { id: 'setStringSetting', name: 'Set String Setting', type: 'string' },
+        { id: 'startApplication', name: 'Start Application', type: 'string' },
+        { id: 'textToSpeech', name: 'Text To Speech', type: 'string' },
 
         // numbers
-        { id: 'setAudioVolume', name: 'Audio Volume', type: 'number' },
         { id: 'screenBrightness', name: 'Screen Brightness', type: 'number' },
+        { id: 'setAudioVolume', name: 'Audio Volume', type: 'number' },
     ],
 };

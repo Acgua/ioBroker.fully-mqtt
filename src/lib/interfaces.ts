@@ -21,3 +21,9 @@ export interface ICmds {
     readonly mqttOn?: string;
     readonly mqttOff?: string;
 }
+
+export interface IConst {
+    readonly mqttEvents: string[];
+    readonly cmds: ICmds[];
+    readonly cmdsSwitches: ICmds[];
+}

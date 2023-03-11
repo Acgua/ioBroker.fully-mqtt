@@ -40,6 +40,10 @@ class MqttServer {
   start() {
     try {
       this.port = this.adapter.config.mqttPort;
+      if (this.adapter.adapterDir === "C:/iobroker/DEV1/node_modules/ioBroker.fully-mqtt/.dev-server/default/node_modules/iobroker.fully-mqtt") {
+        this.port = 3011;
+        this.adapter.log.warn(`DEVELOPER: Port changed to ${this.port} as we are in DEV Environment! If you see this log message, please open an issue on Github.`);
+      }
       this.server.listen(this.port, () => {
         this.adapter.log.info(`[MQTT]\u{1F680} Server started and listening on port ${this.port}`);
       });

@@ -35,7 +35,7 @@ var import_restApi = require("./lib/restApi");
  * -------------------------------------------------------------------
  * ioBroker Fully Browser MQTT Adapter
  * @github  https://github.com/Acgua/ioBroker.fully-mqtt
- * @forum   https://forum.iobroker.net/topic/XXXXX/
+ * @forum   https://forum.iobroker.net/topic/63705/
  * @author  Acgua <https://github.com/Acgua/ioBroker.fully-mqtt>
  * @license Apache License 2.0
  * -------------------------------------------------------------------
@@ -98,44 +98,6 @@ class FullyMqtt extends utils.Adapter {
         if (!enabledAndDisabled.includes(id)) {
           await this.delObjectAsync(id, { recursive: true });
           this.log.info(`Cleanup: Deleted no longer defined objects of '${id}'.`);
-        }
-      }
-    } catch (e) {
-      this.log.error(this.err2Str(e));
-      return;
-    }
-  }
-  async confirmCommandAckTrue(ip, source, cmd, switchVal) {
-    try {
-      const pth = this.fullys[ip].id + ".Commands";
-      if (source === "mqtt") {
-        const idx = this.getIndexFromConf(import_constants.CONST.cmdsSwitches, ["mqttOn", "mqttOff"], cmd);
-        if (idx !== -1) {
-          const conf = import_constants.CONST.cmdsSwitches[idx];
-          const onOrOffCmd = cmd === conf.mqttOn ? true : false;
-          await this.setStateAsync(`${pth}.${conf.cmdOn}`, { val: onOrOffCmd, ack: true });
-          await this.setStateAsync(`${pth}.${conf.cmdOff}`, { val: !onOrOffCmd, ack: true });
-          await this.setStateAsync(`${pth}.${conf.id}`, { val: onOrOffCmd, ack: true });
-        }
-      }
-      if (source === "cmdState") {
-        const idxSw = this.getIndexFromConf(import_constants.CONST.cmdsSwitches, ["id"], cmd);
-        if (idxSw !== -1) {
-          const conf = import_constants.CONST.cmdsSwitches[idxSw];
-          await this.setStateAsync(`${pth}.${conf.cmdOn}`, { val: switchVal, ack: true });
-          await this.setStateAsync(`${pth}.${conf.cmdOff}`, { val: !switchVal, ack: true });
-          await this.setStateAsync(`${pth}.${conf.id}`, { val: switchVal, ack: true });
-        } else {
-          const idx = this.getIndexFromConf(import_constants.CONST.cmdsSwitches, ["cmdOn", "cmdOff"], cmd);
-          if (idx !== -1) {
-            const conf = import_constants.CONST.cmdsSwitches[idx];
-            const onOrOffCmd = cmd === conf.cmdOn ? true : false;
-            await this.setStateAsync(`${pth}.${conf.cmdOn}`, { val: onOrOffCmd, ack: true });
-            await this.setStateAsync(`${pth}.${conf.cmdOff}`, { val: !onOrOffCmd, ack: true });
-            await this.setStateAsync(`${pth}.${conf.id}`, { val: onOrOffCmd, ack: true });
-          } else {
-            await this.setStateAsync(`${pth}.${cmd}`, { val: true, ack: true });
-          }
         }
       }
     } catch (e) {
@@ -364,9 +326,12 @@ class FullyMqtt extends utils.Adapter {
         } else {
           if (lpDevice.useMQTT) {
             this.mqtt_useMqtt = true;
+            this.log.info(`${finalDevice.name} (${finalDevice.ip}) MQTT is activated in adapter instance settings.`);
+          } else {
+            this.log.info(`${finalDevice.name} (${finalDevice.ip}) MQTT is not activated in adapter instance settings.`);
           }
           this.fullys[finalDevice.ip] = finalDevice;
-          this.log.info(`\u{1F5F8} Config of ${finalDevice.name} (${finalDevice.ip}) successfully verified.`);
+          this.log.info(`\u{1F5F8} ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);
         }
       }
       if (this.activeDeviceIPs.length == 0) {
@@ -432,13 +397,28 @@ class FullyMqtt extends utils.Adapter {
       this.log.debug(`[MQTT] \u{1F4E1} ${this.fullys[obj.ip].name} published event, topic: ${obj.topic}, cmd: ${obj.cmd}`);
       if (!this.fullys[obj.ip].mqttClientId)
         this.fullys[obj.ip].mqttClientId = obj.clientId;
-      const pth = `${this.fullys[obj.ip].id}.Events.${obj.cmd}`;
-      if (!await this.getObjectAsync(pth)) {
-        this.log.info(`[MQTT] Event ${obj.cmd} received but state ${pth} does not exist, so we create it first`);
-        await this.setObjectNotExistsAsync(pth, { type: "state", common: { name: "MQTT Event: " + obj.cmd, type: "boolean", role: "switch", read: true, write: false }, native: {} });
+      const pthEvent = `${this.fullys[obj.ip].id}.Events.${obj.cmd}`;
+      if (!await this.getObjectAsync(pthEvent)) {
+        this.log.info(`[MQTT] ${this.fullys[obj.ip].name}: Event ${obj.cmd} received but state ${pthEvent} does not exist, so we create it first`);
+        await this.setObjectNotExistsAsync(pthEvent, { type: "state", common: { name: "MQTT Event: " + obj.cmd, type: "boolean", role: "switch", read: true, write: false }, native: {} });
       }
-      this.setState(pth, { val: true, ack: true });
-      await this.confirmCommandAckTrue(obj.ip, "mqtt", obj.cmd);
+      this.setState(pthEvent, { val: true, ack: true });
+      const pthCmd = this.fullys[obj.ip].id + ".Commands";
+      const idx = this.getIndexFromConf(import_constants.CONST.cmdsSwitches, ["mqttOn", "mqttOff"], obj.cmd);
+      if (idx !== -1) {
+        const conf = import_constants.CONST.cmdsSwitches[idx];
+        const onOrOffCmd = obj.cmd === conf.mqttOn ? true : false;
+        await this.setStateAsync(`${pthCmd}.${conf.id}`, { val: onOrOffCmd, ack: true });
+        await this.setStateAsync(`${pthCmd}.${conf.cmdOn}`, { val: onOrOffCmd, ack: true });
+        await this.setStateAsync(`${pthCmd}.${conf.cmdOff}`, { val: !onOrOffCmd, ack: true });
+      } else {
+        const idx2 = this.getIndexFromConf(import_constants.CONST.cmds, ["id"], obj.cmd);
+        if (idx2 !== -1 && import_constants.CONST.cmds[idx2].type === "boolean") {
+          await this.setStateAsync(`${pthCmd}.${obj.cmd}`, { val: true, ack: true });
+        } else {
+          this.log.debug(`[MQTT] ${this.fullys[obj.ip].name}: Event cmd ${obj.cmd} - no REST API command is existing, so skip confirmation with with ack:true`);
+        }
+      }
     } catch (e) {
       this.log.error(this.err2Str(e));
       return;
@@ -454,28 +434,51 @@ class FullyMqtt extends utils.Adapter {
       const deviceId = idSplit[2];
       const channel = idSplit[3];
       const cmd = idSplit[4];
+      const pth = deviceId + "." + channel;
       if (channel === "Commands") {
         this.log.debug(`state ${stateId} changed: ${stateObj.val} (ack = ${stateObj.ack})`);
-        const deviceObj = this.getFullyByKey("id", deviceId);
-        if (!deviceObj)
+        const fully = this.getFullyByKey("id", deviceId);
+        if (!fully)
           throw `Fully object for deviceId '${deviceId}' not found!`;
-        let fullyCmd = cmd;
+        let cmdToSend = cmd;
+        let switchConf = void 0;
         const idxSw = this.getIndexFromConf(import_constants.CONST.cmdsSwitches, ["id"], cmd);
         if (idxSw !== -1) {
-          const conf = import_constants.CONST.cmdsSwitches[idxSw];
-          fullyCmd = stateObj.val ? conf.cmdOn : conf.cmdOff;
+          switchConf = import_constants.CONST.cmdsSwitches[idxSw];
+          cmdToSend = stateObj.val ? switchConf.cmdOn : switchConf.cmdOff;
         } else {
           if (!stateObj.val)
             return;
         }
-        if (!fullyCmd)
+        if (!cmdToSend)
           throw `onStateChange() - ${stateId}: fullyCmd could not be determined!`;
-        const isSendCmdSuccessful = await this.restApi_inst.sendCmd(deviceObj, fullyCmd, stateObj.val);
-        if (isSendCmdSuccessful) {
-          this.log.info(`${deviceObj.name}: ${cmd} successfully set to ${stateObj.val}`);
-          this.confirmCommandAckTrue(deviceObj.ip, "cmdState", fullyCmd);
+        const sendCommand = await this.restApi_inst.sendCmd(fully, cmdToSend, stateObj.val);
+        if (sendCommand) {
+          this.log.info(`${fully.name}: ${cmd} successfully set to ${stateObj.val}`);
+          if (switchConf !== void 0) {
+            const onOrOffCmdVal = cmd === switchConf.cmdOn ? true : false;
+            await this.setStateAsync(`${pth}.${switchConf.id}`, { val: onOrOffCmdVal, ack: true });
+            await this.setStateAsync(`${pth}.${switchConf.cmdOn}`, { val: onOrOffCmdVal, ack: true });
+            await this.setStateAsync(`${pth}.${switchConf.cmdOff}`, { val: !onOrOffCmdVal, ack: true });
+          } else {
+            if (typeof stateObj.val === "boolean") {
+              const idx = this.getIndexFromConf(import_constants.CONST.cmds, ["id"], cmd);
+              if (idx !== -1) {
+                if (import_constants.CONST.cmds[idx].type === "boolean") {
+                  await this.setStateAsync(stateId, { val: true, ack: true });
+                } else {
+                  this.log.warn(`${fully.name}: ${stateId} - val: ${stateObj.val} is boolean, but cmd ${cmd} is not defined in CONF`);
+                  await this.setStateAsync(stateId, { val: stateObj.val, ack: true });
+                }
+              } else {
+                this.log.warn(`${fully.name}: ${stateId} - val: ${stateObj.val}, cmd ${cmd} is not defined in CONF`);
+              }
+            } else {
+              await this.setStateAsync(stateId, { val: stateObj.val, ack: true });
+            }
+          }
         } else {
-          this.log.debug(`${deviceObj.name}: restApiSendCmd() was not successful (${stateId})`);
+          this.log.debug(`${fully.name}: restApiSendCmd() was not successful (${stateId})`);
         }
       }
     } catch (e) {
