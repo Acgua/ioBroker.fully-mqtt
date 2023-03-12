@@ -10,6 +10,9 @@ export interface IDevice {
     lastSeen: number; // timestamp
     isAlive: true | false;
     timeoutRestRequestInfo: NodeJS.Timeout | undefined;
+    mqttInfoObjectsCreated: true | false; // Set to true once first time creation initiated
+    mqttInfoKeys: string[]; // Info keys from MQTT info, like 'batteryLevel', 'deviceID', ...
+    restInfoKeys: string[]; // Info keys from Rest API info, like 'batteryLevel', 'deviceID', ...
 }
 
 export interface ICmds {
@@ -20,6 +23,14 @@ export interface ICmds {
     readonly cmdOff?: string;
     readonly mqttOn?: string;
     readonly mqttOff?: string;
+}
+
+export interface IMqttDevice {
+    ip?: string;
+    lastSeen?: number;
+    mqttFirstReceived?: true | false;
+    isActive?: true | false;
+    timeoutNoUpdate?: NodeJS.Timeout | undefined;
 }
 
 export interface IConst {

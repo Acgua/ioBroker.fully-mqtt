@@ -32,6 +32,7 @@ class MqttServer {
   constructor(adapter) {
     this.port = -1;
     this.previousInfoPublishTime = 0;
+    this.notAuthorizedClients = [];
     this.adapter = adapter;
     this.aedes = new import_aedes.default();
     this.server = import_net.default.createServer(void 0, this.aedes.handle);
@@ -41,43 +42,56 @@ class MqttServer {
     try {
       this.port = this.adapter.config.mqttPort;
       if (this.adapter.adapterDir === "C:/iobroker/DEV1/node_modules/ioBroker.fully-mqtt/.dev-server/default/node_modules/iobroker.fully-mqtt") {
-        this.port = 3011;
+        this.port = 3012;
         this.adapter.log.warn(`DEVELOPER: Port changed to ${this.port} as we are in DEV Environment! If you see this log message, please open an issue on Github.`);
       }
       this.server.listen(this.port, () => {
         this.adapter.log.info(`[MQTT]\u{1F680} Server started and listening on port ${this.port}`);
       });
       this.aedes.authenticate = (client, username, password, callback) => {
-        if (!this.devices[client.id])
-          this.devices[client.id] = {};
-        let ip = void 0;
-        if (client.conn && "remoteAddress" in client.conn && typeof client.conn.remoteAddress === "string") {
-          const ipSource = client.conn.remoteAddress;
-          this.adapter.log.debug(`[MQTT] client.conn.remoteAddress = "${ipSource}" - ${client.id}`);
-          ip = ipSource.substring(ipSource.lastIndexOf(":") + 1);
-          if (!this.adapter.isIpAddressValid(ip))
-            ip === void 0;
-        }
-        const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${client.id} (IP unknown)`;
-        this.adapter.log.info(`[MQTT] Client ${ipMsg} trys to authenticate...`);
-        if (ip)
-          this.devices[client.id].ip = ip;
-        if (ip && !this.adapter.activeDeviceIPs.includes(ip)) {
-          this.adapter.log.error(`[MQTT] Client ${client.id} not authorized: ${ip} is not an active Fully device IP per adapter settings.`);
+        try {
+          if (this.notAuthorizedClients.includes(client.id)) {
+            callback(null, false);
+            return;
+          }
+          if (!this.devices[client.id])
+            this.devices[client.id] = {};
+          let ip = void 0;
+          if (client.conn && "remoteAddress" in client.conn && typeof client.conn.remoteAddress === "string") {
+            const ipSource = client.conn.remoteAddress;
+            this.adapter.log.debug(`[MQTT] client.conn.remoteAddress = "${ipSource}" - ${client.id}`);
+            ip = ipSource.substring(ipSource.lastIndexOf(":") + 1);
+            if (!this.adapter.isIpAddressValid(ip))
+              ip === void 0;
+          }
+          if (ip && !this.adapter.activeDeviceIPs.includes(ip)) {
+            this.adapter.log.error(`[MQTT] Client ${client.id} not authorized: ${ip} is not an active Fully device IP per adapter settings.`);
+            this.notAuthorizedClients.push(client.id);
+            callback(null, false);
+            return;
+          }
+          const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${client.id} (IP unknown)`;
+          this.adapter.log.info(`[MQTT] Client ${ipMsg} trys to authenticate...`);
+          if (ip)
+            this.devices[client.id].ip = ip;
+          if (!this.adapter.config.mqttDoNotVerifyUserPw) {
+            if (username !== this.adapter.config.mqttUser) {
+              this.adapter.log.warn(`[MQTT] Client ${ipMsg} Authorization rejected: received user name '${username}' does not match '${this.adapter.config.mqttUser}' in adapter settings.`);
+              callback(null, false);
+              return;
+            }
+            if (password.toString() !== this.adapter.config.mqttPassword) {
+              this.adapter.log.warn(`[MQTT] Client ${ipMsg} Authorization rejected: received password does not match with password in adapter settings.`);
+              callback(null, false);
+              return;
+            }
+          }
+          this.adapter.log.info(`[MQTT]\u{1F511} Client ${ipMsg} successfully authenticated.`);
+          callback(null, true);
+        } catch (e) {
+          this.adapter.log.error(this.adapter.err2Str(e));
           callback(null, false);
         }
-        if (!this.adapter.config.mqttDoNotVerifyUserPw) {
-          if (username !== this.adapter.config.mqttUser) {
-            this.adapter.log.warn(`[MQTT] Client ${ipMsg} Authorization rejected: received user name '${username}' does not match '${this.adapter.config.mqttUser}' in adapter settings.`);
-            callback(null, false);
-          }
-          if (password.toString() !== this.adapter.config.mqttPassword) {
-            this.adapter.log.warn(`[MQTT] Client ${ipMsg} Authorization rejected: received password does not match with password in adapter settings.`);
-            callback(null, false);
-          }
-        }
-        this.adapter.log.info(`[MQTT]\u{1F511} Client ${ipMsg} authenticated successfully.`);
-        callback(null, true);
       };
       this.aedes.on("client", (client) => {
         try {
@@ -88,10 +102,10 @@ class MqttServer {
           const ip = this.devices[client.id].ip;
           const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${client.id} (IP unknown)`;
           this.devices[client.id].lastSeen = Date.now();
-          this.setIsAlive(client.id, true);
-          this.scheduleCheckIfStillActive(client.id);
           this.adapter.log.debug(`[MQTT] Client ${ipMsg} connected to broker ${this.aedes.id}`);
           this.adapter.log.info(`[MQTT]\u{1F517} Client ${ipMsg} successfully connected.`);
+          this.setIsAlive(client.id, true);
+          this.scheduleCheckIfStillActive(client.id);
         } catch (e) {
           this.adapter.log.error(this.adapter.err2Str(e));
           return;
@@ -188,13 +202,19 @@ class MqttServer {
       });
       this.aedes.on("clientError", (client, e) => {
         this.setIsAlive(client.id, false);
-        this.adapter.log.error(`[MQTT]\u{1F525} Client error - ${e.message}`);
-        this.adapter.log.debug(`[MQTT]\u{1F525} Client error - stack: ${e.stack}`);
+        if (this.notAuthorizedClients.includes(client.id))
+          return;
+        const ip = this.devices[client.id].ip;
+        const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+        this.adapter.log.error(`[MQTT]\u{1F525} ${logMsgName}: Client error - ${e.message}`);
+        this.adapter.log.debug(`[MQTT]\u{1F525} ${logMsgName}: Client error - stack: ${e.stack}`);
       });
       this.aedes.on("connectionError", (client, e) => {
         this.setIsAlive(client.id, false);
-        this.adapter.log.error(`[MQTT]\u{1F525} Connection error - ${e.message}`);
-        this.adapter.log.debug(`[MQTT]\u{1F525} Connection error - stack: ${e.stack}`);
+        const ip = this.devices[client.id].ip;
+        const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+        this.adapter.log.error(`[MQTT]\u{1F525} ${logMsgName}: Connection error - ${e.message}`);
+        this.adapter.log.debug(`[MQTT]\u{1F525} ${logMsgName}: Connection error - stack: ${e.stack}`);
       });
       this.server.on("error", (e) => {
         if (e instanceof Error && e.message.startsWith("listen EADDRINUSE")) {

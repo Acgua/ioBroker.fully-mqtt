@@ -10,7 +10,6 @@
 
 /***********************************************************************************************
  * TODO:
- *  - Wenn MQTT deaktiviert: entsprechendes abschalten - also nicht pauschal this.mqtt_useMqtt, sondern pro Device
  *  - MQTT: Beim ersten Call von this.server.listen(this.port) Timer starten und nach 1 min prüfen ob alive - und this.setIsAlive() ausführen
  *  - MQTT Passwort verschlüsseln
  ************************************************************************************************/
@@ -40,11 +39,9 @@ export class FullyMqtt extends utils.Adapter {
     // MQTT
     private mqtt_Server: MqttServer | undefined;
     public mqtt_useMqtt: true | false = false; // Is use of MQTT activated per adapter settings (each line of fully devices is checked)
-    public mqtt_infoKeys: string[] = []; // Info keys from MQTT info, like 'batteryLevel', 'deviceID', ...
-    private mqtt_infoObjectsCreated: true | false = false; // Set to true once first time creation initiated
+
     // REST API
     private restApi_inst = new RestApiFully(this); // RestApi Class Instance
-    public restApi_infoKeys: string[] = []; // Info keys from Rest API info, like 'batteryLevel', 'deviceID', ...
 
     /**
      * Active Fullys: IP as key, and object per IDevice
@@ -237,10 +234,10 @@ export class FullyMqtt extends utils.Adapter {
                 if (valType === 'string' || valType === 'boolean' || valType === 'object' || valType === 'number') {
                     if (source === 'mqtt') {
                         // MQTT
-                        this.mqtt_infoKeys.push(key);
+                        this.fullys[ip].mqttInfoKeys.push(key);
                     } else {
                         // REST API
-                        this.restApi_infoKeys.push(key);
+                        this.fullys[ip].restInfoKeys.push(key);
                     }
                     await this.setObjectNotExistsAsync(`${device.id}.Info.${key}`, { type: 'state', common: { name: 'Info: ' + key, type: valType, role: 'value', read: true, write: false }, native: {} });
                 } else {
@@ -266,10 +263,10 @@ export class FullyMqtt extends utils.Adapter {
                 let isKeyUnknown = true;
                 let updateUnchanged = false;
                 if (source === 'mqtt') {
-                    if (this.mqtt_infoKeys.includes(key)) isKeyUnknown = false;
+                    if (this.fullys[ip].mqttInfoKeys.includes(key)) isKeyUnknown = false;
                     if (this.config.mqttUpdateUnchangedObjects) updateUnchanged = true;
                 } else if (source === 'restApi') {
-                    if (this.restApi_infoKeys.includes(key)) isKeyUnknown = false;
+                    if (this.fullys[ip].restInfoKeys.includes(key)) isKeyUnknown = false;
                     if (this.config.restUpdateUnchangedObjects) updateUnchanged = true;
                 }
                 if (isKeyUnknown) {
@@ -375,6 +372,9 @@ export class FullyMqtt extends utils.Adapter {
                     lastSeen: 0, // timestamp
                     isAlive: false,
                     timeoutRestRequestInfo: undefined,
+                    mqttInfoObjectsCreated: false,
+                    mqttInfoKeys: [],
+                    restInfoKeys: [],
                 };
 
                 // name
@@ -536,10 +536,10 @@ export class FullyMqtt extends utils.Adapter {
             if (!this.fullys[obj.ip].mqttClientId) this.fullys[obj.ip].mqttClientId = obj.clientId;
 
             // Create info objects
-            if (!this.mqtt_infoObjectsCreated) {
+            if (!this.fullys[obj.ip].mqttInfoObjectsCreated) {
                 this.log.debug(`[MQTT] ${this.fullys[obj.ip].name}: Creating info objects (if not yet existing)`);
                 await this.createInfoObjects('mqtt', obj.infoObj, obj.ip);
-                this.mqtt_infoObjectsCreated = true;
+                this.fullys[obj.ip].mqttInfoObjectsCreated = true;
             }
 
             // Fill info objects

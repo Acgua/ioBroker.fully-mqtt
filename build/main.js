@@ -50,10 +50,7 @@ class FullyMqtt extends utils.Adapter {
     this.getConfigValuePerKey = import_methods.getConfigValuePerKey.bind(this);
     this.isIpAddressValid = import_methods.isIpAddressValid.bind(this);
     this.mqtt_useMqtt = false;
-    this.mqtt_infoKeys = [];
-    this.mqtt_infoObjectsCreated = false;
     this.restApi_inst = new import_restApi.RestApiFully(this);
-    this.restApi_infoKeys = [];
     this.fullys = {};
     this.disabledDeviceIds = [];
     this.activeDeviceIPs = [];
@@ -159,9 +156,9 @@ class FullyMqtt extends utils.Adapter {
         const valType = typeof val;
         if (valType === "string" || valType === "boolean" || valType === "object" || valType === "number") {
           if (source === "mqtt") {
-            this.mqtt_infoKeys.push(key);
+            this.fullys[ip].mqttInfoKeys.push(key);
           } else {
-            this.restApi_infoKeys.push(key);
+            this.fullys[ip].restInfoKeys.push(key);
           }
           await this.setObjectNotExistsAsync(`${device.id}.Info.${key}`, { type: "state", common: { name: "Info: " + key, type: valType, role: "value", read: true, write: false }, native: {} });
         } else {
@@ -181,12 +178,12 @@ class FullyMqtt extends utils.Adapter {
         let isKeyUnknown = true;
         let updateUnchanged = false;
         if (source === "mqtt") {
-          if (this.mqtt_infoKeys.includes(key))
+          if (this.fullys[ip].mqttInfoKeys.includes(key))
             isKeyUnknown = false;
           if (this.config.mqttUpdateUnchangedObjects)
             updateUnchanged = true;
         } else if (source === "restApi") {
-          if (this.restApi_infoKeys.includes(key))
+          if (this.fullys[ip].restInfoKeys.includes(key))
             isKeyUnknown = false;
           if (this.config.restUpdateUnchangedObjects)
             updateUnchanged = true;
@@ -268,7 +265,10 @@ class FullyMqtt extends utils.Adapter {
           restPassword: "",
           lastSeen: 0,
           isAlive: false,
-          timeoutRestRequestInfo: void 0
+          timeoutRestRequestInfo: void 0,
+          mqttInfoObjectsCreated: false,
+          mqttInfoKeys: [],
+          restInfoKeys: []
         };
         if (this.isEmpty(lpDevice.name)) {
           this.log.error(`Provided device name "${lpDevice.name}" is empty!`);
@@ -381,10 +381,10 @@ class FullyMqtt extends utils.Adapter {
       this.log.debug(`[MQTT]\u{1F4E1} ${this.fullys[obj.ip].name} published info, topic: ${obj.topic}`);
       if (!this.fullys[obj.ip].mqttClientId)
         this.fullys[obj.ip].mqttClientId = obj.clientId;
-      if (!this.mqtt_infoObjectsCreated) {
+      if (!this.fullys[obj.ip].mqttInfoObjectsCreated) {
         this.log.debug(`[MQTT] ${this.fullys[obj.ip].name}: Creating info objects (if not yet existing)`);
         await this.createInfoObjects("mqtt", obj.infoObj, obj.ip);
-        this.mqtt_infoObjectsCreated = true;
+        this.fullys[obj.ip].mqttInfoObjectsCreated = true;
       }
       await this.setInfoStates("mqtt", obj.infoObj, obj.ip);
     } catch (e) {

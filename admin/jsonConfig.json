@@ -17,7 +17,7 @@
                     "style": {
                         "fontSize": 16,
                         "fontWeight": "bold"
-                    }                    
+                    }
                 },
                 "header_Devices": {
                     "newLine": "true",
@@ -95,7 +95,7 @@
                             "attr": "restPassword",
                             "width": "15%",
                             "validator": "data.restPassword.length > 0",
-                            "validatorNoSaveOnError": true               
+                            "validatorNoSaveOnError": true
                         },
                         {
                             "type": "checkbox",
@@ -126,8 +126,16 @@
                         "fontSize": 16
                     }
                 },
-                "mqttUser": {
+                "mqttPort": {
                     "newLine": "true",
+                    "type": "number",
+                    "label": "Port",
+                    "min": 1,
+                    "max": 65535,
+                    "default": 1886,
+                    "help": "MQTT Port (1-65535)"
+                },
+                "mqttUser": {
                     "type": "text",
                     "label": "User name",
                     "help": "MQTT User name"
@@ -137,13 +145,14 @@
                     "label": "Password",
                     "help": "MQTT Password"
                 },
-                "mqttPort": {
-                    "type": "number",
-                    "label": "Port",
-                    "min": 1,
-                    "max": 65535,
-                    "default": 1886,
-                    "help": "MQTT Port (1-65535)"
+                "mqttDoNotVerifyUserPw": {
+                    "type": "checkbox",
+                    "label": "Do not verify user and password",
+                    "help": "Any user/password will be accepted if activated",
+                    "default": false,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3
                 }
             }
         },
@@ -160,7 +169,7 @@
                     "style": {
                         "fontSize": 16,
                         "fontWeight": "bold"
-                    }                    
+                    }
                 },
                 "header_RESTAPI": {
                     "newLine": "true",
@@ -177,7 +186,7 @@
                     "help": "in milliseconds (500-10000, default: 2000)",
                     "sm": 12,
                     "md": 6,
-                    "lg": 3                    
+                    "lg": 3
                 },
                 "restInterval": {
                     "type": "number",
@@ -187,7 +196,7 @@
                     "help": "in seconds (min: 5, default: 60); ignored if MQTT is used",
                     "sm": 12,
                     "md": 6,
-                    "lg": 3                    
+                    "lg": 3
                 },
                 "restUpdateUnchangedObjects": {
                     "type": "checkbox",
@@ -213,15 +222,6 @@
                     "md": 6,
                     "lg": 3
                 },
-                "mqttDoNotVerifyUserPw": {
-                    "type": "checkbox",
-                    "label": "Do not verify user and password",
-                    "help": "Any user/password will be accepted if activated",
-                    "default": false,
-                    "sm": 12,
-                    "md": 6,
-                    "lg": 3
-                },
                 "mqttUpdateUnchangedObjects": {
                     "type": "checkbox",
                     "label": "Always update info objects",
@@ -230,7 +230,7 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 3
-                }            
+                }
             }
         }
     }
