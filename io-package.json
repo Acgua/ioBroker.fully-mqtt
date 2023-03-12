@@ -106,12 +106,14 @@
         "restUpdateUnchangedObjects": false,
         "mqttUser": "",
         "mqttPassword": "",
-        "mqttPort": 1886,
+        "mqttPort": 3000,
         "mqttPublishedInfoDelay": 30,
         "mqttDoNotVerifyUserPw": false,
         "mqttUpdateUnchangedObjects": false,
         "mqttConnErrorsAsInfo": true
     },
+    "encryptedNative": ["mqttPassword"],
+    "protectedNative": ["mqttPassword"],
     "objects": [],
     "instanceObjects": [
         {

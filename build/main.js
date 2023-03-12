@@ -105,7 +105,14 @@ class FullyMqtt extends utils.Adapter {
   async main(device) {
     try {
       this.log.debug(`Start main() - ${device.name} (${device.ip})\u2026`);
-      await this.setObjectNotExistsAsync(device.id, { type: "device", common: { name: device.name }, native: {} });
+      await this.setObjectNotExistsAsync(device.id, {
+        type: "device",
+        common: {
+          name: device.name,
+          statusStates: { onlineId: `${this.namespace}.${device.id}.alive` }
+        },
+        native: {}
+      });
       await this.setObjectNotExistsAsync(device.id + ".Info", { type: "channel", common: { name: "Device Information" }, native: {} });
       await this.setObjectNotExistsAsync(device.id + ".alive", { type: "state", common: { name: "Is Fully alive?", desc: "If Fully Browser is alive or not", type: "boolean", role: "indicator.reachable", read: true, write: false }, native: {} });
       await this.setObjectNotExistsAsync(device.id + ".lastInfoUpdate", { type: "state", common: { name: "Last information update", desc: "Date/time of last information update from Fully Browser", type: "number", role: "value.time", read: true, write: false }, native: {} });
@@ -231,9 +238,9 @@ class FullyMqtt extends utils.Adapter {
   }
   async initConfig() {
     try {
-      if (this.isEmpty(this.config.restTimeout) || this.config.restTimeout < 500 || this.config.restTimeout > 1e4) {
-        this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restTimeout} ms is not allowed, set to default of 2000ms`);
-        this.config.restTimeout = 2e3;
+      if (this.isEmpty(this.config.restTimeout) || this.config.restTimeout < 500 || this.config.restTimeout > 15e3) {
+        this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restTimeout} ms is not allowed, set to default of 6000ms`);
+        this.config.restTimeout = 6e3;
       }
       if (this.isEmpty(this.config.restInterval) || this.config.restInterval < 5) {
         this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restInterval}s is not allowed, set to default of 60s`);

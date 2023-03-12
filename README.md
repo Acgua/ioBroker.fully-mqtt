@@ -36,6 +36,13 @@ It is planned to merge this ioBroker.fully-mqtt adapter into the ioBroker.fullyb
 ### **WORK IN PROGRESS**
 * (Acgua) ...
 
+### 0.0.3-alpha (2023-03-12)
+* (Acgua) Fix: various issues
+* (Acgua) Fix: Encrypt MQTT password ([#11](https://github.com/Acgua/ioBroker.fully-mqtt/issues/11))
+* (Acgua) New: MQTT option to log client and connection errors as info and not error
+* (Acgua) New: Online status for each device is now displayed in objects: e.g. 'fully-mqtt.0.Tablet-Hallway' is green with a connection icon if it is alive
+
+
 ### 0.0.2-alpha (2023-03-12)
 * (Acgua) Bug fixes
 

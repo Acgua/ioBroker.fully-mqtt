@@ -132,7 +132,7 @@
                     "label": "Port",
                     "min": 1,
                     "max": 65535,
-                    "default": 1886,
+                    "default": 3000,
                     "help": "MQTT Port (1-65535)"
                 },
                 "mqttUser": {
@@ -180,10 +180,10 @@
                 "restTimeout": {
                     "type": "number",
                     "min": 500,
-                    "max": 10000,
-                    "default": 2000,
+                    "max": 15000,
+                    "default": 6000,
                     "label": "Request Timeout",
-                    "help": "in milliseconds (500-10000, default: 2000)",
+                    "help": "in milliseconds (500-15000, default: 6000)",
                     "sm": 12,
                     "md": 6,
                     "lg": 3
@@ -233,12 +233,12 @@
                 },
                 "mqttConnErrorsAsInfo": {
                     "type": "checkbox",
-                    "label": "Client & Connection errors as info",
-                    "help": "Logs interim client and connection errors as info and not error",
-                    "default": false,
+                    "label": "Client and Connection errors as info in log",
+                    "help": "Logs client and connection errors as info and not as error",
+                    "default": true,
                     "sm": 12,
-                    "md": 6,
-                    "lg": 3
+                    "md": 7,
+                    "lg": 5
                 }
             }
         }

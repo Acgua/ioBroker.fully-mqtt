@@ -8,12 +8,6 @@
  * -------------------------------------------------------------------
  */
 
-/***********************************************************************************************
- * TODO:
- *  - MQTT: Beim ersten Call von this.server.listen(this.port) Timer starten und nach 1 min prüfen ob alive - und this.setIsAlive() ausführen
- *  - MQTT Passwort verschlüsseln
- ************************************************************************************************/
-
 /**
  * For all imported NPM modules, open console, change dir for example to "C:\iobroker\node_modules\ioBroker.fully-mqtt\"
  * and execute "npm install <module name>", e.g., npm install axios
@@ -160,7 +154,15 @@ export class FullyMqtt extends utils.Adapter {
              * Create device object(s)
              */
             // Device and Info object
-            await this.setObjectNotExistsAsync(device.id, { type: 'device', common: { name: device.name }, native: {} });
+            await this.setObjectNotExistsAsync(device.id, {
+                type: 'device',
+                common: {
+                    name: device.name,
+                    //@ts-expect-error - Object "statusStates" is needed for status, error is: Object literal may only specify known properties, and 'statusStates' does not exist in type 'DeviceCommon'.ts(2345)
+                    statusStates: { onlineId: `${this.namespace}.${device.id}.alive` },
+                },
+                native: {},
+            });
             await this.setObjectNotExistsAsync(device.id + '.Info', { type: 'channel', common: { name: 'Device Information' }, native: {} });
 
             // Alive and info update
@@ -329,9 +331,9 @@ export class FullyMqtt extends utils.Adapter {
             /*************************
              * REST API Fields
              *************************/
-            if (this.isEmpty(this.config.restTimeout) || this.config.restTimeout < 500 || this.config.restTimeout > 10000) {
-                this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restTimeout} ms is not allowed, set to default of 2000ms`);
-                this.config.restTimeout = 2000;
+            if (this.isEmpty(this.config.restTimeout) || this.config.restTimeout < 500 || this.config.restTimeout > 15000) {
+                this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restTimeout} ms is not allowed, set to default of 6000ms`);
+                this.config.restTimeout = 6000;
             }
             if (this.isEmpty(this.config.restInterval) || this.config.restInterval < 5) {
                 this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restInterval}s is not allowed, set to default of 60s`);
