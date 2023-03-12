@@ -166,7 +166,19 @@ export class FullyMqtt extends utils.Adapter {
             await this.setObjectNotExistsAsync(device.id + '.Info', { type: 'channel', common: { name: 'Device Information' }, native: {} });
 
             // Alive and info update
-            await this.setObjectNotExistsAsync(device.id + '.alive', { type: 'state', common: { name: 'Is Fully alive?', desc: 'If Fully Browser is alive or not', type: 'boolean', role: 'indicator.reachable', read: true, write: false }, native: {} });
+            await this.setObjectNotExistsAsync(device.id + '.alive', {
+                type: 'state',
+                common: {
+                    name: 'Is Fully alive?',
+                    desc: 'If Fully Browser is alive or not',
+                    type: 'boolean',
+                    role: 'indicator.reachable',
+                    icon: 'data:image/svg+xml;base64,PHN2ZyBjbGFzcz0iTXVpU3ZnSWNvbi1yb290IE11aVN2Z0ljb24tZm9udFNpemVNZWRpdW0gaWNvbk93biBjc3MtdnViYnV2IiBmb2N1c2FibGU9ImZhbHNlIiBhcmlhLWhpZGRlbj0idHJ1ZSIgdmlld0JveD0iMCAwIDI0IDI0IiBkYXRhLXRlc3RpZD0iV2lmaUljb24iPjxwYXRoIGQ9Im0xIDkgMiAyYzQuOTctNC45NyAxMy4wMy00Ljk3IDE4IDBsMi0yQzE2LjkzIDIuOTMgNy4wOCAyLjkzIDEgOXptOCA4IDMgMyAzLTNjLTEuNjUtMS42Ni00LjM0LTEuNjYtNiAwem0tNC00IDIgMmMyLjc2LTIuNzYgNy4yNC0yLjc2IDEwIDBsMi0yQzE1LjE0IDkuMTQgOC44NyA5LjE0IDUgMTN6Ij48L3BhdGg+PC9zdmc+',
+                    read: true,
+                    write: false,
+                },
+                native: {},
+            });
             await this.setObjectNotExistsAsync(device.id + '.lastInfoUpdate', { type: 'state', common: { name: 'Last information update', desc: 'Date/time of last information update from Fully Browser', type: 'number', role: 'value.time', read: true, write: false }, native: {} });
             await this.setObjectNotExistsAsync(device.id + '.mqttActivated', { type: 'state', common: { name: 'Is MQTT activated?', desc: 'If MQTT is activated for at least one Fully Browser in adapter options', type: 'boolean', role: 'indicator', read: true, write: false }, native: {} });
 
