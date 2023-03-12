@@ -230,6 +230,15 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 3
+                },
+                "mqttConnErrorsAsInfo": {
+                    "type": "checkbox",
+                    "label": "Client & Connection errors as info",
+                    "help": "Logs interim client and connection errors as info and not error",
+                    "default": false,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3
                 }
             }
         }

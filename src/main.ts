@@ -185,7 +185,7 @@ export class FullyMqtt extends utils.Adapter {
                 if (!infoObj) return;
                 await this.createInfoObjects('restApi', infoObj, device.ip);
                 // REST API set info states now
-                await this.setInfoStates('restApi', infoObj, device.ip);
+                await this.setInfoStates('REST', infoObj, device.ip);
             }
 
             // Create MQTT Events Objects
@@ -256,23 +256,23 @@ export class FullyMqtt extends utils.Adapter {
      * @param ip IP Address
      * @returns void
      */
-    private async setInfoStates(source: 'mqtt' | 'restApi', infoObj: { [k: string]: any }, ip: string): Promise<void> {
+    private async setInfoStates(source: 'MQTT' | 'REST', infoObj: { [k: string]: any }, ip: string): Promise<void> {
         try {
             for (const key in infoObj) {
-                const newVal = typeof infoObj[key] === 'object' ? JSON.stringify(infoObj[key]) : infoObj[key]; // https://forum.iobroker.net/post/628870 - https://forum.iobroker.net/post/960260
                 let isKeyUnknown = true;
                 let updateUnchanged = false;
-                if (source === 'mqtt') {
+                if (source === 'MQTT') {
                     if (this.fullys[ip].mqttInfoKeys.includes(key)) isKeyUnknown = false;
                     if (this.config.mqttUpdateUnchangedObjects) updateUnchanged = true;
-                } else if (source === 'restApi') {
+                } else if (source === 'REST') {
                     if (this.fullys[ip].restInfoKeys.includes(key)) isKeyUnknown = false;
                     if (this.config.restUpdateUnchangedObjects) updateUnchanged = true;
                 }
                 if (isKeyUnknown) {
-                    this.log.warn(`${this.fullys[ip].name}: Unknown key '${key}' in info object of ${source}`);
-                    continue;
+                    this.log.debug(`${this.fullys[ip].name}: Yet unknown key '${key}' in info object of ${source}, so create state`);
+                    this.createInfoObjects('mqtt', { [key]: infoObj[key] }, ip);
                 }
+                const newVal = typeof infoObj[key] === 'object' ? JSON.stringify(infoObj[key]) : infoObj[key]; // https://forum.iobroker.net/post/628870 - https://forum.iobroker.net/post/960260
                 if (updateUnchanged) {
                     this.setState(`${this.fullys[ip].id}.Info.${key}`, { val: newVal, ack: true });
                 } else {
@@ -304,7 +304,7 @@ export class FullyMqtt extends utils.Adapter {
                     if (infoObj !== false) {
                         // Successful (no error)
                         // Set states
-                        await this.setInfoStates('restApi', infoObj, ip);
+                        await this.setInfoStates('REST', infoObj, ip);
                         // Call this function again since we are in callback of timeout
                     } else {
                         // error, was handled before in calling function
@@ -543,7 +543,7 @@ export class FullyMqtt extends utils.Adapter {
             }
 
             // Fill info objects
-            await this.setInfoStates('mqtt', obj.infoObj, obj.ip);
+            await this.setInfoStates('MQTT', obj.infoObj, obj.ip);
         } catch (e) {
             this.log.error(this.err2Str(e));
             return;
@@ -592,7 +592,7 @@ export class FullyMqtt extends utils.Adapter {
                     // We have a button, so set it to true
                     await this.setStateAsync(`${pthCmd}.${obj.cmd}`, { val: true, ack: true });
                 } else {
-                    this.log.debug(`[MQTT] ${this.fullys[obj.ip].name}: Event cmd ${obj.cmd} - no REST API command is existing, so skip confirmation with with ack:true`);
+                    this.log.silly(`[MQTT] ${this.fullys[obj.ip].name}: Event cmd ${obj.cmd} - no REST API command is existing, so skip confirmation with with ack:true`);
                 }
             }
         } catch (e) {

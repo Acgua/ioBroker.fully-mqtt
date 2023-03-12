@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fully-mqtt",
-        "version": "0.0.2-alpha",
+        "version": "0.0.3-alpha",
         "news": {
+            "0.0.3-alpha": {
+                "en": "Update",
+                "de": "Aktualisierung",
+                "ru": "Обновление",
+                "pt": "Atualização",
+                "nl": "Update",
+                "fr": "Mise à jour",
+                "it": "Aggiornamento",
+                "es": "Actualización",
+                "pl": "Update",
+                "uk": "Новини",
+                "zh-cn": "最新资料"
+            },
             "0.0.2-alpha": {
                 "en": "Update",
                 "de": "Aktualisierung",
@@ -96,7 +109,8 @@
         "mqttPort": 1886,
         "mqttPublishedInfoDelay": 30,
         "mqttDoNotVerifyUserPw": false,
-        "mqttUpdateUnchangedObjects": false
+        "mqttUpdateUnchangedObjects": false,
+        "mqttConnErrorsAsInfo": true
     },
     "objects": [],
     "instanceObjects": [

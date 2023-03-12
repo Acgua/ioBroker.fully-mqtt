@@ -11,6 +11,7 @@ declare global {
             mqttPublishedInfoDelay: number;
             mqttDoNotVerifyUserPw: true | false;
             mqttUpdateUnchangedObjects: true | false;
+            mqttConnErrorsAsInfo: true | false;
             restTimeout: number;
             restInterval: number;
             restUpdateUnchangedObjects: true | false;

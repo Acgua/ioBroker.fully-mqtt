@@ -143,7 +143,8 @@ class MqttServer {
             const limit = this.adapter.config.mqttPublishedInfoDelay * 1e3;
             if (prevTime && prevTime !== 0) {
               if (Date.now() - prevTime < limit) {
-                this.adapter.log.silly(`[MQTT] ${devMsg} Packet rejected: Last packet came in ${Date.now() - prevTime}ms ago...`);
+                const diffMs = Date.now() - prevTime;
+                this.adapter.log.silly(`[MQTT] ${devMsg} Packet rejected: Last packet came in ${diffMs}ms (${Math.round(diffMs / 1e3)}s) ago...`);
                 return;
               }
             }
@@ -200,20 +201,28 @@ class MqttServer {
         }
       });
       this.aedes.on("clientError", (client, e) => {
-        this.setIsAlive(client.id, false);
         if (this.notAuthorizedClients.includes(client.id))
           return;
         const ip = this.devices[client.id].ip;
         const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
-        this.adapter.log.error(`[MQTT]\u{1F525} ${logMsgName}: Client error - ${e.message}`);
+        if (this.adapter.config.mqttConnErrorsAsInfo) {
+          this.adapter.log.info(`[MQTT] ${logMsgName}: Client error - ${e.message}`);
+        } else {
+          this.adapter.log.error(`[MQTT]\u{1F525} ${logMsgName}: Client error - ${e.message}`);
+        }
         this.adapter.log.debug(`[MQTT]\u{1F525} ${logMsgName}: Client error - stack: ${e.stack}`);
+        this.setIsAlive(client.id, false);
       });
       this.aedes.on("connectionError", (client, e) => {
-        this.setIsAlive(client.id, false);
         const ip = this.devices[client.id].ip;
         const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
-        this.adapter.log.error(`[MQTT]\u{1F525} ${logMsgName}: Connection error - ${e.message}`);
+        if (this.adapter.config.mqttConnErrorsAsInfo) {
+          this.adapter.log.info(`[MQTT] ${logMsgName}: Connection error - ${e.message}`);
+        } else {
+          this.adapter.log.error(`[MQTT]\u{1F525} ${logMsgName}: Connection error - ${e.message}`);
+        }
         this.adapter.log.debug(`[MQTT]\u{1F525} ${logMsgName}: Connection error - stack: ${e.stack}`);
+        this.setIsAlive(client.id, false);
       });
       this.server.on("error", (e) => {
         if (e instanceof Error && e.message.startsWith("listen EADDRINUSE")) {
@@ -235,15 +244,20 @@ class MqttServer {
     const ip = (_a = this.devices[clientId]) == null ? void 0 : _a.ip;
     if (ip) {
       this.adapter.onAliveChange("MQTT", ip, isAlive);
+      if (isAlive) {
+        this.scheduleCheckIfStillActive(clientId);
+      } else {
+        clearTimeout(this.devices[clientId].timeoutNoUpdate);
+      }
     } else {
       this.adapter.log.debug(`[MQTT] isAlive changed to ${isAlive}, but IP of client ${clientId} is still unknown.`);
     }
   }
   async scheduleCheckIfStillActive(clientId) {
     try {
+      clearTimeout(this.devices[clientId].timeoutNoUpdate);
       if (!this.devices[clientId])
         this.devices[clientId] = {};
-      clearTimeout(this.devices[clientId].timeoutNoUpdate);
       const interval = 70 * 1e3;
       this.devices[clientId].timeoutNoUpdate = setTimeout(async () => {
         try {
