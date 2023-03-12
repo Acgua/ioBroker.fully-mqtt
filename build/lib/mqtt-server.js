@@ -113,7 +113,11 @@ class MqttServer {
       this.aedes.on("clientDisconnect", (client) => {
         const ip = this.devices[client.id].ip;
         const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
-        this.adapter.log.warn(`[MQTT] Client ${logMsgName} disconnected.`);
+        if (this.adapter.config.mqttConnErrorsAsInfo) {
+          this.adapter.log.info(`[MQTT] Client ${logMsgName} disconnected.`);
+        } else {
+          this.adapter.log.error(`[MQTT] Client ${logMsgName} disconnected.`);
+        }
         this.setIsAlive(client.id, false);
       });
       this.aedes.on("publish", (packet, client) => {
