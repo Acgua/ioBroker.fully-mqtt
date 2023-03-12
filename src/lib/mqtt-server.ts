@@ -10,7 +10,6 @@ export class MqttServer {
     private aedes: Aedes;
     public devices: { [mqttClientId: string]: IMqttDevice }; // {}
     private port = -1;
-    private previousInfoPublishTime = 0;
     private notAuthorizedClients: string[] = []; // to avoid multiple log lines
 
     /**
@@ -203,15 +202,15 @@ export class MqttServer {
 
                         // Slow down: Don't accept info event more often than x seconds
                         // Per Fully doc, should not come in more often than 60s anyway...
-                        const prevTime = this.previousInfoPublishTime;
+                        const prevTime = this.devices[client.id].previousInfoPublishTime;
                         const limit = this.adapter.config.mqttPublishedInfoDelay * 1000; // milliseconds
-                        if (this.previousInfoPublishTime !== 0) {
+                        if (prevTime && prevTime !== 0) {
                             if (Date.now() - prevTime < limit) {
                                 this.adapter.log.silly(`[MQTT] ${devMsg} Packet rejected: Last packet came in ${Date.now() - prevTime}ms ago...`);
                                 return;
                             }
                         }
-                        this.previousInfoPublishTime = Date.now(); // set for future events
+                        this.devices[client.id].previousInfoPublishTime = Date.now(); // set for future events
 
                         /**
                          * First time received device info incl. IP address etc.

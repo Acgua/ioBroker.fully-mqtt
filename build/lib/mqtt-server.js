@@ -31,7 +31,6 @@ var import_net = __toESM(require("net"));
 class MqttServer {
   constructor(adapter) {
     this.port = -1;
-    this.previousInfoPublishTime = 0;
     this.notAuthorizedClients = [];
     this.adapter = adapter;
     this.aedes = new import_aedes.default();
@@ -140,15 +139,15 @@ class MqttServer {
               return;
             }
             this.devices[client.id].ip = ip;
-            const prevTime = this.previousInfoPublishTime;
+            const prevTime = this.devices[client.id].previousInfoPublishTime;
             const limit = this.adapter.config.mqttPublishedInfoDelay * 1e3;
-            if (this.previousInfoPublishTime !== 0) {
+            if (prevTime && prevTime !== 0) {
               if (Date.now() - prevTime < limit) {
                 this.adapter.log.silly(`[MQTT] ${devMsg} Packet rejected: Last packet came in ${Date.now() - prevTime}ms ago...`);
                 return;
               }
             }
-            this.previousInfoPublishTime = Date.now();
+            this.devices[client.id].previousInfoPublishTime = Date.now();
             if (!this.devices[client.id].mqttFirstReceived) {
               this.adapter.log.debug(`[MQTT] Client ${client.id} = ${this.adapter.fullys[ip].name} = ${ip}`);
               this.devices[client.id].mqttFirstReceived = true;

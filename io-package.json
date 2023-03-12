@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fully-mqtt",
-        "version": "0.0.1-alpha",
+        "version": "0.0.2-alpha",
         "news": {
+            "0.0.2-alpha": {
+                "en": "Update",
+                "de": "Aktualisierung",
+                "ru": "Обновление",
+                "pt": "Atualização",
+                "nl": "Update",
+                "fr": "Mise à jour",
+                "it": "Aggiornamento",
+                "es": "Actualización",
+                "pl": "Update",
+                "uk": "Новини",
+                "zh-cn": "最新资料"
+            },
             "0.0.1-alpha": {
                 "en": "initial release",
                 "de": "Erstveröffentlichung",

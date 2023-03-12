@@ -31,6 +31,7 @@ export interface IMqttDevice {
     mqttFirstReceived?: true | false;
     isActive?: true | false;
     timeoutNoUpdate?: NodeJS.Timeout | undefined;
+    previousInfoPublishTime?: number;
 }
 
 export interface IConst {

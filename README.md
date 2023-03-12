@@ -36,6 +36,9 @@ It is planned to merge this ioBroker.fully-mqtt adapter into the ioBroker.fullyb
 ### **WORK IN PROGRESS**
 * (Acgua) ...
 
+### 0.0.2-alpha (2023-03-12)
+* (Acgua) Bug fixes
+
 ### 0.0.1-alpha (2023-03-09)
 * (Acgua) Initial test release
 
