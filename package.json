@@ -1,6 +1,6 @@
 {
   "name": "iobroker.fully-mqtt",
-  "version": "0.0.3-alpha",
+  "version": "0.0.4",
   "description": "Control Fully Kiosk Browser",
   "author": {
     "name": "Acgua",

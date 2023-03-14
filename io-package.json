@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fully-mqtt",
-        "version": "0.0.3-alpha",
+        "version": "0.0.4",
         "news": {
+            "0.0.4": {
+                "en": "Translations and improvements",
+                "de": "Übersetzungen und Verbesserungen",
+                "ru": "Переводы и исправления",
+                "pt": "Traduções e correções",
+                "nl": "Vertaling:",
+                "fr": "Traductions et corrections",
+                "it": "Traduzioni e correzioni",
+                "es": "Traducciones y correcciones",
+                "pl": "Tłumaczenie i naprawa",
+                "uk": "Переклади та виправлення",
+                "zh-cn": "笔译和固定"
+              },
             "0.0.3-alpha": {
                 "en": "Update",
                 "de": "Aktualisierung",

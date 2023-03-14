@@ -11,20 +11,26 @@
 
 **Tests:** ![Test and Release](https://github.com/Acgua/ioBroker.fully-mqtt/workflows/Test%20and%20Release/badge.svg)
 
-## ioBroker Forum Threads
-* [TEST - Adapter Fully Browser mit MQTT](https://forum.iobroker.net/topic/63705/)
-
-## IMPORTANT - WICHTIG
-Many thanks to @arteck (https://github.com/arteck) for [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser). 
-Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I would love to merge ioBroker.fully-mqtt into [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser) to just have one single adapter.
-
 ## About this ioBroker Adapter
 
 This adapter controls your [Fully Kiosk Browser](https://www.fully-kiosk.com) (a Plus License is required). It provides you with a bunch of possibilites to control your tablet through ioBroker, like turning the display on/off, launch any tablet app, launch the screensaver etc. Also, it provides various information in states, like battery level of your tablet, etc. which you can use e.g. for Visualization.
 
-### MQTT
-Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser), this adapter also supports MQTT.
-It is planned to merge this ioBroker.fully-mqtt adapter into the ioBroker.fullybrowser adapter.
+Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser), this adapter also supports **MQTT**.
+
+## Credits
+
+Many thanks to @arteck (https://github.com/arteck) for [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser). While I planned to just extend to use the existing adapter for an MQTT enhancement, I finally decided to write a new adapter in TypeScript and include latest ioBroker development features, as I anyway would have had to rewrite approx. 70-80% of the code for the MQTT integration.
+Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I would love to merge this Fully MQTT adapter into [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser) to just have one single adapter for the ioBroker community.
+
+
+## Documentation
+
+[🇺🇸 Documentation](./doc/en/README.md)
+
+## ioBroker Forum Thread
+
+[TEST - Adapter Fully Browser mit MQTT](https://forum.iobroker.net/topic/63705/)
+
 
 
 ## Changelog
@@ -35,6 +41,11 @@ It is planned to merge this ioBroker.fully-mqtt adapter into the ioBroker.fullyb
 
 ### **WORK IN PROGRESS**
 * (Acgua) ...
+
+### 0.0.4 (2023-03-14)
+* (Acgua) Added translations
+* (Acgua) readme updated and prepared for adapter documentation
+* (Acgua) Fixed a few issues
 
 ### 0.0.3-alpha (2023-03-12)
 * (Acgua) Fix: various issues

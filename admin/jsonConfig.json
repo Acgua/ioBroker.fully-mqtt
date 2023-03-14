@@ -4,30 +4,124 @@
     "i18n": true,
     "type": "tabs",
     "items": {
-        "_tab_Options": {
+        "_tab_Start": {
             "type": "panel",
-            "label": "Options",
+            "label": {
+                "en": "Main Settings",
+                "de": "Haupteinstellungen",
+                "ru": "Основные настройки",
+                "pt": "Configurações principais",
+                "nl": "Hoofdstukken",
+                "fr": "Paramètres principaux",
+                "it": "Impostazioni principali",
+                "es": "Ajustes principales",
+                "pl": "Strona główna",
+                "uk": "Основні налаштування",
+                "zh-cn": "主要规定"
+            },
             "items": {
-                "link_Github": {
-                    "type": "staticLink",
-                    "newLine": "true",
-                    "href": "https://github.com/Acgua/ioBroker.fully-mqtt",
-                    "label": "Documentation: Acgua/iobroker.fully-mqtt",
-                    "icon": "web",
+                "header_Start": {
+                    "type": "header",
+                    "text": {
+                        "en": "Welcome to Fully MQTT adapter",
+                        "de": "Willkommen beim Fully-MQTT Adapter",
+                        "ru": "Добро пожаловать в Fully MQTT адаптер",
+                        "pt": "Bem-vindo ao adaptador totalmente MQTT",
+                        "nl": "Welkom bij Fully MQT",
+                        "fr": "Bienvenue sur l'adaptateur Fully MQTT",
+                        "it": "Benvenuto nell'adattatore Fully MQTT",
+                        "es": "Bienvenido al adaptador Fully MQTT",
+                        "pl": "Welcome to Fully MQTT (ang.)",
+                        "uk": "Ласкаво просимо до повного адаптера MQTT",
+                        "zh-cn": "2. 欢迎全面适应外国直接投资"
+                    },
+                    "size": 2
+                },
+                "_textStart": {
+                    "type": "staticText",
+                    "text": {
+                        "en": "A detailed documentation with explanations and all further information can be found on this GitHub page:",
+                        "de": "Eine ausführliche Dokumentation mit Erläuterungen und allen weiteren Informationen ist auf dieser GitHub-Seite:",
+                        "ru": "Подробную документацию с разъяснениями и всю дополнительную информацию можно найти на этой странице GitHub:",
+                        "pt": "Uma documentação detalhada com explicações e todas as informações adicionais podem ser encontradas nesta página do GitHub:",
+                        "nl": "Een gedetailleerde documentatie met verklaringen en alle verdere informatie kan worden gevonden op deze GitHub pagina:",
+                        "fr": "Une documentation détaillée avec des explications et toute autre information peut être trouvée sur cette page GitHub:",
+                        "it": "Una documentazione dettagliata con spiegazioni e tutte le ulteriori informazioni possono essere trovate su questa pagina GitHub:",
+                        "es": "En esta página de GitHub se puede encontrar una documentación detallada con explicaciones y toda la información adicional:",
+                        "pl": "Szczegółowe dokumentowanie z wyjaśnieniami i wszystkie inne informacje można znaleźć na stronie GitHub",
+                        "uk": "На цій сторінці GitHub можна знайти детальну документацію з поясненнями та подальшою інформацією:",
+                        "zh-cn": "本格特·哈布页可查阅附有解释和所有进一步资料的详细文件:"
+                    },
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
                     "style": {
                         "fontSize": 16,
-                        "fontWeight": "bold"
+                        "marginTop": 0
+                    }
+                },
+                "_documentationLink": {
+                    "type": "staticLink",
+                    "label": {
+                        "en": "Fully MQTT Adapter Documentation",
+                        "de": "Fully-MQTT Adapter-Dokumentation",
+                        "ru": "Полностью MQTT Адаптер Документация",
+                        "pt": "Documentação do adaptador Fully MQTT",
+                        "nl": "Fully MQT-adapter Document",
+                        "fr": "Documentation de l'adaptateur Fully MQTT",
+                        "it": "Documentazione dell'adattatore Fully MQTT",
+                        "es": "Fully MQTT Adapter Documentation",
+                        "pl": "Pełna dokumentacja Fully MQTT",
+                        "uk": "Повністю Документація адаптера Fully MQTT",
+                        "zh-cn": "全面记录"
+                    },
+                    "button": true,
+                    "icon": "info",
+                    "href": "https://github.com/Acgua/ioBroker.fully-mqtt",
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 2,
+                    "style": {
+                        "fontSize": 16,
+                        "marginTop": 0
                     }
                 },
                 "header_Devices": {
                     "newLine": "true",
                     "type": "header",
-                    "text": "Fully Browser Devices",
-                    "size": 2
+                    "text": {
+                        "en": "Fully Browser Devices",
+                        "de": "Fully-Browser-Geräte",
+                        "ru": "Fully Browser Devices",
+                        "pt": "Fully Browser Devices",
+                        "nl": "Fully Browser Devices",
+                        "fr": "Fully Browser Devices",
+                        "it": "Fully Browser Devices",
+                        "es": "Fully Browser Devices",
+                        "pl": "Fully Browser Device",
+                        "uk": "Fully Browser Devices",
+                        "zh-cn": "Fully Browser Devices"
+                    },
+                    "size": 2,
+                    "style": {
+                        "marginTop": 20
+                    }
                 },
                 "text_DevicesInfo": {
                     "type": "staticText",
-                    "label": "Add new devices by clicking the plus (+) symbol...",
+                    "label": {
+                        "en": "Add new devices by clicking the plus (+) symbol...",
+                        "de": "Neue Geräte hinzufügen, indem Sie auf das Plus-Symbol (+) klicken...",
+                        "ru": "Добавьте новые устройства, нажав символ плюс (+)...",
+                        "pt": "Adicione novos dispositivos clicando no símbolo plus (+)...",
+                        "nl": "Voeg nieuwe apparaten toe door de plus te kliken symbool...",
+                        "fr": "Ajoutez de nouveaux appareils en cliquant sur le symbole plus (+)...",
+                        "it": "Aggiungi nuovi dispositivi facendo clic sul simbolo +...",
+                        "es": "Añadir nuevos dispositivos haciendo clic en el símbolo más (+)...",
+                        "pl": "Nowe urządzenia poprzez kliknięcie symbolu plus (+)...",
+                        "uk": "Додати нові пристрої, натиснувши символ плюс (+)...",
+                        "zh-cn": "通过点击加(+)象征来增加新的装置。..."
+                    },
                     "newLine": "true",
                     "style": {
                         "fontSize": 16
@@ -41,7 +135,19 @@
                     "items": [
                         {
                             "type": "text",
-                            "title": "Device Name",
+                            "title": {
+                                "en": "Device Name",
+                                "de": "Gerätename",
+                                "ru": "Наименование устройства",
+                                "pt": "Nome do dispositivo",
+                                "nl": "Vernietig Name",
+                                "fr": "Nom du dispositif",
+                                "it": "Nome del dispositivo",
+                                "es": "Nombre del dispositivo",
+                                "pl": "Nazwisko",
+                                "uk": "Назва пристрою",
+                                "zh-cn": "Device姓名"
+                            },
                             "attr": "name",
                             "maxLength": 50,
                             "trim": false,
@@ -53,7 +159,19 @@
                         },
                         {
                             "type": "select",
-                            "title": "Protocol",
+                            "title": {
+                                "en": "Protocol",
+                                "de": "Protokoll",
+                                "ru": "Протокол",
+                                "pt": "Protocolo",
+                                "nl": "Protocol",
+                                "fr": "Protocole",
+                                "it": "Protocollo",
+                                "es": "Protocolo",
+                                "pl": "Protokół",
+                                "uk": "Протокол",
+                                "zh-cn": "议定书"
+                            },
                             "attr": "restProtocol",
                             "default": "http",
                             "width": "5%",
@@ -72,7 +190,19 @@
                         },
                         {
                             "type": "text",
-                            "title": "IP Address",
+                            "title": {
+                                "en": "IP Address",
+                                "de": "IP-Adresse",
+                                "ru": "IP адрес",
+                                "pt": "Endereço IP",
+                                "nl": "IP Addres",
+                                "fr": "Adresse IP",
+                                "it": "Indirizzo IP",
+                                "es": "Dirección IP",
+                                "pl": "IP Address",
+                                "uk": "IP-адреса",
+                                "zh-cn": "IP地址"
+                            },
                             "attr": "ip",
                             "maxLength": 15,
                             "trim": true,
@@ -91,7 +221,19 @@
                         },
                         {
                             "type": "password",
-                            "title": "Remote Admin Password",
+                            "title": {
+                                "en": "Remote Admin Password",
+                                "de": "Remote Admin Passwort",
+                                "ru": "Remote Admin Password",
+                                "pt": "Remote Admin Password",
+                                "nl": "Remote Admin Password",
+                                "fr": "Remote Admin Password",
+                                "it": "Remote Admin Password",
+                                "es": "Remote Admin Password",
+                                "pl": "Remote Admin Password",
+                                "uk": "Remote Admin Password",
+                                "zh-cn": "Remote Admin Password"
+                            },
                             "attr": "restPassword",
                             "width": "15%",
                             "validator": "data.restPassword.length > 0",
@@ -101,12 +243,24 @@
                             "type": "checkbox",
                             "attr": "useMQTT",
                             "width": "50px",
-                            "title": "Use MQTT",
+                            "title": "MQTT",
                             "default": true
                         },
                         {
                             "type": "checkbox",
-                            "attr": "isActive",
+                            "attr": {
+                                "en": "Enabled",
+                                "de": "Aktiv",
+                                "ru": "Включить",
+                                "pt": "Activado",
+                                "nl": "In staat",
+                                "fr": "Enabled",
+                                "it": "Abilitato",
+                                "es": "Enabled",
+                                "pl": "Enabled",
+                                "uk": "Увімкнути",
+                                "zh-cn": "附录"
+                            },
                             "width": "50px",
                             "title": "Enabled",
                             "default": true
@@ -116,12 +270,36 @@
                 "header_MQTT": {
                     "newLine": "true",
                     "type": "header",
-                    "text": "MQTT Configuration",
+                    "text": {
+                        "en": "MQTT Configuration",
+                        "de": "MQTT-Konfiguration",
+                        "ru": "MQTT Конфигурация",
+                        "pt": "MQTT Configuração",
+                        "nl": "MQT Configuratie",
+                        "fr": "MQTT Configuration",
+                        "it": "MQTT Configurazione",
+                        "es": "MQTT Configuración",
+                        "pl": "MQTT konfiguracja",
+                        "uk": "MQTT Конфігурація",
+                        "zh-cn": "进口 配 法"
+                    },
                     "size": 2
                 },
                 "text_MQTT-info": {
                     "type": "staticText",
-                    "label": "You can leave user name and password empty, port is always required. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                    "label": {
+                        "en": "Port is always required, but you can leave user name and password empty. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "de": "Die Angabe der Port-Nummer ist immer erforderlich, aber Benutzername und Passwort kann man leer lassen. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "ru": "Порт всегда необходим, но вы можете оставить имя пользователя и пароль пустым. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "pt": "A porta é sempre necessária, mas você pode deixar o nome do usuário e a senha vazias. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "nl": "Port is altijd nodig, maar je kunt gebruikersnaam en wachtwoord leeg laten. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "fr": "Port est toujours nécessaire, mais vous pouvez laisser le nom d'utilisateur et mot de passe vide. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "it": "La porta è sempre richiesta, ma è possibile lasciare il nome utente e la password vuota. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "es": "El puerto siempre es necesario, pero puede dejar el nombre de usuario y la contraseña vacía. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "pl": "Port jest zawsze potrzebny, ale może odejść od nazwy użytkownika i przekazać słowo puste. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "uk": "Порт завжди необхідний, але ви можете залишити ім'я користувача і пароль порожній. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)",
+                        "zh-cn": "港口总是需要,但你可以离开用户名称和密码空。."
+                    },
                     "style": {
                         "fontSize": 16
                     }
@@ -137,40 +315,65 @@
                 },
                 "mqttUser": {
                     "type": "text",
-                    "label": "User name",
-                    "help": "MQTT User name"
+                    "label": { "en": "User name", "de": "Benutzername" },
+                    "help": { "en": "MQTT User name", "de": "MQTT Benutzername" }
                 },
                 "mqttPassword": {
                     "type": "password",
-                    "label": "Password",
-                    "help": "MQTT Password"
+                    "label": { "en": "Password", "de": "Passwort" },
+                    "help": { "en": "MQTT Password", "de": "MQTT Passwort" }
                 },
                 "mqttDoNotVerifyUserPw": {
                     "type": "checkbox",
-                    "label": "Do not verify user and password",
-                    "help": "Any user/password will be accepted if activated",
+                    "label": {
+                        "en": "Do not verify user and password",
+                        "de": "Benutzername und Passwort nicht verifizieren",
+                        "ru": "Не проверять пользователя и пароль",
+                        "pt": "Não verifique o usuário e a senha",
+                        "nl": "Verifieer geen gebruiker en wachtwoord",
+                        "fr": "Ne vérifiez pas l'utilisateur et le mot de passe",
+                        "it": "Non verificare l'utente e la password",
+                        "es": "No verifique usuario y contraseña",
+                        "pl": "Nie zweryfikuj użytkownika i przemij słowo",
+                        "uk": "Не перевірити користувача і пароль",
+                        "zh-cn": "核查用户和密码"
+                    },
+                    "help": {
+                        "en": "This disables the username and password verification",
+                        "de": "Die Überprüfung von Benutzername und Passwort wird damit deaktiviert",
+                        "ru": "Это отключает имя пользователя и проверку пароля",
+                        "pt": "Isso desabilita o nome de usuário e a verificação de senha",
+                        "nl": "Dit schakelt de gebruikersnaam en wachtwoord verificatie uit",
+                        "fr": "Cela désactive la vérification du nom d'utilisateur et du mot de passe",
+                        "it": "Questo disabilita la verifica del nome utente e password",
+                        "es": "Esto desactiva el nombre de usuario y la verificación de contraseñas",
+                        "pl": "To uniemożliwia użytkownikowi nazwę i weryfikację haseł",
+                        "uk": "Це відключає перевірку імені користувача та пароля",
+                        "zh-cn": "用户名称和密码核查"
+                    },
                     "default": false,
                     "sm": 12,
                     "md": 6,
-                    "lg": 3
+                    "lg": 5
                 }
             }
         },
         "_tab_Expert Settings": {
             "type": "panel",
-            "label": "Expert Settings",
+            "label": {
+                "en": "Expert Settings",
+                "de": "Experten-Einstellungen",
+                "ru": "Экспертные настройки",
+                "pt": "Configurações de especialistas",
+                "nl": "Expert Setting",
+                "fr": "Paramètres d ' experts",
+                "it": "Impostazioni degli esperti",
+                "es": "Configuración de expertos",
+                "pl": "Strona internetowa",
+                "uk": "Експертні налаштування",
+                "zh-cn": "专家设置"
+            },
             "items": {
-                "link_Github": {
-                    "type": "staticLink",
-                    "newLine": "true",
-                    "href": "https://github.com/Acgua/ioBroker.fully-mqtt",
-                    "label": "Documentation: Acgua/iobroker.fully-mqtt",
-                    "icon": "web",
-                    "style": {
-                        "fontSize": 16,
-                        "fontWeight": "bold"
-                    }
-                },
                 "header_RESTAPI": {
                     "newLine": "true",
                     "type": "header",
@@ -183,7 +386,19 @@
                     "max": 15000,
                     "default": 6000,
                     "label": "Request Timeout",
-                    "help": "in milliseconds (500-15000, default: 6000)",
+                    "help": {
+                        "en": "in milliseconds (500-15000, default: 6000)",
+                        "de": "in Millisekunden (500-15000, Default: 6000)",
+                        "ru": "в миллисекундах (500-15000, по умолчанию: 6000)",
+                        "pt": "em milissegundos (500-15000, padrão: 6000)",
+                        "nl": "quality over quantity (qoq) releases vertaling:",
+                        "fr": "en millisecondes (500-15000, par défaut: 6000)",
+                        "it": "in millisecondi (500-15000, default: 6000)",
+                        "es": "en milisegundos (500-15000, por defecto: 6000)",
+                        "pl": "w milisekundach (500-15000) domyślnie: 6000",
+                        "uk": "в мілісекундах (500-15000, за замовчуванням: 6000)",
+                        "zh-cn": "(500-1 000美元,违约:6000 000美元)"
+                    },
                     "sm": 12,
                     "md": 6,
                     "lg": 3
@@ -193,15 +408,27 @@
                     "min": 5,
                     "label": "Request Interval",
                     "default": 60,
-                    "help": "in seconds (min: 5, default: 60); ignored if MQTT is used",
+                    "help": {
+                        "en": "in seconds (min: 5, default: 60); ignored if MQTT is used",
+                        "de": "in Sekunden (min: 5, Default: 60;), wird ignoriert wenn MQTT aktiv",
+                        "ru": "в секундах (мин: 5, по умолчанию: 60;) игнорируется, если используется MQTT",
+                        "pt": "em segundos (min: 5, padrão: 60;) ignorado se MQTT é usado",
+                        "nl": "negeerde of MQTT gebruikt wordt",
+                        "fr": "en secondes (min: 5, default: 60;) ignoré si MQTT est utilisé",
+                        "it": "in secondi (min: 5, predefinito: 60;) ignorato se MQTT viene utilizzato",
+                        "es": "en segundos (min: 5, default: 60;) ignorado si se utiliza MQTT",
+                        "pl": "w drugim (min: 5, domyślna: 60; zignorowany, jeśli MQTT jest używany)",
+                        "uk": "в секундах (min: 5, за замовчуванням: 60;) ігнорувати, якщо MQTT використовується",
+                        "zh-cn": "在第二期(min:5,违约:60;如果使用了MQTT,则忽视了这一点。"
+                    },
                     "sm": 12,
                     "md": 6,
                     "lg": 3
                 },
                 "restUpdateUnchangedObjects": {
                     "type": "checkbox",
-                    "label": "Always update info objects",
-                    "help": "Always update info objects, even if value did not change",
+                    "label": { "en": "Always update info states", "de": "Info-Datenpunkte immer aktualisieren" },
+                    "help": { "en": "Always update info objects, even if value did not change", "de": "Info-Datenpunkte werden damit immer aktualisiert, auch wenn sich der Wert nicht ändert" },
                     "default": false,
                     "sm": 12,
                     "md": 6,
@@ -216,16 +443,16 @@
                     "type": "number",
                     "min": 2,
                     "max": 120,
-                    "label": "Do not process published info more than every x seconds",
-                    "help": "in seconds (2-120, default: 30)",
+                    "label": { "en": "Do not process published info more than every x seconds", "de": "Publizierte Infos nicht öfter als alle x Sekunden verarbeiten" },
+                    "help": { "en": "in seconds (2-120, default: 30)", "de": "in Sekunden (2-120, Default: 30)" },
                     "sm": 12,
                     "md": 6,
                     "lg": 3
                 },
                 "mqttUpdateUnchangedObjects": {
                     "type": "checkbox",
-                    "label": "Always update info objects",
-                    "help": "Always update info objects, even if value did not change",
+                    "label": { "en": "Always update info states", "de": "Info-Datenpunkte immer aktualisieren" },
+                    "help": { "en": "Always update info objects, even if value did not change", "de": "Info-Datenpunkte werden damit immer aktualisiert, auch wenn sich der Wert nicht ändert" },
                     "default": false,
                     "sm": 12,
                     "md": 6,
@@ -233,8 +460,8 @@
                 },
                 "mqttConnErrorsAsInfo": {
                     "type": "checkbox",
-                    "label": "Client and Connection errors as info in log",
-                    "help": "Logs client and connection errors as info and not as error",
+                    "label": { "en": "Client and Connection errors as info in log", "de": "Client- und Connection-Fehler as info im Log" },
+                    "help": { "en": "Logs client and connection errors as 'info' and not as 'error'", "de": "Loggt Client- und Connection-Fehler als 'info' und nicht als 'error'" },
                     "default": true,
                     "sm": 12,
                     "md": 7,
