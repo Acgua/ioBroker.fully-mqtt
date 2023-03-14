@@ -1,7 +1,7 @@
 {
     "_ignore_Acgua1": "The following '_ignore_' are just there to be able to add comments to this json file.",
     "_ignore_Acgua2": "See https://github.com/ioBroker/ioBroker.admin/blob/master/src/src/components/JsonConfigComponent/SCHEMA.md",
-    "i18n": true,
+    "i18n": false,
     "type": "tabs",
     "items": {
         "_tab_Start": {
