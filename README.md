@@ -1,15 +1,22 @@
 ![Logo](admin/fully-mqtt.png)
+
 # ioBroker.fully-mqtt
 
-[![NPM version](https://img.shields.io/npm/v/iobroker.fully-mqtt.svg)](https://www.npmjs.com/package/iobroker.fully-mqtt)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/LICENSE)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fully-mqtt.svg)](https://www.npmjs.com/package/iobroker.fully-mqtt)
-![Number of Installations](https://iobroker.live/badges/fully-mqtt-installed.svg)
+![GitHub repo size](https://img.shields.io/github/repo-size/Acgua/ioBroker.fully-mqtt)
+</br>![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Acgua/ioBroker.fully-mqtt)
+![GitHub last commit](https://img.shields.io/github/last-commit/Acgua/ioBroker.fully-mqtt)
+![GitHub issues](https://img.shields.io/github/issues/Acgua/ioBroker.fully-mqtt)
+</br>
+**Version:** </br>
+![Beta](https://img.shields.io/npm/v/iobroker.fully-mqtt.svg?color=red&label=beta)
 ![Current version in stable repository](https://iobroker.live/badges/fully-mqtt-stable.svg)
-[![Dependency Status](https://img.shields.io/david/Acgua/iobroker.fully-mqtt.svg)](https://david-dm.org/Acgua/iobroker.fully-mqtt)
+![Number of Installations](https://iobroker.live/badges/fully-mqtt-installed.svg)
+</br>
+**Tests:** </br>
+![Test and Release](https://github.com/Acgua/ioBroker.fully-mqtt/workflows/Test%20and%20Release/badge.svg)
 
-[![NPM](https://nodei.co/npm/iobroker.fully-mqtt.png?downloads=true)](https://nodei.co/npm/iobroker.fully-mqtt/)
-
-**Tests:** ![Test and Release](https://github.com/Acgua/ioBroker.fully-mqtt/workflows/Test%20and%20Release/badge.svg)
 
 ## About this ioBroker Adapter
 
@@ -22,7 +29,6 @@ Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser),
 Many thanks to @arteck (https://github.com/arteck) for [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser). While I planned to just extend to use the existing adapter for an MQTT enhancement, I finally decided to write a new adapter in TypeScript and include latest ioBroker development features, as I anyway would have had to rewrite approx. 70-80% of the code for the MQTT integration.
 Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I would love to merge this Fully MQTT adapter into [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser) to just have one single adapter for the ioBroker community.
 
-
 ## Documentation
 
 [🇺🇸 Documentation](./doc/en/README.md)
@@ -31,35 +37,38 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 
 [TEST - Adapter Fully Browser mit MQTT](https://forum.iobroker.net/topic/63705/)
 
-
-
 ## Changelog
+
 <!--
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
 
 ### **WORK IN PROGRESS**
-* (Acgua) ...
+
+-   (Acgua) ...
 
 ### 0.0.4 (2023-03-14)
-* (Acgua) Added all translations to admin/jsonConfig.json 
-* (Acgua) Fixed test error by removing nodejs 12 support, and added nodejs 18
-* (Acgua) readme updated and prepared for adapter documentation
-* (Acgua) Fixed a few issues
+
+-   (Acgua) Added all translations to admin/jsonConfig.json
+-   (Acgua) Fixed test error by removing nodejs 12 support, and added nodejs 18
+-   (Acgua) readme updated and prepared for adapter documentation
+-   (Acgua) Fixed a few issues
 
 ### 0.0.3-alpha (2023-03-12)
-* (Acgua) Fix: various issues
-* (Acgua) Fix: Encrypt MQTT password ([#11](https://github.com/Acgua/ioBroker.fully-mqtt/issues/11))
-* (Acgua) New: MQTT option to log client and connection errors as info and not error
-* (Acgua) New: Online status for each device is now displayed in objects: e.g. 'fully-mqtt.0.Tablet-Hallway' is green with a connection icon if it is alive
 
+-   (Acgua) Fix: various issues
+-   (Acgua) Fix: Encrypt MQTT password ([#11](https://github.com/Acgua/ioBroker.fully-mqtt/issues/11))
+-   (Acgua) New: MQTT option to log client and connection errors as info and not error
+-   (Acgua) New: Online status for each device is now displayed in objects: e.g. 'fully-mqtt.0.Tablet-Hallway' is green with a connection icon if it is alive
 
 ### 0.0.2-alpha (2023-03-12)
-* (Acgua) Bug fixes
+
+-   (Acgua) Bug fixes
 
 ### 0.0.1-alpha (2023-03-09)
-* (Acgua) Initial test release
+
+-   (Acgua) Initial test release
 
 ## License
 
