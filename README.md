@@ -43,7 +43,8 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 * (Acgua) ...
 
 ### 0.0.4 (2023-03-14)
-* (Acgua) Added translations
+* (Acgua) Added all translations to admin/jsonConfig.json 
+* (Acgua) Fixed test error by removing nodejs 12 support, and added nodejs 18
 * (Acgua) readme updated and prepared for adapter documentation
 * (Acgua) Fixed a few issues
 

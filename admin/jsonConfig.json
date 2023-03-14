@@ -77,7 +77,7 @@
                     },
                     "button": true,
                     "icon": "info",
-                    "href": "https://github.com/Acgua/ioBroker.fully-mqtt",
+                    "href": "https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/doc/en/README.md",
                     "sm": 12,
                     "md": 12,
                     "lg": 2,
