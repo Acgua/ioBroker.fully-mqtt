@@ -148,20 +148,6 @@ export class MqttServer {
             });
 
             /**
-             * fired when a client disconnects
-             */
-            this.aedes.on('clientDisconnect', (client) => {
-                const ip = this.devices[client.id].ip;
-                const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
-                if (this.adapter.config.mqttConnErrorsAsInfo) {
-                    this.adapter.log.info(`[MQTT] Client ${logMsgName} disconnected.`);
-                } else {
-                    this.adapter.log.error(`[MQTT] Client ${logMsgName} disconnected.`);
-                }
-                this.setIsAlive(client.id, false);
-            });
-
-            /**
              * fired when a client publishes a message packet on the topic
              */
             this.aedes.on('publish', (packet, client) => {
@@ -297,6 +283,23 @@ export class MqttServer {
                 }
             });
 
+            /**
+             * fired when a client disconnects
+             */
+            this.aedes.on('clientDisconnect', (client) => {
+                const ip = this.devices[client.id].ip;
+                const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+                if (this.adapter.config.mqttConnErrorsAsInfo) {
+                    this.adapter.log.info(`[MQTT] Client ${logMsgName} disconnected.`);
+                } else {
+                    this.adapter.log.error(`[MQTT] Client ${logMsgName} disconnected.`);
+                }
+                this.setIsAlive(client.id, false);
+            });
+
+            /**
+             * fired on client error
+             */
             this.aedes.on('clientError', (client, e) => {
                 if (this.notAuthorizedClients.includes(client.id)) return; // Error msg was already thrown in aedes.authenticate() before
                 const ip = this.devices[client.id].ip;
@@ -323,7 +326,7 @@ export class MqttServer {
             });
 
             /**
-             * on server error
+             * fired on server error
              */
             this.server.on('error', (e: any) => {
                 if (e instanceof Error && e.message.startsWith('listen EADDRINUSE')) {

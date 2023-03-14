@@ -110,16 +110,6 @@ class MqttServer {
           return;
         }
       });
-      this.aedes.on("clientDisconnect", (client) => {
-        const ip = this.devices[client.id].ip;
-        const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
-        if (this.adapter.config.mqttConnErrorsAsInfo) {
-          this.adapter.log.info(`[MQTT] Client ${logMsgName} disconnected.`);
-        } else {
-          this.adapter.log.error(`[MQTT] Client ${logMsgName} disconnected.`);
-        }
-        this.setIsAlive(client.id, false);
-      });
       this.aedes.on("publish", (packet, client) => {
         try {
           if (!client || !packet)
@@ -203,6 +193,16 @@ class MqttServer {
           this.adapter.log.error(this.adapter.err2Str(e));
           return;
         }
+      });
+      this.aedes.on("clientDisconnect", (client) => {
+        const ip = this.devices[client.id].ip;
+        const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+        if (this.adapter.config.mqttConnErrorsAsInfo) {
+          this.adapter.log.info(`[MQTT] Client ${logMsgName} disconnected.`);
+        } else {
+          this.adapter.log.error(`[MQTT] Client ${logMsgName} disconnected.`);
+        }
+        this.setIsAlive(client.id, false);
       });
       this.aedes.on("clientError", (client, e) => {
         if (this.notAuthorizedClients.includes(client.id))
