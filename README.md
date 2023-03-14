@@ -11,12 +11,11 @@
 </br>
 **Version:** </br>
 ![Beta](https://img.shields.io/npm/v/iobroker.fully-mqtt.svg?color=red&label=beta)
-![Current version in stable repository](https://iobroker.live/badges/fully-mqtt-stable.svg)
+![Stable](https://iobroker.live/badges/fully-mqtt-stable.svg)
 ![Number of Installations](https://iobroker.live/badges/fully-mqtt-installed.svg)
 </br>
 **Tests:** </br>
 ![Test and Release](https://github.com/Acgua/ioBroker.fully-mqtt/workflows/Test%20and%20Release/badge.svg)
-
 
 ## About this ioBroker Adapter
 
