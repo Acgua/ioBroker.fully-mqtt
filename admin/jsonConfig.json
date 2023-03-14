@@ -460,8 +460,8 @@
                 },
                 "mqttConnErrorsAsInfo": {
                     "type": "checkbox",
-                    "label": { "en": "Client and Connection errors as info in log", "de": "Client- und Connection-Fehler as info im Log" },
-                    "help": { "en": "Logs client and connection errors as 'info' and not as 'error'", "de": "Loggt Client- und Connection-Fehler als 'info' und nicht als 'error'" },
+                    "label": { "en": "Client and Connection errors as info in log", "de": "Client- und Connection-Fehler als info im Log" },
+                    "help": { "en": "Logs client and connection errors as 'info' and not as 'error'", "de": "Client- und Connection-Fehler als 'info' und nicht als 'error' im Log ausgeben" },
                     "default": true,
                     "sm": 12,
                     "md": 7,
