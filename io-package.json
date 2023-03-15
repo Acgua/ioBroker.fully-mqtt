@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fully-mqtt",
-        "version": "0.0.4",
+        "version": "0.0.5",
         "news": {
+            "0.0.5": {
+                "en": "Test release script",
+                "de": "Testversion Skript",
+                "ru": "Тест-релиз скрипт",
+                "pt": "Script de liberação de teste",
+                "nl": "Test release",
+                "fr": "Test release script",
+                "it": "Script di rilascio test",
+                "es": "Script de prueba",
+                "pl": "Testy",
+                "uk": "Статус на сервери",
+                "zh-cn": "试验性释放说明"
+            },
             "0.0.4": {
                 "en": "Translations and improvements",
                 "de": "Übersetzungen und Verbesserungen",
@@ -82,8 +95,16 @@
             "uk": "Control Fully Kiosk Browser",
             "zh-cn": "完全控制 Kiosk 浏览器"
         },
-        "authors": ["Acgua <no@mail.com>"],
-        "keywords": ["fully", "kiosk", "browser", "tablet", "mqtt"],
+        "authors": [
+            "Acgua <no@mail.com>"
+        ],
+        "keywords": [
+            "fully",
+            "kiosk",
+            "browser",
+            "tablet",
+            "mqtt"
+        ],
         "license": "Apache-2.0",
         "platform": "Javascript/Node.js",
         "main": "build/main.js",
@@ -125,8 +146,12 @@
         "mqttUpdateUnchangedObjects": false,
         "mqttConnErrorsAsInfo": true
     },
-    "encryptedNative": ["mqttPassword"],
-    "protectedNative": ["mqttPassword"],
+    "encryptedNative": [
+        "mqttPassword"
+    ],
+    "protectedNative": [
+        "mqttPassword"
+    ],
     "objects": [],
     "instanceObjects": [
         {
