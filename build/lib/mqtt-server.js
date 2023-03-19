@@ -251,7 +251,8 @@ class MqttServer {
       if (isAlive) {
         this.scheduleCheckIfStillActive(clientId);
       } else {
-        clearTimeout(this.devices[clientId].timeoutNoUpdate);
+        if (this.devices[clientId].timeoutNoUpdate)
+          this.adapter.clearTimeout(this.devices[clientId].timeoutNoUpdate);
       }
     } else {
       this.adapter.log.debug(`[MQTT] isAlive changed to ${isAlive}, but IP of client ${clientId} is still unknown.`);
@@ -259,11 +260,12 @@ class MqttServer {
   }
   async scheduleCheckIfStillActive(clientId) {
     try {
-      clearTimeout(this.devices[clientId].timeoutNoUpdate);
+      if (this.devices[clientId].timeoutNoUpdate)
+        this.adapter.clearTimeout(this.devices[clientId].timeoutNoUpdate);
       if (!this.devices[clientId])
         this.devices[clientId] = {};
       const interval = 70 * 1e3;
-      this.devices[clientId].timeoutNoUpdate = setTimeout(async () => {
+      this.devices[clientId].timeoutNoUpdate = this.adapter.setTimeout(async () => {
         try {
           const lastSeen = this.devices[clientId].lastSeen;
           if (!lastSeen)
@@ -288,7 +290,8 @@ class MqttServer {
   terminate() {
     this.adapter.log.info(`[MQTT] Disconnect all clients and close server`);
     for (const clientId in this.devices) {
-      clearTimeout(this.devices[clientId].timeoutNoUpdate);
+      if (this.devices[clientId].timeoutNoUpdate)
+        this.adapter.clearTimeout(this.devices[clientId].timeoutNoUpdate);
       this.setIsAlive(clientId, false);
     }
     if (this.aedes) {

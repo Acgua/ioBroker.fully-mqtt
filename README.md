@@ -23,18 +23,18 @@ This adapter controls your [Fully Kiosk Browser](https://www.fully-kiosk.com) (a
 
 Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser), this adapter also supports **MQTT**.
 
+## Documentation
+
+* [Documentation](./docs/en/README.md)
+
+## ioBroker Forum Thread
+
+* [TEST - Adapter Fully Browser mit MQTT](https://forum.iobroker.net/topic/63705/)
+
 ## Credits
 
 Many thanks to @arteck (https://github.com/arteck) for [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser). While I planned to just extend to use the existing adapter for an MQTT enhancement, I finally decided to write a new adapter in TypeScript and include latest ioBroker development features, as I anyway would have had to rewrite approx. 70-80% of the code for the MQTT integration.
 Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I would love to merge this Fully MQTT adapter into [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser) to just have one single adapter for the ioBroker community.
-
-## Documentation
-
-[🇺🇸 Documentation](./doc/en/README.md)
-
-## ioBroker Forum Thread
-
-[TEST - Adapter Fully Browser mit MQTT](https://forum.iobroker.net/topic/63705/)
 
 ## Changelog
 
@@ -45,7 +45,8 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 
 ### **WORK IN PROGRESS**
 
--   (Acgua) ...
+-   (Acgua) i18n (@iobroker/adapter-dev) implemented
+-   (Acgua) using adapter.setTimeout instead of standard setTimeout
 
 ### 0.0.5 (2023-03-15)
 

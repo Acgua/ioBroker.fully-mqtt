@@ -63,6 +63,7 @@ jobs:
     needs: [check-and-lint, adapter-tests]
 
     # Trigger this step only when a commit on any branch is tagged with a version number
+    # 15.03.2023 - uncommented as we want to always run it
     if: |
       contains(github.event.head_commit.message, '[skip ci]') == false &&
       github.event_name == 'push' &&

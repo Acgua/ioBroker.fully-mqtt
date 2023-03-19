@@ -308,10 +308,11 @@ export class FullyMqtt extends utils.Adapter {
      */
     private async scheduleRestApiRequestInfo(ip: string): Promise<void> {
         try {
-            clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
+            // @ts-expect-error "Type 'null' is not assignable to type 'Timeout'.ts(2345)" - we check for not being null via "if"
+            if (this.fullys[ip].timeoutRestRequestInfo) this.clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
             const interval = this.config.restInterval * 1000;
             if (interval < 2000) throw `[REST] We do not allow to set a REST API interval for info update every < 2 seconds!`;
-            this.fullys[ip].timeoutRestRequestInfo = setTimeout(async () => {
+            this.fullys[ip].timeoutRestRequestInfo = this.setTimeout(async () => {
                 try {
                     // Update Info
                     const infoObj = await this.restApi_inst.getInfo(ip);
@@ -347,8 +348,8 @@ export class FullyMqtt extends utils.Adapter {
                 this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restTimeout} ms is not allowed, set to default of 6000ms`);
                 this.config.restTimeout = 6000;
             }
-            if (this.isEmpty(this.config.restInterval) || this.config.restInterval < 5) {
-                this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restInterval}s is not allowed, set to default of 60s`);
+            if (this.isEmpty(this.config.restInterval) || this.config.restInterval < 5 || this.config.restInterval > 86400000) {
+                this.log.warn(`Adapter instance settings: REST API interval of ${this.config.restInterval}s is not allowed, set to default of 60s`);
                 this.config.restInterval = 60;
             }
 
@@ -385,7 +386,7 @@ export class FullyMqtt extends utils.Adapter {
                     restPassword: '',
                     lastSeen: 0, // timestamp
                     isAlive: false,
-                    timeoutRestRequestInfo: undefined,
+                    timeoutRestRequestInfo: null,
                     mqttInfoObjectsCreated: false,
                     mqttInfoKeys: [],
                     restInfoKeys: [],
@@ -755,26 +756,22 @@ export class FullyMqtt extends utils.Adapter {
      */
     private iob_onUnload(callback: () => void): void {
         try {
-            // Here you must clear all timeouts or intervals that may still be active
-            // clearTimeout(timeout1);
-            // clearTimeout(timeout2);
-            // ...
-            // clearInterval(interval1);
-
             if (this.fullys) {
                 for (const ip in this.fullys) {
-                    // Clear timeouts
-                    clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
+                    // Clear Request Info timeout
+                    // @ts-expect-error "Type 'null' is not assignable to type 'Timeout'.ts(2345)" - we check for not being null via "if"
+                    if (this.fullys[ip].timeoutRestRequestInfo) this.clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
                     this.log.info(`${this.fullys[ip].name}: Clear timeouts.`);
                     // Set alive status to false
                     this.setState(this.fullys[ip].id + '.alive', { val: false, ack: true });
                 }
             }
 
-            // Clear timeouts
+            // Clear MQTT server timeouts
             if (this.mqtt_Server) {
                 for (const clientId in this.mqtt_Server.devices) {
-                    clearTimeout(this.mqtt_Server.devices[clientId].timeoutNoUpdate);
+                    // @ts-expect-error "Type 'null' is not assignable to type 'Timeout'.ts(2345)" - we check for not being null via "if"
+                    if (this.mqtt_Server.devices[clientId].timeoutNoUpdate) this.clearTimeout(this.mqtt_Server.devices[clientId].timeoutNoUpdate);
                 }
             }
 

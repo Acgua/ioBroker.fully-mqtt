@@ -9,7 +9,7 @@ export interface IDevice {
     restPassword: string;
     lastSeen: number; // timestamp
     isAlive: true | false;
-    timeoutRestRequestInfo: NodeJS.Timeout | undefined;
+    timeoutRestRequestInfo: ioBroker.Timeout | null;
     mqttInfoObjectsCreated: true | false; // Set to true once first time creation initiated
     mqttInfoKeys: string[]; // Info keys from MQTT info, like 'batteryLevel', 'deviceID', ...
     restInfoKeys: string[]; // Info keys from Rest API info, like 'batteryLevel', 'deviceID', ...
@@ -30,7 +30,7 @@ export interface IMqttDevice {
     lastSeen?: number;
     mqttFirstReceived?: true | false;
     isActive?: true | false;
-    timeoutNoUpdate?: NodeJS.Timeout | undefined;
+    timeoutNoUpdate?: ioBroker.Timeout | null;
     previousInfoPublishTime?: number;
 }
 

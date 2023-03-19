@@ -121,14 +121,19 @@
         "adminUI": {
             "config": "json"
         },
-        "dependencies": [
-            {
-                "js-controller": ">=4.0.15"
-            }
-        ],
+        "docs": {
+            "en": [
+                "docs/en/README.md"
+            ]
+        },
         "globalDependencies": [
             {
                 "admin": ">=6.0.0"
+            }
+        ],
+        "dependencies": [
+            {
+                "js-controller": ">=4.0.15"
             }
         ]
     },

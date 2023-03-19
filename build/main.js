@@ -226,11 +226,12 @@ class FullyMqtt extends utils.Adapter {
   }
   async scheduleRestApiRequestInfo(ip) {
     try {
-      clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
+      if (this.fullys[ip].timeoutRestRequestInfo)
+        this.clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
       const interval = this.config.restInterval * 1e3;
       if (interval < 2e3)
         throw `[REST] We do not allow to set a REST API interval for info update every < 2 seconds!`;
-      this.fullys[ip].timeoutRestRequestInfo = setTimeout(async () => {
+      this.fullys[ip].timeoutRestRequestInfo = this.setTimeout(async () => {
         try {
           const infoObj = await this.restApi_inst.getInfo(ip);
           if (infoObj !== false) {
@@ -254,8 +255,8 @@ class FullyMqtt extends utils.Adapter {
         this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restTimeout} ms is not allowed, set to default of 6000ms`);
         this.config.restTimeout = 6e3;
       }
-      if (this.isEmpty(this.config.restInterval) || this.config.restInterval < 5) {
-        this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restInterval}s is not allowed, set to default of 60s`);
+      if (this.isEmpty(this.config.restInterval) || this.config.restInterval < 5 || this.config.restInterval > 864e5) {
+        this.log.warn(`Adapter instance settings: REST API interval of ${this.config.restInterval}s is not allowed, set to default of 60s`);
         this.config.restInterval = 60;
       }
       if (this.isEmpty(this.config.mqttPort) || this.config.mqttPort < 1 || this.config.mqttPort > 65535) {
@@ -284,7 +285,7 @@ class FullyMqtt extends utils.Adapter {
           restPassword: "",
           lastSeen: 0,
           isAlive: false,
-          timeoutRestRequestInfo: void 0,
+          timeoutRestRequestInfo: null,
           mqttInfoObjectsCreated: false,
           mqttInfoKeys: [],
           restInfoKeys: []
@@ -535,14 +536,16 @@ class FullyMqtt extends utils.Adapter {
     try {
       if (this.fullys) {
         for (const ip in this.fullys) {
-          clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
+          if (this.fullys[ip].timeoutRestRequestInfo)
+            this.clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
           this.log.info(`${this.fullys[ip].name}: Clear timeouts.`);
           this.setState(this.fullys[ip].id + ".alive", { val: false, ack: true });
         }
       }
       if (this.mqtt_Server) {
         for (const clientId in this.mqtt_Server.devices) {
-          clearTimeout(this.mqtt_Server.devices[clientId].timeoutNoUpdate);
+          if (this.mqtt_Server.devices[clientId].timeoutNoUpdate)
+            this.clearTimeout(this.mqtt_Server.devices[clientId].timeoutNoUpdate);
         }
       }
       if (this.mqtt_Server) {

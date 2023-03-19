@@ -355,7 +355,8 @@ export class MqttServer {
                 this.scheduleCheckIfStillActive(clientId); // restart timer
             } else {
                 // clear timer
-                clearTimeout(this.devices[clientId].timeoutNoUpdate);
+                // @ts-expect-error "Type 'null' is not assignable to type 'Timeout'.ts(2345)" - we check for not being null via "if"
+                if (this.devices[clientId].timeoutNoUpdate) this.adapter.clearTimeout(this.devices[clientId].timeoutNoUpdate);
             }
         } else {
             this.adapter.log.debug(`[MQTT] isAlive changed to ${isAlive}, but IP of client ${clientId} is still unknown.`);
@@ -369,7 +370,8 @@ export class MqttServer {
      */
     private async scheduleCheckIfStillActive(clientId: string): Promise<void> {
         try {
-            clearTimeout(this.devices[clientId].timeoutNoUpdate);
+            // @ts-expect-error "Type 'null' is not assignable to type 'Timeout'.ts(2345)" - we check for not being null via "if"
+            if (this.devices[clientId].timeoutNoUpdate) this.adapter.clearTimeout(this.devices[clientId].timeoutNoUpdate);
 
             if (!this.devices[clientId]) this.devices[clientId] = {};
 
@@ -377,7 +379,7 @@ export class MqttServer {
             // const ip = this.devices[clientId].ip;
             // const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${clientId} (IP unknown)`;
             const interval = 70 * 1000; // every 60s + 10s buffer
-            this.devices[clientId].timeoutNoUpdate = setTimeout(async () => {
+            this.devices[clientId].timeoutNoUpdate = this.adapter.setTimeout(async () => {
                 try {
                     const lastSeen = this.devices[clientId].lastSeen;
                     if (!lastSeen) return;
@@ -409,7 +411,8 @@ export class MqttServer {
         this.adapter.log.info(`[MQTT] Disconnect all clients and close server`);
         // isAlive
         for (const clientId in this.devices) {
-            clearTimeout(this.devices[clientId].timeoutNoUpdate); // Clear timeout
+            // @ts-expect-error "Type 'null' is not assignable to type 'Timeout'.ts(2345)" - we check for not being null via "if"
+            if (this.devices[clientId].timeoutNoUpdate) this.adapter.clearTimeout(this.devices[clientId].timeoutNoUpdate);
             this.setIsAlive(clientId, false);
         }
 
