@@ -1,197 +1,210 @@
 {
-    "common": {
-        "name": "fully-mqtt",
-        "version": "0.0.6",
-        "news": {
-            "0.0.6": {
-                "en": "i18n (@iobroker/adapter-dev) implemented\nusing adapter.setTimeout instead of standard setTimeout",
-                "de": "i18n (@iobroker/adapter-dev) implementiert\nmit Adapter.set Timeout statt Standard-Set Zeit",
-                "ru": "i18n (@iobroker/adapter-dev) реализован\nс помощью Adapter.set Timeout вместо стандартного набора Тайм-аут",
-                "pt": "i18n (@iobroker/adapter-dev) implementado\nusando o adaptador.set Timeout em vez de conjunto padrão Timeout",
-                "nl": "i18n (@iobroker/adapter-dev)\nmet gebruik van adapter. Time-out in plaats van standaard set Time-out",
-                "fr": "i18n (@iobroker/adapter-dev) mis en œuvre\navec adaptateur.set Timeout au lieu de série Timeout",
-                "it": "i18n (@iobroker/adapter-dev) implementato\nutilizzando adattatore.set Timeout invece del set standard Tempo",
-                "es": "i18n (@iobroker/adapter-dev) implementado\nusando adaptador.set Tiempo en lugar de conjunto estándar Timeout",
-                "pl": "i18n (@iobroker/adapter-dev) (ang.)\nzastosowanie adapter.set Czas zamiast standardowego zestawu Timeout",
-                "uk": "javascript licenses api веб-сайт go1.13.8\nза допомогою адаптера.set Перебування замість стандартного набору Розклад",
-                "zh-cn": "i18n (oiobroker/adapter-dev)\n利用适应者。 时间而非标准规定 时限"
-            },
-            "0.0.5": {
-                "en": "Test release script",
-                "de": "Testversion Skript",
-                "ru": "Тест-релиз скрипт",
-                "pt": "Script de liberação de teste",
-                "nl": "Test release",
-                "fr": "Test release script",
-                "it": "Script di rilascio test",
-                "es": "Script de prueba",
-                "pl": "Testy",
-                "uk": "Статус на сервери",
-                "zh-cn": "试验性释放说明"
-            },
-            "0.0.4": {
-                "en": "Translations and improvements",
-                "de": "Übersetzungen und Verbesserungen",
-                "ru": "Переводы и исправления",
-                "pt": "Traduções e correções",
-                "nl": "Vertaling:",
-                "fr": "Traductions et corrections",
-                "it": "Traduzioni e correzioni",
-                "es": "Traducciones y correcciones",
-                "pl": "Tłumaczenie i naprawa",
-                "uk": "Переклади та виправлення",
-                "zh-cn": "笔译和固定"
-            },
-            "0.0.3-alpha": {
-                "en": "Update",
-                "de": "Aktualisierung",
-                "ru": "Обновление",
-                "pt": "Atualização",
-                "nl": "Update",
-                "fr": "Mise à jour",
-                "it": "Aggiornamento",
-                "es": "Actualización",
-                "pl": "Update",
-                "uk": "Новини",
-                "zh-cn": "最新资料"
-            },
-            "0.0.2-alpha": {
-                "en": "Update",
-                "de": "Aktualisierung",
-                "ru": "Обновление",
-                "pt": "Atualização",
-                "nl": "Update",
-                "fr": "Mise à jour",
-                "it": "Aggiornamento",
-                "es": "Actualización",
-                "pl": "Update",
-                "uk": "Новини",
-                "zh-cn": "最新资料"
-            },
-            "0.0.1-alpha": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "uk": "initial release",
-                "zh-cn": "首次出版"
-            }
-        },
-        "titleLang": {
-            "en": "Fully Kiosk Browser (MQTT)",
-            "de": "Fully Kiosk Browser (MQTT)",
-            "ru": "Fully Kiosk Browser (MQTT)",
-            "pt": "Fully Kiosk Browser (MQTT)",
-            "nl": "Fully Kiosk Browser (MQTT)",
-            "fr": "Fully Kiosk Browser (MQTT)",
-            "it": "Fully Kiosk Browser (MQTT)",
-            "es": "Fully Kiosk Browser (MQTT)",
-            "pl": "Fully Kiosk Browser (MQTT)",
-            "uk": "Fully Kiosk Browser (MQTT)",
-            "zh-cn": "Fully Kiosk Browser (MQTT)"
-        },
-        "desc": {
-            "en": "Control Fully Kiosk Browser",
-            "de": "Fully Browser steuern",
-            "ru": "Полный контроль браузера киоска",
-            "pt": "Controle totalmente o navegador de quiosque",
-            "nl": "Controle Volledig Kiosk Browser",
-            "fr": "Contrôlez entièrement le navigateur Kiosk",
-            "it": "Controlla completamente il browser Kiosk",
-            "es": "Navegador de quiosco de control completo",
-            "pl": "Kontroluj w pełni przeglądarkę kiosku",
-            "uk": "Control Fully Kiosk Browser",
-            "zh-cn": "完全控制 Kiosk 浏览器"
-        },
-        "authors": [
-            "Acgua <no@mail.com>"
-        ],
-        "keywords": [
-            "fully",
-            "kiosk",
-            "browser",
-            "tablet",
-            "mqtt"
-        ],
-        "license": "Apache-2.0",
-        "platform": "Javascript/Node.js",
-        "main": "build/main.js",
-        "icon": "fully-mqtt.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/Acgua/ioBroker.fully-mqtt/main/admin/fully-mqtt.png",
-        "readme": "https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "multimedia",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "poll",
-        "adminUI": {
-            "config": "json"
-        },
-        "docs": {
-            "en": [
-                "docs/en/README.md"
-            ]
-        },
-        "globalDependencies": [
-            {
-                "admin": ">=6.0.0"
-            }
-        ],
-        "dependencies": [
-            {
-                "js-controller": ">=4.0.15"
-            }
-        ]
+  "common": {
+    "name": "fully-mqtt",
+    "version": "0.0.7",
+    "news": {
+      "0.0.7": {
+        "en": "Test-only of release etc.",
+        "de": "Test-only of release etc.",
+        "ru": "Тест-только релиза и т.д.",
+        "pt": "Test-only da liberação etc.",
+        "nl": "Test-only of release etc.",
+        "fr": "Test-only of release etc.",
+        "it": "Test-solo di rilascio ecc.",
+        "es": "Prueba solo de liberación, etc.",
+        "pl": "Test-only of release (ang.).",
+        "uk": "Тест-тільки релізу і т.д.",
+        "zh-cn": "试验释放等。."
+      },
+      "0.0.6": {
+        "en": "i18n (@iobroker/adapter-dev) implemented\nusing adapter.setTimeout instead of standard setTimeout",
+        "de": "i18n (@iobroker/adapter-dev) implementiert\nmit Adapter.set Timeout statt Standard-Set Zeit",
+        "ru": "i18n (@iobroker/adapter-dev) реализован\nс помощью Adapter.set Timeout вместо стандартного набора Тайм-аут",
+        "pt": "i18n (@iobroker/adapter-dev) implementado\nusando o adaptador.set Timeout em vez de conjunto padrão Timeout",
+        "nl": "i18n (@iobroker/adapter-dev)\nmet gebruik van adapter. Time-out in plaats van standaard set Time-out",
+        "fr": "i18n (@iobroker/adapter-dev) mis en œuvre\navec adaptateur.set Timeout au lieu de série Timeout",
+        "it": "i18n (@iobroker/adapter-dev) implementato\nutilizzando adattatore.set Timeout invece del set standard Tempo",
+        "es": "i18n (@iobroker/adapter-dev) implementado\nusando adaptador.set Tiempo en lugar de conjunto estándar Timeout",
+        "pl": "i18n (@iobroker/adapter-dev) (ang.)\nzastosowanie adapter.set Czas zamiast standardowego zestawu Timeout",
+        "uk": "javascript licenses api веб-сайт go1.13.8\nза допомогою адаптера.set Перебування замість стандартного набору Розклад",
+        "zh-cn": "i18n (oiobroker/adapter-dev)\n利用适应者。 时间而非标准规定 时限"
+      },
+      "0.0.5": {
+        "en": "Test release script",
+        "de": "Testversion Skript",
+        "ru": "Тест-релиз скрипт",
+        "pt": "Script de liberação de teste",
+        "nl": "Test release",
+        "fr": "Test release script",
+        "it": "Script di rilascio test",
+        "es": "Script de prueba",
+        "pl": "Testy",
+        "uk": "Статус на сервери",
+        "zh-cn": "试验性释放说明"
+      },
+      "0.0.4": {
+        "en": "Translations and improvements",
+        "de": "Übersetzungen und Verbesserungen",
+        "ru": "Переводы и исправления",
+        "pt": "Traduções e correções",
+        "nl": "Vertaling:",
+        "fr": "Traductions et corrections",
+        "it": "Traduzioni e correzioni",
+        "es": "Traducciones y correcciones",
+        "pl": "Tłumaczenie i naprawa",
+        "uk": "Переклади та виправлення",
+        "zh-cn": "笔译和固定"
+      },
+      "0.0.3-alpha": {
+        "en": "Update",
+        "de": "Aktualisierung",
+        "ru": "Обновление",
+        "pt": "Atualização",
+        "nl": "Update",
+        "fr": "Mise à jour",
+        "it": "Aggiornamento",
+        "es": "Actualización",
+        "pl": "Update",
+        "uk": "Новини",
+        "zh-cn": "最新资料"
+      },
+      "0.0.2-alpha": {
+        "en": "Update",
+        "de": "Aktualisierung",
+        "ru": "Обновление",
+        "pt": "Atualização",
+        "nl": "Update",
+        "fr": "Mise à jour",
+        "it": "Aggiornamento",
+        "es": "Actualización",
+        "pl": "Update",
+        "uk": "Новини",
+        "zh-cn": "最新资料"
+      },
+      "0.0.1-alpha": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "uk": "initial release",
+        "zh-cn": "首次出版"
+      }
     },
-    "native": {
-        "tableDevices": [],
-        "restUseHttps": false,
-        "restInterval": 60,
-        "restTimeout": 2000,
-        "restUpdateUnchangedObjects": false,
-        "mqttUser": "",
-        "mqttPassword": "",
-        "mqttPort": 3000,
-        "mqttPublishedInfoDelay": 30,
-        "mqttDoNotVerifyUserPw": false,
-        "mqttUpdateUnchangedObjects": false,
-        "mqttConnErrorsAsInfo": true
+    "titleLang": {
+      "en": "Fully Kiosk Browser (MQTT)",
+      "de": "Fully Kiosk Browser (MQTT)",
+      "ru": "Fully Kiosk Browser (MQTT)",
+      "pt": "Fully Kiosk Browser (MQTT)",
+      "nl": "Fully Kiosk Browser (MQTT)",
+      "fr": "Fully Kiosk Browser (MQTT)",
+      "it": "Fully Kiosk Browser (MQTT)",
+      "es": "Fully Kiosk Browser (MQTT)",
+      "pl": "Fully Kiosk Browser (MQTT)",
+      "uk": "Fully Kiosk Browser (MQTT)",
+      "zh-cn": "Fully Kiosk Browser (MQTT)"
     },
-    "encryptedNative": [
-        "mqttPassword"
+    "desc": {
+      "en": "Control Fully Kiosk Browser",
+      "de": "Fully Browser steuern",
+      "ru": "Полный контроль браузера киоска",
+      "pt": "Controle totalmente o navegador de quiosque",
+      "nl": "Controle Volledig Kiosk Browser",
+      "fr": "Contrôlez entièrement le navigateur Kiosk",
+      "it": "Controlla completamente il browser Kiosk",
+      "es": "Navegador de quiosco de control completo",
+      "pl": "Kontroluj w pełni przeglądarkę kiosku",
+      "uk": "Control Fully Kiosk Browser",
+      "zh-cn": "完全控制 Kiosk 浏览器"
+    },
+    "authors": [
+      "Acgua <no@mail.com>"
     ],
-    "protectedNative": [
-        "mqttPassword"
+    "keywords": [
+      "fully",
+      "kiosk",
+      "browser",
+      "tablet",
+      "mqtt"
     ],
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "Device or service connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
+    "license": "Apache-2.0",
+    "platform": "Javascript/Node.js",
+    "main": "build/main.js",
+    "icon": "fully-mqtt.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/Acgua/ioBroker.fully-mqtt/main/admin/fully-mqtt.png",
+    "readme": "https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "multimedia",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "poll",
+    "adminUI": {
+      "config": "json"
+    },
+    "docs": {
+      "en": [
+        "docs/en/README.md"
+      ]
+    },
+    "globalDependencies": [
+      {
+        "admin": ">=6.0.0"
+      }
+    ],
+    "dependencies": [
+      {
+        "js-controller": ">=4.0.15"
+      }
     ]
+  },
+  "native": {
+    "tableDevices": [],
+    "restUseHttps": false,
+    "restInterval": 60,
+    "restTimeout": 2000,
+    "restUpdateUnchangedObjects": false,
+    "mqttUser": "",
+    "mqttPassword": "",
+    "mqttPort": 3000,
+    "mqttPublishedInfoDelay": 30,
+    "mqttDoNotVerifyUserPw": false,
+    "mqttUpdateUnchangedObjects": false,
+    "mqttConnErrorsAsInfo": true
+  },
+  "encryptedNative": [
+    "mqttPassword"
+  ],
+  "protectedNative": [
+    "mqttPassword"
+  ],
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }
