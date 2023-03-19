@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fully-mqtt",
-        "version": "0.0.5",
+        "version": "0.0.6",
         "news": {
+            "0.0.6": {
+                "en": "i18n (@iobroker/adapter-dev) implemented\nusing adapter.setTimeout instead of standard setTimeout",
+                "de": "i18n (@iobroker/adapter-dev) implementiert\nmit Adapter.set Timeout statt Standard-Set Zeit",
+                "ru": "i18n (@iobroker/adapter-dev) реализован\nс помощью Adapter.set Timeout вместо стандартного набора Тайм-аут",
+                "pt": "i18n (@iobroker/adapter-dev) implementado\nusando o adaptador.set Timeout em vez de conjunto padrão Timeout",
+                "nl": "i18n (@iobroker/adapter-dev)\nmet gebruik van adapter. Time-out in plaats van standaard set Time-out",
+                "fr": "i18n (@iobroker/adapter-dev) mis en œuvre\navec adaptateur.set Timeout au lieu de série Timeout",
+                "it": "i18n (@iobroker/adapter-dev) implementato\nutilizzando adattatore.set Timeout invece del set standard Tempo",
+                "es": "i18n (@iobroker/adapter-dev) implementado\nusando adaptador.set Tiempo en lugar de conjunto estándar Timeout",
+                "pl": "i18n (@iobroker/adapter-dev) (ang.)\nzastosowanie adapter.set Czas zamiast standardowego zestawu Timeout",
+                "uk": "javascript licenses api веб-сайт go1.13.8\nза допомогою адаптера.set Перебування замість стандартного набору Розклад",
+                "zh-cn": "i18n (oiobroker/adapter-dev)\n利用适应者。 时间而非标准规定 时限"
+            },
             "0.0.5": {
                 "en": "Test release script",
                 "de": "Testversion Skript",

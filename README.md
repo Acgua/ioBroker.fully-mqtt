@@ -43,7 +43,7 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
     ### **WORK IN PROGRESS**
 -->
 
-### **WORK IN PROGRESS**
+### 0.0.6 (2023-03-19)
 
 -   (Acgua) i18n (@iobroker/adapter-dev) implemented
 -   (Acgua) using adapter.setTimeout instead of standard setTimeout
