@@ -24,11 +24,23 @@
                         "marginTop": 0
                     }
                 },
-                "_documentationLink": {
+                "_documentationLinkGerman": {
                     "type": "staticLink",
-                    "label": "Fully MQTT Adapter Documentation",
+                    "label": "🇩🇪 Deutsche Dokumentation",
                     "button": true,
-                    "icon": "info",
+                    "href": "https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/docs/de/README.md",
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 2,
+                    "style": {
+                        "fontSize": 16,
+                        "marginTop": 0
+                    }
+                },
+                "_documentationLinkEnglish": {
+                    "type": "staticLink",
+                    "label": "🇬🇧 English Documentation",
+                    "button": true,
                     "href": "https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/docs/en/README.md",
                     "sm": 12,
                     "md": 12,
@@ -61,6 +73,13 @@
                     "md": 12,
                     "lg": 12,
                     "items": [
+                        {
+                            "type": "checkbox",
+                            "attr": "Enabled",
+                            "width": "30px",
+                            "title": "",
+                            "default": true
+                        },
                         {
                             "type": "text",
                             "title": "Device Name",
@@ -124,13 +143,6 @@
                             "attr": "useMQTT",
                             "width": "50px",
                             "title": "MQTT",
-                            "default": true
-                        },
-                        {
-                            "type": "checkbox",
-                            "attr": "Enabled",
-                            "width": "50px",
-                            "title": "Enabled",
                             "default": true
                         }
                     ]

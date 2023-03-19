@@ -320,10 +320,10 @@ export class FullyMqtt extends utils.Adapter {
                         // Successful (no error)
                         // Set states
                         await this.setInfoStates('REST', infoObj, ip);
-                        // Call this function again since we are in callback of timeout
                     } else {
                         // error, was handled before in calling function
                     }
+                    // Call this function again since we are in callback of timeout
                     this.scheduleRestApiRequestInfo(ip);
                 } catch (e) {
                     this.log.error(this.err2Str(e));

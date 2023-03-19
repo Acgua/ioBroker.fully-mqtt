@@ -1,4 +1,4 @@
-![Logo](admin/fully-mqtt.png)
+![Logo](admin/fully-mqtt_500.png)
 
 # ioBroker.fully-mqtt
 
@@ -25,7 +25,8 @@ Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser),
 
 ## Documentation
 
-* [Documentation](./docs/en/README.md)
+* [🇬🇧 English Documentation](./docs/en/README.md)
+* [🇩🇪 Deutsche Dokumentation](./docs/de/README.md)
 
 ## ioBroker Forum Thread
 
