@@ -71,6 +71,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    # Write permissions are required to create Github releases - https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128
+    permissions:
+      contents: write
+
     steps:
       - uses: ioBroker/testing-action-deploy@v1
         with:

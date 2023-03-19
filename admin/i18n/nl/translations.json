@@ -15,6 +15,7 @@
     "Logs client and connection errors as 'info' and not as 'error'": "Registreert client- en verbindingsfouten als 'info' en niet als 'fout'",
     "MQTT Configuration": "MQTT-configuratie",
     "MQTT Password": "MQTT-wachtwoord",
+    "Main Settings": "Belangrijkste instellingen",
     "Password": "Wachtwoord",
     "Port is always required, but you can leave user name and password empty. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)": "Poort is altijd vereist, maar u kunt de gebruikersnaam en het wachtwoord leeg laten. Volledig browser-app: Instellingen -> Andere instellingen -> MQTT-integratie (PLUS)",
     "Protocol": "Protocol",

@@ -15,6 +15,7 @@
     "Logs client and connection errors as 'info' and not as 'error'": "Registra erros de cliente e conexão como 'informações' e não como 'erro'",
     "MQTT Configuration": "Configuração MQTT",
     "MQTT Password": "Senha do MQTT",
+    "Main Settings": "Configurações principais",
     "Password": "Senha",
     "Port is always required, but you can leave user name and password empty. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)": "A porta é sempre necessária, mas você pode deixar o nome de usuário e a senha em branco. Aplicativo totalmente do navegador: Configurações -> Outras configurações -> Integração MQTT (PLUS)",
     "Protocol": "Protocolo",

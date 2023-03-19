@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fully-mqtt",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "news": {
+      "0.0.8": {
+        "en": "Github Workflow Deploy - try to fix GitHub release failed with status: 403 undefined ([Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128))",
+        "de": "Github Workflow Deploy - versuchen, GitHub-Release mit dem Status zu beheben: 403 undefiniert [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+        "ru": "Github Workflow Deploy - попробуйте исправить GitHub релиз не удалось со статусом: 403 undefined [Ссылка](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+        "pt": "Github Workflow Deploy - tentar corrigir a versão GitHub falhou com o status: 403 indefinido [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+        "nl": "Github Workflow Deploy - proberen GitHub vrijlating te repareren gefaald met status: 403 onbepaalde [Link ) [Ghtub /com/ / 12-g-g-g-g-g-g-g-g-g-b-b-b-b-b-b-b-b-b-b-b-b-b-b-b-b-b-p-p- /12-b",
+        "fr": "Github Workflow Deploy - essayer de réparer GitHub release failed with status: 403 undefined [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+        "it": "Github Workflow Deploy - cercare di risolvere GitHub rilascio fallito con stato: 403 non definito [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+        "es": "Github Workflow Deploy - try to fix GitHub release failed with status: 403 un defined [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+        "pl": "Github Workflow Deploy – próba naprawy GitHub nie powiodła się ze statusem: 403 niedefiniowane Link(https:/github.com/softprops/action-gh-release/issues/236#comment-11500128",
+        "uk": "Github Workflow Deploy - спробувати виправити реліз GitHub не вдалося з статусом: 403 undefined [Link](https://github.com/softprops/action-gh-release/issues/236#productcomment-1150530128)",
+        "zh-cn": "Gthub工作流程Deploy——试图确定GitHub的释放没有地位:403个未界定的[Link](http://github.com/softs/action-gh-release/issues/236#issuecomment-1150530128)"
+      },
       "0.0.7": {
         "en": "Test-only of release etc.",
         "de": "Test-only of release etc.",
@@ -80,19 +93,6 @@
         "pl": "Update",
         "uk": "Новини",
         "zh-cn": "最新资料"
-      },
-      "0.0.1-alpha": {
-        "en": "initial release",
-        "de": "Erstveröffentlichung",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "uk": "initial release",
-        "zh-cn": "首次出版"
       }
     },
     "titleLang": {

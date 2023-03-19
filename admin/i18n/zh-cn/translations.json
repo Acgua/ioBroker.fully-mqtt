@@ -15,6 +15,7 @@
     "Logs client and connection errors as 'info' and not as 'error'": "将客户端和连接错误记录为“信息”而不是“错误”",
     "MQTT Configuration": "MQTT 配置",
     "MQTT Password": "MQTT密码",
+    "Main Settings": "主要设置",
     "Password": "密码",
     "Port is always required, but you can leave user name and password empty. Fully Browser App: Settings -> Other Settings -> MQTT Integration (PLUS)": "端口始终是必需的，但您可以将用户名和密码留空。完全浏览器应用程序：设置 -> 其他设置 -> MQTT 集成 (PLUS)",
     "Protocol": "协议书",
