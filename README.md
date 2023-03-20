@@ -43,6 +43,10 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+-   (Acgua) English adapter documentation added.
+
 ### 0.0.8 (2023-03-19)
 
 -   (Acgua) Github Workflow Deploy - try to fix GitHub release failed with status: 403 undefined ([Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128))
