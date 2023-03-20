@@ -32,6 +32,13 @@ Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser),
 
 * [TEST - Adapter Fully Browser mit MQTT](https://forum.iobroker.net/topic/63705/)
 
+## To Do and/or In Progress
+* To Do: Delete device objects once deleted in adapter options
+* To Do: Add option to delete device objects if device is deactivated
+* In Progress: Add Adapter to Latest Repository for beta testing (requested, [PR #2184](https://github.com/ioBroker/ioBroker.repositories/pull/2184))
+* In Progress: Add Adapter to Weblate (requested, [#108](https://github.com/ioBrokerTranslator/requests/issues/108))
+* In Progress: Add [Sentry](https://github.com/ioBroker/plugin-sentry) (requested, [#213](https://github.com/ioBroker/plugin-sentry/issues/213))
+
 ## Credits
 
 Many thanks to @arteck (https://github.com/arteck) for [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser). While I planned to just extend to use the existing adapter for an MQTT enhancement, I finally decided to write a new adapter in TypeScript and include latest ioBroker development features, as I anyway would have had to rewrite approx. 70-80% of the code for the MQTT integration.
