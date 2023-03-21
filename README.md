@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/LICENSE)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fully-mqtt.svg)](https://www.npmjs.com/package/iobroker.fully-mqtt)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Acgua/ioBroker.fully-mqtt)
+[![Translation status](https://weblate.iobroker.net/widgets/adapters/-/fully-mqtt/svg-badge.svg)](https://weblate.iobroker.net/engage/adapters/?utm_source=widget)
 </br>![GitHub commit activity](https://img.shields.io/github/commit-activity/m/Acgua/ioBroker.fully-mqtt)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Acgua/ioBroker.fully-mqtt)
 ![GitHub issues](https://img.shields.io/github/issues/Acgua/ioBroker.fully-mqtt)
@@ -33,7 +34,7 @@ Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser),
 * [TEST - Adapter Fully Browser mit MQTT](https://forum.iobroker.net/topic/63705/)
 
 ## To Do and/or In Progress
-* To Do: Delete device objects once deleted in adapter options
+* To Do: Delete device objects once device is deleted in adapter options
 * To Do: Add option to delete device objects if device is deactivated
 * In Progress: Add Adapter to Latest Repository for beta testing (requested, [PR #2184](https://github.com/ioBroker/ioBroker.repositories/pull/2184))
 * In Progress: Add Adapter to Weblate (requested, [#108](https://github.com/ioBrokerTranslator/requests/issues/108))
@@ -41,7 +42,7 @@ Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser),
 
 ## Credits
 
-Many thanks to @arteck (https://github.com/arteck) for [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser). While I planned to just extend to use the existing adapter for an MQTT enhancement, I finally decided to write a new adapter in TypeScript and include latest ioBroker development features, as I anyway would have had to rewrite approx. 70-80% of the code for the MQTT integration.
+Many thanks to @arteck (https://github.com/arteck) for [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser). While I planned to extend his adapter to include MQTT, I finally decided to write a new adapter in TypeScript and include latest ioBroker development features, as I anyway would have had to rewrite approx. 70-80% of the code for the MQTT integration.
 Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I would love to merge this Fully MQTT adapter into [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser) to just have one single adapter for the ioBroker community.
 
 ## Changelog
