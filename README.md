@@ -29,15 +29,14 @@ Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser),
 * [🇬🇧 English Documentation](./docs/en/README.md)
 * [🇩🇪 Deutsche Dokumentation](./docs/de/README.md)
 
-## ioBroker Forum Thread
+## Discussion and Questions
 
-* [TEST - Adapter Fully Browser mit MQTT](https://forum.iobroker.net/topic/63705/)
+* [ioBroker Forum](https://forum.iobroker.net/topic/63705/)
 
 ## To Do and/or In Progress
 * To Do: Delete device objects once device is deleted in adapter options
 * To Do: Add option to delete device objects if device is deactivated
 * In Progress: Add Adapter to Latest Repository for beta testing (requested, [PR #2184](https://github.com/ioBroker/ioBroker.repositories/pull/2184))
-* In Progress: Add Adapter to Weblate (requested, [#108](https://github.com/ioBrokerTranslator/requests/issues/108))
 * In Progress: Add [Sentry](https://github.com/ioBroker/plugin-sentry) (requested, [#213](https://github.com/ioBroker/plugin-sentry/issues/213))
 
 ## Credits
@@ -54,6 +53,7 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 ### **WORK IN PROGRESS**
 
 -   (Acgua) English adapter documentation added.
+-   (Acgua) Adapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))
 
 ### 0.0.8 (2023-03-19)
 
