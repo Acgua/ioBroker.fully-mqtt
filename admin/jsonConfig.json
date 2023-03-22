@@ -75,7 +75,7 @@
                     "items": [
                         {
                             "type": "checkbox",
-                            "attr": "Enabled",
+                            "attr": "enabled",
                             "width": "30px",
                             "title": "",
                             "default": true

@@ -34,8 +34,6 @@ Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser),
 * [ioBroker Forum](https://forum.iobroker.net/topic/63705/)
 
 ## To Do and/or In Progress
-* To Do: Delete device objects once device is deleted in adapter options
-* To Do: Add option to delete device objects if device is deactivated
 * In Progress: Add Adapter to Latest Repository for beta testing (requested, [PR #2184](https://github.com/ioBroker/ioBroker.repositories/pull/2184))
 * In Progress: Add [Sentry](https://github.com/ioBroker/plugin-sentry) (requested, [#213](https://github.com/ioBroker/plugin-sentry/issues/213))
 
@@ -52,8 +50,11 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 -->
 ### **WORK IN PROGRESS**
 
+-   (Acgua) **Breaking Change** If you update from a previous version: In Adapter config, device table: disable and enable your all of your devices, and save options afterwards.
+-   (Acgua) Bug fix: enabled devices in config were skipped
 -   (Acgua) English adapter documentation added.
 -   (Acgua) Adapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))
+-   (Acgua) Verified that device objects are removed when device was deleted or renamed in config
 
 ### 0.0.8 (2023-03-19)
 

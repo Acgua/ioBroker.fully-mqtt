@@ -50,7 +50,7 @@ export class FullyMqtt extends utils.Adapter {
     // array of device ids, which are not activated
     public disabledDeviceIds = [] as string[];
     // All active IP addresses
-    public activeDeviceIPs = [] as string[];
+    public activeDeviceIPs = [] as string[]; // for MQTT server to verify IP
 
     // Has onAliveChange() ever been called before?
     private onAliveChange_EverBeenCalledBefore = false;
@@ -61,17 +61,17 @@ export class FullyMqtt extends utils.Adapter {
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({ ...options, name: 'fully-mqtt' });
 
-        this.on('ready', this.iob_onReady.bind(this));
-        this.on('stateChange', this.iob_onStateChange.bind(this));
+        this.on('ready', this.onReady.bind(this));
+        this.on('stateChange', this.onStateChange.bind(this));
         // this.on('objectChange', this.onObjectChange.bind(this));
         // this.on('message', this.onMessage.bind(this));
-        this.on('unload', this.iob_onUnload.bind(this));
+        this.on('unload', this.onUnload.bind(this));
     }
 
     /**
      * Is called when databases are connected and adapter received configuration.
      */
-    private async iob_onReady(): Promise<void> {
+    private async onReady(): Promise<void> {
         try {
             /**
              * Set the connection indicator to false during startup
@@ -104,38 +104,9 @@ export class FullyMqtt extends utils.Adapter {
             }
 
             /**
-             * Remove device objects if device was renamed
+             * Delete device object tree(s) if deleted or renamed in config
              */
-            // Get string array of all adapter objects: ['fully-mqtt.0.info', 'fully-mqtt.0.info.connection', ...];
-            const paths = Object.keys(await this.getAdapterObjectsAsync());
-
-            // Ignore fully-mqtt.0.info tree (which includes fully-mqtt.0.info.connection, ...)
-            const idBlacklist = ['info'];
-
-            // Get fully device ids of 'fully-mqtt.0.Kitchen' etc., like ['Kitchen', 'Tablet-Bathroom', ...]
-            const allDeviceIds: Array<string> = [];
-            for (const path of paths) {
-                const pathSplit = path.split('.');
-                if (idBlacklist.includes(pathSplit[2])) {
-                    //this.log.debug(`Ignore ${path} since it should not be removed!`);
-                } else {
-                    const id = pathSplit[2]; // e.g. 'Kitchen'
-                    if (!allDeviceIds.includes(id)) allDeviceIds.push(id);
-                }
-            }
-            // process all device ids
-            for (const id of allDeviceIds) {
-                // We consider both enabled and disabled devices and only remove states if device row was deleted in config
-                const enabledAndDisabled = this.disabledDeviceIds;
-                for (const ip in this.fullys) {
-                    enabledAndDisabled.push(this.fullys[ip].id);
-                }
-
-                if (!enabledAndDisabled.includes(id)) {
-                    await this.delObjectAsync(id, { recursive: true });
-                    this.log.info(`Cleanup: Deleted no longer defined objects of '${id}'.`);
-                }
-            }
+            this.deleteRemovedDeviceObjects();
         } catch (e) {
             this.log.error(this.err2Str(e));
             return;
@@ -266,6 +237,47 @@ export class FullyMqtt extends utils.Adapter {
     }
 
     /**
+     * Delete device objects if device was (a) renamed or (b) deleted from devices table in adapter settings.
+     * However, do not delete if it was just set inactive in table.
+     */
+    private async deleteRemovedDeviceObjects(): Promise<void> {
+        try {
+            // Get string array of all adapter objects: ['fully-mqtt.0.info', 'fully-mqtt.0.info.connection', ...];
+            const adapterObjectsIds: string[] = Object.keys(await this.getAdapterObjectsAsync());
+
+            // Get all existing fully device ids of iobroker adapter objects in array: 'fully-mqtt.0.Tablet-Kitchen' -> 'Tablet-Kitchen', 'fully-mqtt.0.Tablet-Hallway' -> 'Tablet-Hallway', etc.
+            const allObjectDeviceIds: Array<string> = [];
+            for (const objectId of adapterObjectsIds) {
+                const deviceId = objectId.split('.')[2]; // e.g. 'Tablet-Kitchen'
+                // Ignore fully-mqtt.0.info tree (which includes fully-mqtt.0.info.connection, ...). Add more to ignore as needed in the future...
+                if (['info'].includes(deviceId)) {
+                    this.log.silly(`Cleanup: Ignore non device related state ${objectId}.`);
+                } else {
+                    if (!allObjectDeviceIds.includes(deviceId)) allObjectDeviceIds.push(deviceId);
+                }
+            }
+
+            // process all adapter object devices ['Tablet-Kitchen', 'Tablet-Hallway', ...] accordingly
+            for (const id of allObjectDeviceIds) {
+                // We handle both disabled devices and enabled devices
+                const allConfigDeviceIds = this.disabledDeviceIds; // add all disabled ids first
+                // now add all active ones
+                for (const ip in this.fullys) {
+                    allConfigDeviceIds.push(this.fullys[ip].id);
+                }
+
+                if (!allConfigDeviceIds.includes(id)) {
+                    await this.delObjectAsync(id, { recursive: true });
+                    this.log.info(`Cleanup: Deleted no longer defined device objects of '${id}'.`);
+                }
+            }
+        } catch (e) {
+            this.log.error(this.err2Str(e));
+            return;
+        }
+    }
+
+    /**
      * Update Info States - MQTT or REST API
      * @param ip IP Address
      * @returns void
@@ -373,6 +385,7 @@ export class FullyMqtt extends utils.Adapter {
                 return false;
             }
             const deviceIds: string[] = []; // to check for duplicate device ids
+            const deviceIPs: string[] = []; // to check for duplicate device IPs
             for (let i = 0; i < this.config.tableDevices.length; i++) {
                 const lpDevice = this.config.tableDevices[i];
                 const finalDevice: IDevice = {
@@ -431,13 +444,15 @@ export class FullyMqtt extends utils.Adapter {
                 if (!this.isIpAddressValid(lpDevice.ip)) {
                     this.log.error(`${finalDevice.name}: Provided IP address "${lpDevice.ip}" is not valid!`);
                     return false;
-                } else {
-                    finalDevice.ip = lpDevice.ip;
-                    // global array for all active IPs
-                    if (lpDevice.isActive) {
-                        this.activeDeviceIPs.push(lpDevice.ip);
-                    }
                 }
+                if (deviceIPs.includes(lpDevice.ip)) {
+                    this.log.error(`Device "${finalDevice.name}" -> IP:"${lpDevice.ip}" is used for more than once device.`);
+                    return false;
+                } else {
+                    deviceIPs.push(lpDevice.ip);
+                    finalDevice.ip = lpDevice.ip;
+                }
+
                 // REST Port
                 if (isNaN(lpDevice.restPort) || lpDevice.restPort < 0 || lpDevice.restPort > 65535) {
                     this.log.error(`Adapter config Fully port number ${lpDevice.restPort} is not valid, should be >= 0 and < 65536.`);
@@ -454,9 +469,7 @@ export class FullyMqtt extends utils.Adapter {
                 }
 
                 this.log.debug(`Final Config: ${JSON.stringify(finalDevice)}`);
-                if (lpDevice.isActive) {
-                    // Is Active
-
+                if (lpDevice.enabled) {
                     // if MQTT is activated, set variable to true
                     if (lpDevice.useMQTT) {
                         this.mqtt_useMqtt = true;
@@ -466,17 +479,19 @@ export class FullyMqtt extends utils.Adapter {
                     }
 
                     // Finalize
+
                     this.fullys[finalDevice.ip] = finalDevice;
+                    this.activeDeviceIPs.push(lpDevice.ip); // global array for all active IPs
                     this.log.info(`🗸 ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);
                 } else {
-                    // Skip if not active. (but we did verification anyway!)
+                    // Skip if not enabled. (but we did verification anyway!)
                     this.disabledDeviceIds.push(finalDevice.id);
                     this.log.debug(`Device ${finalDevice.name} (${finalDevice.ip}) is not enabled, so skip it.`);
                     continue;
                 }
             }
 
-            if (this.activeDeviceIPs.length == 0) {
+            if (Object.keys(this.fullys).length === 0) {
                 this.log.error(`No active devices with correct configuration found.`);
                 return false;
             }
@@ -617,11 +632,12 @@ export class FullyMqtt extends utils.Adapter {
     }
 
     /**
-     * Called once a subscribed state changes. Initialized by Class constructor.
+     * Called once a subscribed state changes.
+     * Ready once subscribeStatesAsync() is called...
      * @param id - e.g. "fully-mqtt.0.Tablet-Bathroom.Commands.screenSwitch"
      * @param stateObj - e.g. { val: true, ack: false, ts: 123456789, q: 0, lc: 123456789 }
      */
-    private async iob_onStateChange(stateId: string, stateObj: ioBroker.State | null | undefined): Promise<void> {
+    private async onStateChange(stateId: string, stateObj: ioBroker.State | null | undefined): Promise<void> {
         try {
             if (!stateObj) return; // state was deleted, we disregard...
             if (stateObj.ack) return; // ignore ack:true
@@ -754,7 +770,7 @@ export class FullyMqtt extends utils.Adapter {
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      */
-    private iob_onUnload(callback: () => void): void {
+    private onUnload(callback: () => void): void {
         try {
             if (this.fullys) {
                 for (const ip in this.fullys) {

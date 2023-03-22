@@ -55,11 +55,11 @@ class FullyMqtt extends utils.Adapter {
     this.disabledDeviceIds = [];
     this.activeDeviceIPs = [];
     this.onAliveChange_EverBeenCalledBefore = false;
-    this.on("ready", this.iob_onReady.bind(this));
-    this.on("stateChange", this.iob_onStateChange.bind(this));
-    this.on("unload", this.iob_onUnload.bind(this));
+    this.on("ready", this.onReady.bind(this));
+    this.on("stateChange", this.onStateChange.bind(this));
+    this.on("unload", this.onUnload.bind(this));
   }
-  async iob_onReady() {
+  async onReady() {
     try {
       this.setState("info.connection", { val: false, ack: true });
       if (await this.initConfig()) {
@@ -75,28 +75,7 @@ class FullyMqtt extends utils.Adapter {
       for (const ip in this.fullys) {
         await this.main(this.fullys[ip]);
       }
-      const paths = Object.keys(await this.getAdapterObjectsAsync());
-      const idBlacklist = ["info"];
-      const allDeviceIds = [];
-      for (const path of paths) {
-        const pathSplit = path.split(".");
-        if (idBlacklist.includes(pathSplit[2])) {
-        } else {
-          const id = pathSplit[2];
-          if (!allDeviceIds.includes(id))
-            allDeviceIds.push(id);
-        }
-      }
-      for (const id of allDeviceIds) {
-        const enabledAndDisabled = this.disabledDeviceIds;
-        for (const ip in this.fullys) {
-          enabledAndDisabled.push(this.fullys[ip].id);
-        }
-        if (!enabledAndDisabled.includes(id)) {
-          await this.delObjectAsync(id, { recursive: true });
-          this.log.info(`Cleanup: Deleted no longer defined objects of '${id}'.`);
-        }
-      }
+      this.deleteRemovedDeviceObjects();
     } catch (e) {
       this.log.error(this.err2Str(e));
       return;
@@ -190,6 +169,34 @@ class FullyMqtt extends utils.Adapter {
       return;
     }
   }
+  async deleteRemovedDeviceObjects() {
+    try {
+      const adapterObjectsIds = Object.keys(await this.getAdapterObjectsAsync());
+      const allObjectDeviceIds = [];
+      for (const objectId of adapterObjectsIds) {
+        const deviceId = objectId.split(".")[2];
+        if (["info"].includes(deviceId)) {
+          this.log.silly(`Cleanup: Ignore non device related state ${objectId}.`);
+        } else {
+          if (!allObjectDeviceIds.includes(deviceId))
+            allObjectDeviceIds.push(deviceId);
+        }
+      }
+      for (const id of allObjectDeviceIds) {
+        const allConfigDeviceIds = this.disabledDeviceIds;
+        for (const ip in this.fullys) {
+          allConfigDeviceIds.push(this.fullys[ip].id);
+        }
+        if (!allConfigDeviceIds.includes(id)) {
+          await this.delObjectAsync(id, { recursive: true });
+          this.log.info(`Cleanup: Deleted no longer defined device objects of '${id}'.`);
+        }
+      }
+    } catch (e) {
+      this.log.error(this.err2Str(e));
+      return;
+    }
+  }
   async setInfoStates(source, infoObj, ip) {
     try {
       for (const key in infoObj) {
@@ -272,6 +279,7 @@ class FullyMqtt extends utils.Adapter {
         return false;
       }
       const deviceIds = [];
+      const deviceIPs = [];
       for (let i = 0; i < this.config.tableDevices.length; i++) {
         const lpDevice = this.config.tableDevices[i];
         const finalDevice = {
@@ -320,11 +328,13 @@ class FullyMqtt extends utils.Adapter {
         if (!this.isIpAddressValid(lpDevice.ip)) {
           this.log.error(`${finalDevice.name}: Provided IP address "${lpDevice.ip}" is not valid!`);
           return false;
+        }
+        if (deviceIPs.includes(lpDevice.ip)) {
+          this.log.error(`Device "${finalDevice.name}" -> IP:"${lpDevice.ip}" is used for more than once device.`);
+          return false;
         } else {
+          deviceIPs.push(lpDevice.ip);
           finalDevice.ip = lpDevice.ip;
-          if (lpDevice.isActive) {
-            this.activeDeviceIPs.push(lpDevice.ip);
-          }
         }
         if (isNaN(lpDevice.restPort) || lpDevice.restPort < 0 || lpDevice.restPort > 65535) {
           this.log.error(`Adapter config Fully port number ${lpDevice.restPort} is not valid, should be >= 0 and < 65536.`);
@@ -339,7 +349,7 @@ class FullyMqtt extends utils.Adapter {
           finalDevice.restPassword = lpDevice.restPassword;
         }
         this.log.debug(`Final Config: ${JSON.stringify(finalDevice)}`);
-        if (lpDevice.isActive) {
+        if (lpDevice.enabled) {
           if (lpDevice.useMQTT) {
             this.mqtt_useMqtt = true;
             this.log.info(`${finalDevice.name} (${finalDevice.ip}) MQTT is activated in adapter instance settings.`);
@@ -347,6 +357,7 @@ class FullyMqtt extends utils.Adapter {
             this.log.info(`${finalDevice.name} (${finalDevice.ip}) MQTT is not activated in adapter instance settings.`);
           }
           this.fullys[finalDevice.ip] = finalDevice;
+          this.activeDeviceIPs.push(lpDevice.ip);
           this.log.info(`\u{1F5F8} ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);
         } else {
           this.disabledDeviceIds.push(finalDevice.id);
@@ -354,7 +365,7 @@ class FullyMqtt extends utils.Adapter {
           continue;
         }
       }
-      if (this.activeDeviceIPs.length == 0) {
+      if (Object.keys(this.fullys).length === 0) {
         this.log.error(`No active devices with correct configuration found.`);
         return false;
       }
@@ -444,7 +455,7 @@ class FullyMqtt extends utils.Adapter {
       return;
     }
   }
-  async iob_onStateChange(stateId, stateObj) {
+  async onStateChange(stateId, stateObj) {
     try {
       if (!stateObj)
         return;
@@ -532,7 +543,7 @@ class FullyMqtt extends utils.Adapter {
       return -1;
     }
   }
-  iob_onUnload(callback) {
+  onUnload(callback) {
     try {
       if (this.fullys) {
         for (const ip in this.fullys) {
