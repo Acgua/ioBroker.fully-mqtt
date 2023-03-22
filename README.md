@@ -56,8 +56,8 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 -   (Acgua) **Breaking Change** If you update from a previous version: In Adapter config, device table: disable and enable your all of your devices, and save options afterwards.
 -   (Acgua) Bug fix: enabled devices in config were skipped
 -   (Acgua) English adapter documentation added.
--   (Acgua) Adapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))
 -   (Acgua) Verified that device objects are removed when device was deleted or renamed in config
+-   (mcm1957) Adapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))
 
 ### 0.0.8 (2023-03-19)
 
