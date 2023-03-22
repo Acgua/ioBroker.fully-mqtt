@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fully-mqtt",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "news": {
+      "0.0.10": {
+        "en": "Do not show Remote Admin Password in debug log ([#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14))",
+        "de": "Nicht anzeigen Remote Admin Passwort in debug log [#14](https://github.com/Acgua/ioBroker.ful-mqt/issues/14)",
+        "ru": "Не показывать Remote Admin Password в журнале debug [#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14)",
+        "pt": "Não mostre Senha de Administrador Remoto no log de depuração [#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14)",
+        "nl": "Laat Remote Admin Pasword niet zien in debug log 14:",
+        "fr": "Ne pas afficher Remote Admin Password in debug log [#14](https://github.com/Acgua/ioBroker.fully-mqt/issues/14)",
+        "it": "Non mostrare la password di amministratore remoto nel registro di debug [#14](https://github.com/Acgua/ioBroker.fully-mqt/issues/14)",
+        "es": "No mostrar contraseña de administrador remoto en el registro de depuración [#14](https://github.com/Acgua/ioBroker.fully-mqt/issues/14)",
+        "pl": "Nie pokazuje Remote Admin Password w debug log #14(https:/github.com/Acgua/ioBroker.ful-mqtt/issues/14)",
+        "uk": "Не показувати пароль віддаленого адміністратора в журналі debug [#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14)",
+        "zh-cn": "不要在德布格逻辑(第14号)中展示遥感词(http://github.com/Acgua/ioBroker.ful-mqt/issues/14)。"
+      },
       "0.0.9": {
         "en": "**Breaking Change** If you update from a previous version: In Adapter config, device table: disable and enable your all of your devices, and save options afterwards.\nBug fix: enabled devices in config were skipped\nEnglish adapter documentation added.\nAdapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))\nVerified that device objects are removed when device was deleted or renamed in config",
         "de": "**Breaking Change** If you update from a previous version: In Adapter config, device table: disable and enable your all of your devices, and save options afterwards.\nBug fix: enabled devices in config were skipped\nEnglish adapter documentation added.\nAdapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))\nVerified that device objects are removed when device was deleted or renamed in config",
@@ -80,19 +93,6 @@
         "pl": "Tłumaczenie i naprawa",
         "uk": "Переклади та виправлення",
         "zh-cn": "笔译和固定"
-      },
-      "0.0.3-alpha": {
-        "en": "Update",
-        "de": "Aktualisierung",
-        "ru": "Обновление",
-        "pt": "Atualização",
-        "nl": "Update",
-        "fr": "Mise à jour",
-        "it": "Aggiornamento",
-        "es": "Actualización",
-        "pl": "Update",
-        "uk": "Новини",
-        "zh-cn": "最新资料"
       }
     },
     "titleLang": {
