@@ -110,8 +110,11 @@ export class RestApiFully {
         };
 
         try {
+            // Log
+            const urlWithoutPassword = finalUrl.replace(/password=.*&type/g, 'password=hidden&type'); // "
+            this.adapter.log.debug(`[REST] ${device.name}: Start ${what} ${what === 'sendCmd' ? '"' + cmd + '"' : ''}, URL: ${urlWithoutPassword}`);
+
             // Axios: Send command
-            this.adapter.log.debug(`[REST] ${device.name}: Start ${what} ${what === 'sendCmd' ? cmd : ''}, URL: ${finalUrl}`);
             const response = await axios.get(finalUrl, config);
 
             // Errors
@@ -130,6 +133,7 @@ export class RestApiFully {
                 this.adapter.log.error(`[REST] ${device.name}: ${what} ${what === 'sendCmd' ? cmd : ''} failed: Response received but it does not have key 'data'`);
                 return { status: false };
             }
+            this.adapter.log.debug(`[REST] ${what} response.data: ${JSON.stringify(response.data)}`);
 
             // Handle Device Info
             if (what === 'getInfo') {
@@ -145,7 +149,7 @@ export class RestApiFully {
 
             // Handle all other commands
             if (!('status' in response.data)) {
-                this.adapter.onAliveChange('REST', device.ip, true); // Update isAlive
+                this.adapter.onAliveChange('REST', device.ip, false); // Update isAlive
                 this.adapter.log.error(`[REST] ${device.name}: Sending ${what} failed: Response received but response.data does not have key 'status'`);
                 return { status: false };
             }
@@ -159,8 +163,9 @@ export class RestApiFully {
                     this.adapter.log.error(`[REST] ${device.name}: Error: Sending cmd ${what} failed: ${response.status} - ${response.statusText}`);
                     return { status: false };
                 default:
-                    this.adapter.onAliveChange('REST', device.ip, true); // Update isAlive
-                    this.adapter.log.error(`[REST] [REST] ${device.name}: Undefined response when sending cmd ${what}: ${response.status} - ${response.statusText}`);
+                    // unexpected
+                    this.adapter.onAliveChange('REST', device.ip, true); // Update isAlive - at this time alive=true
+                    this.adapter.log.error(`[REST] ${device.name}: Undefined response.data.status = "${response.data.status}" when sending cmd ${what}: ${response.status} - ${response.statusText}`);
                     return { status: false };
             }
         } catch (err) {
