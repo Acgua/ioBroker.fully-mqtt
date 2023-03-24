@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fully-mqtt",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "news": {
+      "0.0.11": {
+        "en": "Fix: Remote admin password issue\nImproved debug and error log when sending REST API commands",
+        "de": "Fix: Remote Admin Passwort Problem\nVerbesserte Debug- und Fehlerprotokolle beim Senden von REST API-Befehlen",
+        "ru": "Исправление: Удаленный пароль admin\nУлучшена отладка и ошибка лога при отправке команд REST API",
+        "pt": "Corrigir: Problema de senha de administrador remoto\nRegistro melhorado de depuração e erro ao enviar comandos de API REST",
+        "nl": "Verwijder het wachtwoord\nImproviseerde debug en fouten logboek als ze de API commando's sturen",
+        "fr": "Correction : Problème de mot de passe administrateur distant\nDébug amélioré et journal d'erreur lors de l'envoi de commandes API REST",
+        "it": "Risolvere il problema della password di amministratore remoto\nMigliorato il debug e il log degli errori quando si inviano i comandi REST API",
+        "es": "Corrección: Problema de contraseña de administración remota\nMejor depuración y registro de errores al enviar comandos REST API",
+        "pl": "Fix: Remote admin password\nImprowed debug and error log, gdy wysłano komendy API REST",
+        "uk": "Виправлення: Віддалене видалення пароля адміністратора\nУдосконалено дебат і журнал помилок при надсиланні команд API REST",
+        "zh-cn": "Fix:遥感密码问题\n在派遣区域采购计划指挥员时,改进了降解和错误的逻辑"
+      },
       "0.0.10": {
         "en": "Do not show Remote Admin Password in debug log ([#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14))",
         "de": "Nicht anzeigen Remote Admin Passwort in debug log [#14](https://github.com/Acgua/ioBroker.ful-mqt/issues/14)",
@@ -80,19 +93,6 @@
         "pl": "Testy",
         "uk": "Статус на сервери",
         "zh-cn": "试验性释放说明"
-      },
-      "0.0.4": {
-        "en": "Translations and improvements",
-        "de": "Übersetzungen und Verbesserungen",
-        "ru": "Переводы и исправления",
-        "pt": "Traduções e correções",
-        "nl": "Vertaling:",
-        "fr": "Traductions et corrections",
-        "it": "Traduzioni e correzioni",
-        "es": "Traducciones y correcciones",
-        "pl": "Tłumaczenie i naprawa",
-        "uk": "Переклади та виправлення",
-        "zh-cn": "笔译和固定"
       }
     },
     "titleLang": {
