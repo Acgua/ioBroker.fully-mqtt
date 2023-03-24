@@ -348,7 +348,7 @@ class FullyMqtt extends utils.Adapter {
         } else {
           finalDevice.restPassword = lpDevice.restPassword;
         }
-        const logConfig = finalDevice;
+        const logConfig = { ...finalDevice };
         logConfig.restPassword = "(hidden)";
         this.log.debug(`Final Config: ${JSON.stringify(logConfig)}`);
         if (lpDevice.enabled) {

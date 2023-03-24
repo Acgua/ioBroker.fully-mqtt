@@ -468,7 +468,7 @@ export class FullyMqtt extends utils.Adapter {
                     finalDevice.restPassword = lpDevice.restPassword;
                 }
 
-                const logConfig = finalDevice;
+                const logConfig = { ...finalDevice }; // copy object using spread
                 logConfig.restPassword = '(hidden)'; // do not show password in log !
                 this.log.debug(`Final Config: ${JSON.stringify(logConfig)}`);
                 if (lpDevice.enabled) {
