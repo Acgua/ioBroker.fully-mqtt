@@ -48,6 +48,11 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+-   (Acgua) Fix: Remote admin password issue
+-   (Acgua) Improved debug and error log when sending REST API commands
+
 ### 0.0.10 (2023-03-22)
 -   (Acgua) Do not show Remote Admin Password in debug log ([#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14))
 
