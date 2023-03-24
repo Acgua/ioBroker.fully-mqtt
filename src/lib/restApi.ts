@@ -161,7 +161,7 @@ export class RestApiFully {
                     return { status: true };
                 case 'Error':
                     if (response.data.statustext === 'Please login') {
-                        this.adapter.log.error(`[REST] ${device.name}: Error: Remote Admin Password seems to be incorrect. Sending cmd ${what} failed.`);
+                        this.adapter.log.error(`[REST] ${device.name}: Error: Remote Admin Password seems to be incorrect. Sending ${what} failed.`);
                     } else {
                         this.adapter.log.error(`[REST] ${device.name}: Error: Sending cmd ${what} failed, received status text: ${response.data.statustext}`);
                     }
