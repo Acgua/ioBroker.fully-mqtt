@@ -527,9 +527,9 @@ export class FullyMqtt extends utils.Adapter {
 
                 // log
                 if (isAlive) {
-                    this.log.info(`[${source}] ${this.fullys[ip].name} is alive (${msg})`);
+                    this.log.info(`${this.fullys[ip].name} is alive ([${source}] ${msg})`);
                 } else {
-                    this.log.warn(`[${source}] ${this.fullys[ip].name} is not alive! (${msg})`);
+                    this.log.warn(`${this.fullys[ip].name} is not alive! ([${source}] ${msg})`);
                 }
             } else {
                 // No change
