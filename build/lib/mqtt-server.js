@@ -40,8 +40,8 @@ class MqttServer {
   start() {
     try {
       this.port = this.adapter.config.mqttPort;
-      if (this.adapter.adapterDir === "C:/iobroker/DEV1/node_modules/ioBroker.fully-mqtt/.dev-server/default/node_modules/iobroker.fully-mqtt") {
-        this.port = 3012;
+      if (this.adapter.adapterDir.includes("/.dev-server/default/node_modules")) {
+        this.port = 3013;
         this.adapter.log.warn(`DEVELOPER: Port changed to ${this.port} as we are in DEV Environment! If you see this log message, please open an issue on Github.`);
       }
       this.server.listen(this.port, () => {
@@ -100,10 +100,9 @@ class MqttServer {
             this.devices[client.id] = {};
           const ip = this.devices[client.id].ip;
           const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${client.id} (IP unknown)`;
-          this.devices[client.id].lastSeen = Date.now();
           this.adapter.log.debug(`[MQTT] Client ${ipMsg} connected to broker ${this.aedes.id}`);
           this.adapter.log.info(`[MQTT]\u{1F517} Client ${ipMsg} successfully connected.`);
-          this.setIsAlive(client.id, true);
+          this.setIsAlive(client.id, true, "client connected");
           this.scheduleCheckIfStillActive(client.id);
         } catch (e) {
           this.adapter.log.error(this.adapter.err2Str(e));
@@ -114,8 +113,7 @@ class MqttServer {
         try {
           if (!client || !packet)
             return;
-          this.devices[client.id].lastSeen = Date.now();
-          this.setIsAlive(client.id, true);
+          this.setIsAlive(client.id, true, "client published message");
           if (!this.devices[client.id])
             this.devices[client.id] = {};
           if (packet.qos !== 1)
@@ -202,7 +200,7 @@ class MqttServer {
         } else {
           this.adapter.log.error(`[MQTT] Client ${logMsgName} disconnected.`);
         }
-        this.setIsAlive(client.id, false);
+        this.setIsAlive(client.id, false, "client disconnected");
       });
       this.aedes.on("clientError", (client, e) => {
         if (this.notAuthorizedClients.includes(client.id))
@@ -215,7 +213,7 @@ class MqttServer {
           this.adapter.log.error(`[MQTT]\u{1F525} ${logMsgName}: Client error - ${e.message}`);
         }
         this.adapter.log.debug(`[MQTT]\u{1F525} ${logMsgName}: Client error - stack: ${e.stack}`);
-        this.setIsAlive(client.id, false);
+        this.setIsAlive(client.id, false, "client error");
       });
       this.aedes.on("connectionError", (client, e) => {
         const ip = this.devices[client.id].ip;
@@ -226,7 +224,7 @@ class MqttServer {
           this.adapter.log.error(`[MQTT]\u{1F525} ${logMsgName}: Connection error - ${e.message}`);
         }
         this.adapter.log.debug(`[MQTT]\u{1F525} ${logMsgName}: Connection error - stack: ${e.stack}`);
-        this.setIsAlive(client.id, false);
+        this.setIsAlive(client.id, false, "connection error");
       });
       this.server.on("error", (e) => {
         if (e instanceof Error && e.message.startsWith("listen EADDRINUSE")) {
@@ -242,12 +240,14 @@ class MqttServer {
       return;
     }
   }
-  setIsAlive(clientId, isAlive) {
+  setIsAlive(clientId, isAlive, msg) {
     var _a;
+    if (isAlive)
+      this.devices[clientId].lastTimeActive = Date.now();
     this.devices[clientId].isActive = isAlive;
     const ip = (_a = this.devices[clientId]) == null ? void 0 : _a.ip;
     if (ip) {
-      this.adapter.onAliveChange("MQTT", ip, isAlive);
+      this.adapter.onAliveChange("MQTT", ip, isAlive, msg);
       if (isAlive) {
         this.scheduleCheckIfStillActive(clientId);
       } else {
@@ -260,6 +260,8 @@ class MqttServer {
   }
   async scheduleCheckIfStillActive(clientId) {
     try {
+      const ip = this.devices[clientId].ip;
+      const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${clientId} (IP unknown)`;
       if (this.devices[clientId].timeoutNoUpdate)
         this.adapter.clearTimeout(this.devices[clientId].timeoutNoUpdate);
       if (!this.devices[clientId])
@@ -267,14 +269,17 @@ class MqttServer {
       const interval = 70 * 1e3;
       this.devices[clientId].timeoutNoUpdate = this.adapter.setTimeout(async () => {
         try {
-          const lastSeen = this.devices[clientId].lastSeen;
-          if (!lastSeen)
+          const lastTimeActive = this.devices[clientId].lastTimeActive;
+          if (!lastTimeActive)
             return;
-          const diff = Date.now() - lastSeen;
+          const diff = Date.now() - lastTimeActive;
           if (diff > 7e4) {
-            this.setIsAlive(clientId, false);
+            this.adapter.log.debug(`[MQTT] ${ipMsg} NOT ALIVE - last contact ${Math.round(diff / 1e3)}s (${diff}ms) ago`);
+            this.setIsAlive(clientId, false, "client did not send message for more than 70 seconds");
           } else {
-            this.setIsAlive(clientId, true);
+            this.adapter.log.warn(`[MQTT] ${ipMsg} Please open a issue on Github, this should never happen: scheduleCheckIfStillActive() timeout, and last contact was less than 70s ago.`);
+            this.adapter.log.warn(`[MQTT] ${ipMsg} is alive - last contact ${Math.round(diff / 1e3)}s (${diff}ms) ago`);
+            this.setIsAlive(clientId, true, `alive check is successful (last contact: ${Math.round(diff / 1e3)}s ago)`);
           }
           this.scheduleCheckIfStillActive(clientId);
         } catch (e) {
@@ -292,7 +297,7 @@ class MqttServer {
     for (const clientId in this.devices) {
       if (this.devices[clientId].timeoutNoUpdate)
         this.adapter.clearTimeout(this.devices[clientId].timeoutNoUpdate);
-      this.setIsAlive(clientId, false);
+      this.setIsAlive(clientId, false, "MQTT server was terminated");
     }
     if (this.aedes) {
       this.aedes.close(() => {

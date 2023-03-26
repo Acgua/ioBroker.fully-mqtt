@@ -27,7 +27,7 @@ export interface ICmds {
 
 export interface IMqttDevice {
     ip?: string;
-    lastSeen?: number;
+    lastTimeActive?: number;
     mqttFirstReceived?: true | false;
     isActive?: true | false;
     timeoutNoUpdate?: ioBroker.Timeout | null;

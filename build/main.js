@@ -377,7 +377,7 @@ class FullyMqtt extends utils.Adapter {
       return false;
     }
   }
-  async onAliveChange(source, ip, isAlive) {
+  async onAliveChange(source, ip, isAlive, msg) {
     try {
       const prevIsAlive = this.fullys[ip].isAlive;
       this.fullys[ip].isAlive = isAlive;
@@ -386,9 +386,9 @@ class FullyMqtt extends utils.Adapter {
       if (!calledBefore && isAlive === true || prevIsAlive !== isAlive) {
         this.setState(this.fullys[ip].id + ".alive", { val: isAlive, ack: true });
         if (isAlive) {
-          this.log.info(`[${source}] ${this.fullys[ip].name} is alive.`);
+          this.log.info(`[${source}] ${this.fullys[ip].name} is alive (${msg})`);
         } else {
-          this.log.warn(`[${source}] ${this.fullys[ip].name} is not alive!`);
+          this.log.warn(`[${source}] ${this.fullys[ip].name} is not alive! (${msg})`);
         }
       } else {
       }

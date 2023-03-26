@@ -51,6 +51,7 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 
 ### **WORK IN PROGRESS**
 
+-   (Acgua) Logging improved
 -   (Acgua) Internal: test git branch
 
 ### 0.0.11 (2023-03-24)

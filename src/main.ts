@@ -508,7 +508,7 @@ export class FullyMqtt extends utils.Adapter {
      * On Alive Changes
      * for both REST API and MQTT
      */
-    public async onAliveChange(source: 'MQTT' | 'REST', ip: string, isAlive: true | false): Promise<void> {
+    public async onAliveChange(source: 'MQTT' | 'REST', ip: string, isAlive: true | false, msg: string): Promise<void> {
         try {
             const prevIsAlive = this.fullys[ip].isAlive;
             this.fullys[ip].isAlive = isAlive;
@@ -527,9 +527,9 @@ export class FullyMqtt extends utils.Adapter {
 
                 // log
                 if (isAlive) {
-                    this.log.info(`[${source}] ${this.fullys[ip].name} is alive.`);
+                    this.log.info(`[${source}] ${this.fullys[ip].name} is alive (${msg})`);
                 } else {
-                    this.log.warn(`[${source}] ${this.fullys[ip].name} is not alive!`);
+                    this.log.warn(`[${source}] ${this.fullys[ip].name} is not alive! (${msg})`);
                 }
             } else {
                 // No change
