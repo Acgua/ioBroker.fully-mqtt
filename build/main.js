@@ -386,9 +386,9 @@ class FullyMqtt extends utils.Adapter {
       if (!calledBefore && isAlive === true || prevIsAlive !== isAlive) {
         this.setState(this.fullys[ip].id + ".alive", { val: isAlive, ack: true });
         if (isAlive) {
-          this.log.info(`${this.fullys[ip].name} is alive ([${source}] ${msg})`);
+          this.log.info(`${this.fullys[ip].name} is alive (${source}: ${msg})`);
         } else {
-          this.log.warn(`${this.fullys[ip].name} is not alive! ([${source}] ${msg})`);
+          this.log.warn(`${this.fullys[ip].name} is not alive! (${source}: ${msg})`);
         }
       } else {
       }
