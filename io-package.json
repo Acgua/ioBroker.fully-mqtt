@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fully-mqtt",
-    "version": "0.0.11",
+    "version": "0.0.12",
     "news": {
+      "0.0.12": {
+        "en": "Logging improved\nInternal: test git branch",
+        "de": "Protokollierung verbessert\nIntern: Test git branch",
+        "ru": "Улучшается вход\nВнутреннее: test git Branch",
+        "pt": "Melhorar o registo\nInterna: ramo git de teste",
+        "nl": "Logging verbeterd\nVertaling:",
+        "fr": "Logging improved\nInterne: branche git test",
+        "it": "Registrazione migliorata\nInterno: ramo di prova",
+        "es": "Mejoramiento de los registros\nInterno: rama de punto de prueba",
+        "pl": "Logging poprawił\nWewnątrz: test gimnazjum",
+        "uk": "Удосконалено рухи\nВнутрішня: тест git branch",
+        "zh-cn": "B. 后勤改善\n内部:试验室"
+      },
       "0.0.11": {
         "en": "Fix: Remote admin password issue\nImproved debug and error log when sending REST API commands",
         "de": "Fix: Remote Admin Passwort Problem\nVerbesserte Debug- und Fehlerprotokolle beim Senden von REST API-Befehlen",
@@ -80,19 +93,6 @@
         "pl": "i18n (@iobroker/adapter-dev) (ang.)\nzastosowanie adapter.set Czas zamiast standardowego zestawu Timeout",
         "uk": "javascript licenses api веб-сайт go1.13.8\nза допомогою адаптера.set Перебування замість стандартного набору Розклад",
         "zh-cn": "i18n (oiobroker/adapter-dev)\n利用适应者。 时间而非标准规定 时限"
-      },
-      "0.0.5": {
-        "en": "Test release script",
-        "de": "Testversion Skript",
-        "ru": "Тест-релиз скрипт",
-        "pt": "Script de liberação de teste",
-        "nl": "Test release",
-        "fr": "Test release script",
-        "it": "Script di rilascio test",
-        "es": "Script de prueba",
-        "pl": "Testy",
-        "uk": "Статус на сервери",
-        "zh-cn": "试验性释放说明"
       }
     },
     "titleLang": {
