@@ -52,9 +52,9 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 ### **WORK IN PROGRESS**
 
 -   (Acgua) **Breaking Change**: Using MQTT is required, and removed option to deactivate MQTT. Reasons: 1. requesting info thru REST API is redundant and simply not needed since MQTT is available, 2. It does not make sense to not use MQTT since it provides live updates of states.
+-   (Acgua) **Breaking Change**: Object 'mqttActivated' ('fully-mqtt.x.yyy.mqttActivated') is no longer used. Feel free to delete these objects if you update from a previous version as these will not be deleted automatically.
 -   (Acgua) Removed all REST API info requests, as MQTT use is now required
 -   (Acgua) Code improvements
-
 
 ### 0.0.12 (2023-03-26)
 
