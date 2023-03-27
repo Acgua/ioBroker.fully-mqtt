@@ -39,7 +39,7 @@ export class MqttServer {
              * #############################################################
              */
             if (this.adapter.adapterDir.includes('/.dev-server/default/node_modules')) {
-                this.port = 3013;
+                this.port = 3012;
                 this.adapter.log.warn(`DEVELOPER: Port changed to ${this.port} as we are in DEV Environment! If you see this log message, please open an issue on Github.`);
             }
 

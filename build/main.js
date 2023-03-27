@@ -107,7 +107,6 @@ class FullyMqtt extends utils.Adapter {
         native: {}
       });
       await this.setObjectNotExistsAsync(device.id + ".lastInfoUpdate", { type: "state", common: { name: "Last information update", desc: "Date/time of last information update from Fully Browser", type: "number", role: "value.time", read: true, write: false }, native: {} });
-      await this.setObjectNotExistsAsync(device.id + ".mqttActivated", { type: "state", common: { name: "Is MQTT activated?", desc: "If MQTT is activated for at least one Fully Browser in adapter options", type: "boolean", role: "indicator", read: true, write: false }, native: {} });
       await this.setObjectNotExistsAsync(device.id + ".Commands", { type: "channel", common: { name: "Commands (REST API)" }, native: {} });
       const allCommands = import_constants.CONST.cmds.concat(import_constants.CONST.cmdsSwitches);
       for (const cmdObj of allCommands) {
@@ -122,48 +121,11 @@ class FullyMqtt extends utils.Adapter {
           lpRole = "switch";
         await this.setObjectNotExistsAsync(device.id + ".Commands." + cmdObj.id, { type: "state", common: { name: "Command: " + cmdObj.name, type: cmdObj.type, role: lpRole, read: true, write: true }, native: {} });
       }
-      if (!device.useMQTT) {
-        const infoObj = await this.restApi_inst.getInfo(device.ip);
-        if (!infoObj)
-          return;
-        await this.createInfoObjects("restApi", infoObj, device.ip);
-        await this.setInfoStates("REST", infoObj, device.ip);
+      await this.setObjectNotExistsAsync(device.id + ".Events", { type: "channel", common: { name: "MQTT Events" }, native: {} });
+      for (const event of import_constants.CONST.mqttEvents) {
+        await this.setObjectNotExistsAsync(device.id + ".Events." + event, { type: "state", common: { name: "MQTT Event: " + event, type: "boolean", role: "switch", read: true, write: false }, native: {} });
       }
-      if (device.useMQTT) {
-        await this.setObjectNotExistsAsync(device.id + ".Events", { type: "channel", common: { name: "MQTT Events" }, native: {} });
-        for (const event of import_constants.CONST.mqttEvents) {
-          await this.setObjectNotExistsAsync(device.id + ".Events." + event, { type: "state", common: { name: "MQTT Event: " + event, type: "boolean", role: "switch", read: true, write: false }, native: {} });
-        }
-      }
-      this.setState(device.id + ".mqttActivated", { val: device.useMQTT, ack: true });
       await this.subscribeStatesAsync(device.id + ".Commands.*");
-      if (!device.useMQTT) {
-        await this.scheduleRestApiRequestInfo(device.ip);
-        this.log.info(`[REST] ${device.name}: Regular info update requests scheduled (every ${this.config.restInterval} seconds).`);
-      }
-    } catch (e) {
-      this.log.error(this.err2Str(e));
-      return;
-    }
-  }
-  async createInfoObjects(source, infoObj, ip) {
-    try {
-      const device = this.fullys[ip];
-      for (const key in infoObj) {
-        const val = infoObj[key];
-        const valType = typeof val;
-        if (valType === "string" || valType === "boolean" || valType === "object" || valType === "number") {
-          if (source === "mqtt") {
-            this.fullys[ip].mqttInfoKeys.push(key);
-          } else {
-            this.fullys[ip].restInfoKeys.push(key);
-          }
-          await this.setObjectNotExistsAsync(`${device.id}.Info.${key}`, { type: "state", common: { name: "Info: " + key, type: valType, role: "value", read: true, write: false }, native: {} });
-        } else {
-          this.log.warn(`Unknown type ${valType} of key '${key}' in info object`);
-          continue;
-        }
-      }
     } catch (e) {
       this.log.error(this.err2Str(e));
       return;
@@ -197,75 +159,8 @@ class FullyMqtt extends utils.Adapter {
       return;
     }
   }
-  async setInfoStates(source, infoObj, ip) {
-    try {
-      for (const key in infoObj) {
-        let isKeyUnknown = true;
-        let updateUnchanged = false;
-        if (source === "MQTT") {
-          if (this.fullys[ip].mqttInfoKeys.includes(key))
-            isKeyUnknown = false;
-          if (this.config.mqttUpdateUnchangedObjects)
-            updateUnchanged = true;
-        } else if (source === "REST") {
-          if (this.fullys[ip].restInfoKeys.includes(key))
-            isKeyUnknown = false;
-          if (this.config.restUpdateUnchangedObjects)
-            updateUnchanged = true;
-        }
-        if (isKeyUnknown) {
-          this.log.debug(`${this.fullys[ip].name}: Yet unknown key '${key}' in info object of ${source}, so create state`);
-          this.createInfoObjects("mqtt", { [key]: infoObj[key] }, ip);
-        }
-        const newVal = typeof infoObj[key] === "object" ? JSON.stringify(infoObj[key]) : infoObj[key];
-        if (updateUnchanged) {
-          this.setState(`${this.fullys[ip].id}.Info.${key}`, { val: newVal, ack: true });
-        } else {
-          this.setStateChanged(`${this.fullys[ip].id}.Info.${key}`, { val: newVal, ack: true });
-        }
-      }
-      this.setState(this.fullys[ip].id + ".lastInfoUpdate", { val: Date.now(), ack: true });
-      this.setState(this.fullys[ip].id + ".alive", { val: true, ack: true });
-    } catch (e) {
-      this.log.error(this.err2Str(e));
-      return;
-    }
-  }
-  async scheduleRestApiRequestInfo(ip) {
-    try {
-      if (this.fullys[ip].timeoutRestRequestInfo)
-        this.clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
-      const interval = this.config.restInterval * 1e3;
-      if (interval < 2e3)
-        throw `[REST] We do not allow to set a REST API interval for info update every < 2 seconds!`;
-      this.fullys[ip].timeoutRestRequestInfo = this.setTimeout(async () => {
-        try {
-          const infoObj = await this.restApi_inst.getInfo(ip);
-          if (infoObj !== false) {
-            await this.setInfoStates("REST", infoObj, ip);
-          } else {
-          }
-          this.scheduleRestApiRequestInfo(ip);
-        } catch (e) {
-          this.log.error(this.err2Str(e));
-          return;
-        }
-      }, interval);
-    } catch (e) {
-      this.log.error(this.err2Str(e));
-      return;
-    }
-  }
   async initConfig() {
     try {
-      if (this.isEmpty(this.config.restTimeout) || this.config.restTimeout < 500 || this.config.restTimeout > 15e3) {
-        this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restTimeout} ms is not allowed, set to default of 6000ms`);
-        this.config.restTimeout = 6e3;
-      }
-      if (this.isEmpty(this.config.restInterval) || this.config.restInterval < 5 || this.config.restInterval > 864e5) {
-        this.log.warn(`Adapter instance settings: REST API interval of ${this.config.restInterval}s is not allowed, set to default of 60s`);
-        this.config.restInterval = 60;
-      }
       if (this.isEmpty(this.config.mqttPort) || this.config.mqttPort < 1 || this.config.mqttPort > 65535) {
         this.log.warn(`Adapter instance settings: MQTT Port ${this.config.mqttPort} is not allowed, set to default of 1886`);
         this.config.mqttPort = 1886;
@@ -273,6 +168,10 @@ class FullyMqtt extends utils.Adapter {
       if (this.isEmpty(this.config.mqttPublishedInfoDelay) || this.config.mqttPublishedInfoDelay < 2 || this.config.mqttPublishedInfoDelay > 120) {
         this.log.warn(`Adapter instance settings: MQTT Publish Info Delay of ${this.config.mqttPublishedInfoDelay}s is not allowed, set to default of 30s`);
         this.config.mqttPublishedInfoDelay = 30;
+      }
+      if (this.isEmpty(this.config.restTimeout) || this.config.restTimeout < 500 || this.config.restTimeout > 15e3) {
+        this.log.warn(`Adapter instance settings: REST API timeout of ${this.config.restTimeout} ms is not allowed, set to default of 6000ms`);
+        this.config.restTimeout = 6e3;
       }
       if (this.isEmpty(this.config.tableDevices)) {
         this.log.error(`No Fully devices defined in adapter instance settings!`);
@@ -286,17 +185,13 @@ class FullyMqtt extends utils.Adapter {
           name: "",
           id: "",
           ip: "",
-          mqttClientId: void 0,
-          useMQTT: false,
+          mqttInfoObjectsCreated: false,
+          mqttInfoKeys: [],
           restProtocol: "http",
           restPort: 0,
           restPassword: "",
           lastSeen: 0,
-          isAlive: false,
-          timeoutRestRequestInfo: null,
-          mqttInfoObjectsCreated: false,
-          mqttInfoKeys: [],
-          restInfoKeys: []
+          isAlive: false
         };
         if (this.isEmpty(lpDevice.name)) {
           this.log.error(`Provided device name "${lpDevice.name}" is empty!`);
@@ -319,11 +214,6 @@ class FullyMqtt extends utils.Adapter {
           finalDevice.restProtocol = "http";
         } else {
           finalDevice.restProtocol = lpDevice.restProtocol;
-        }
-        if (lpDevice.useMQTT) {
-          finalDevice.useMQTT = true;
-        } else {
-          finalDevice.useMQTT = false;
         }
         if (!this.isIpAddressValid(lpDevice.ip)) {
           this.log.error(`${finalDevice.name}: Provided IP address "${lpDevice.ip}" is not valid!`);
@@ -412,14 +302,35 @@ class FullyMqtt extends utils.Adapter {
   async onMqttInfo(obj) {
     try {
       this.log.debug(`[MQTT]\u{1F4E1} ${this.fullys[obj.ip].name} published info, topic: ${obj.topic}`);
-      if (!this.fullys[obj.ip].mqttClientId)
-        this.fullys[obj.ip].mqttClientId = obj.clientId;
-      if (!this.fullys[obj.ip].mqttInfoObjectsCreated) {
-        this.log.debug(`[MQTT] ${this.fullys[obj.ip].name}: Creating info objects (if not yet existing)`);
-        await this.createInfoObjects("mqtt", obj.infoObj, obj.ip);
-        this.fullys[obj.ip].mqttInfoObjectsCreated = true;
+      const formerInfoKeysLength = this.fullys[obj.ip].mqttInfoKeys.length;
+      const newInfoKeysAdded = [];
+      for (const key in obj.infoObj) {
+        const val = obj.infoObj[key];
+        const valType = typeof val;
+        if (valType !== "string" && valType !== "boolean" && valType !== "object" && valType !== "number") {
+          this.log.warn(`[MQTT] ${this.fullys[obj.ip].name}: Unknown type ${valType} of key '${key}' in info object`);
+          continue;
+        }
+        if (!this.fullys[obj.ip].mqttInfoKeys.includes(key)) {
+          this.fullys[obj.ip].mqttInfoKeys.push(key);
+          newInfoKeysAdded.push(key);
+          await this.setObjectNotExistsAsync(`${this.fullys[obj.ip].id}.Info.${key}`, { type: "state", common: { name: "Info: " + key, type: valType, role: "value", read: true, write: false }, native: {} });
+        }
       }
-      await this.setInfoStates("MQTT", obj.infoObj, obj.ip);
+      if (formerInfoKeysLength === 0)
+        this.log.debug(`[MQTT] ${this.fullys[obj.ip].name}: Initially create states for ${newInfoKeysAdded.length} info items (if not yet existing)`);
+      if (formerInfoKeysLength > 0 && newInfoKeysAdded.length > 0)
+        this.log.info(`[MQTT] ${this.fullys[obj.ip].name}: Created new info object(s) as not seen before (if object(s) did not exist): ${newInfoKeysAdded.join(", ")}`);
+      for (const key in obj.infoObj) {
+        const newVal = typeof obj.infoObj[key] === "object" ? JSON.stringify(obj.infoObj[key]) : obj.infoObj[key];
+        if (this.config.mqttUpdateUnchangedObjects) {
+          this.setState(`${this.fullys[obj.ip].id}.Info.${key}`, { val: newVal, ack: true });
+        } else {
+          this.setStateChanged(`${this.fullys[obj.ip].id}.Info.${key}`, { val: newVal, ack: true });
+        }
+      }
+      this.setState(this.fullys[obj.ip].id + ".lastInfoUpdate", { val: Date.now(), ack: true });
+      this.setState(this.fullys[obj.ip].id + ".alive", { val: true, ack: true });
     } catch (e) {
       this.log.error(this.err2Str(e));
       return;
@@ -428,8 +339,6 @@ class FullyMqtt extends utils.Adapter {
   async onMqttEvent(obj) {
     try {
       this.log.debug(`[MQTT] \u{1F4E1} ${this.fullys[obj.ip].name} published event, topic: ${obj.topic}, cmd: ${obj.cmd}`);
-      if (!this.fullys[obj.ip].mqttClientId)
-        this.fullys[obj.ip].mqttClientId = obj.clientId;
       const pthEvent = `${this.fullys[obj.ip].id}.Events.${obj.cmd}`;
       if (!await this.getObjectAsync(pthEvent)) {
         this.log.info(`[MQTT] ${this.fullys[obj.ip].name}: Event ${obj.cmd} received but state ${pthEvent} does not exist, so we create it first`);
@@ -549,9 +458,6 @@ class FullyMqtt extends utils.Adapter {
     try {
       if (this.fullys) {
         for (const ip in this.fullys) {
-          if (this.fullys[ip].timeoutRestRequestInfo)
-            this.clearTimeout(this.fullys[ip].timeoutRestRequestInfo);
-          this.log.info(`${this.fullys[ip].name}: Clear timeouts.`);
           this.setState(this.fullys[ip].id + ".alive", { val: false, ack: true });
         }
       }

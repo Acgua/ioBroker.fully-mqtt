@@ -137,13 +137,6 @@
                             "width": "15%",
                             "validator": "data.restPassword.length > 0",
                             "validatorNoSaveOnError": true
-                        },
-                        {
-                            "type": "checkbox",
-                            "attr": "useMQTT",
-                            "width": "50px",
-                            "title": "MQTT",
-                            "default": true
                         }
                     ]
                 },
@@ -169,24 +162,23 @@
                     "default": 3000,
                     "help": "MQTT Port (1-65535)"
                 },
-                "mqttUser": {
-                    "type": "text",
-                    "label": "User name",
-                    "help": "MQTT User name"
-                },
-                "mqttPassword": {
-                    "type": "password",
-                    "label": "Password",
-                    "help": "MQTT Password"
-                },
                 "mqttDoNotVerifyUserPw": {
                     "type": "checkbox",
                     "label": "Do not verify user and password",
                     "help": "This disables the username and password verification",
-                    "default": false,
-                    "sm": 12,
-                    "md": 6,
-                    "lg": 5
+                    "default": true
+                },                
+                "mqttUser": {
+                    "type": "text",
+                    "label": "User name",
+                    "help": "MQTT User name",
+                    "hidden": "data.mqttDoNotVerifyUserPw"
+                },
+                "mqttPassword": {
+                    "type": "password",
+                    "label": "Password",
+                    "help": "MQTT Password",
+                    "hidden": "data.mqttDoNotVerifyUserPw"                    
                 }
             }
         },
@@ -194,42 +186,6 @@
             "type": "panel",
             "label": "Expert Settings",
             "items": {
-                "header_RESTAPI": {
-                    "newLine": "true",
-                    "type": "header",
-                    "text": "Remote Admin (REST API)",
-                    "size": 2
-                },
-                "restTimeout": {
-                    "type": "number",
-                    "min": 500,
-                    "max": 15000,
-                    "default": 6000,
-                    "label": "Request Timeout",
-                    "help": "in milliseconds (500-15000, default: 6000)",
-                    "sm": 12,
-                    "md": 6,
-                    "lg": 3
-                },
-                "restInterval": {
-                    "type": "number",
-                    "min": 5,
-                    "label": "Request Interval",
-                    "default": 60,
-                    "help": "in seconds (min: 5, default: 60); ignored if MQTT is used",
-                    "sm": 12,
-                    "md": 6,
-                    "lg": 3
-                },
-                "restUpdateUnchangedObjects": {
-                    "type": "checkbox",
-                    "label": "Always update info states",
-                    "help": "Always update info objects, even if value did not change",
-                    "default": false,
-                    "sm": 12,
-                    "md": 6,
-                    "lg": 3
-                },
                 "header_MQTT": {
                     "type": "header",
                     "text": "MQTT",
@@ -262,7 +218,24 @@
                     "sm": 12,
                     "md": 7,
                     "lg": 5
-                }
+                },
+                "header_RESTAPI": {
+                    "newLine": "true",
+                    "type": "header",
+                    "text": "Remote Admin (REST API)",
+                    "size": 2
+                },
+                "restTimeout": {
+                    "type": "number",
+                    "min": 500,
+                    "max": 15000,
+                    "default": 6000,
+                    "label": "Request Timeout",
+                    "help": "in milliseconds (500-15000, default: 6000)",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 3
+                }                
             }
         }
     }

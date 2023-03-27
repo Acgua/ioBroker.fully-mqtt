@@ -169,14 +169,12 @@
   "native": {
     "tableDevices": [],
     "restUseHttps": false,
-    "restInterval": 60,
     "restTimeout": 2000,
-    "restUpdateUnchangedObjects": false,
     "mqttUser": "",
     "mqttPassword": "",
     "mqttPort": 3000,
     "mqttPublishedInfoDelay": 30,
-    "mqttDoNotVerifyUserPw": false,
+    "mqttDoNotVerifyUserPw": true,
     "mqttUpdateUnchangedObjects": false,
     "mqttConnErrorsAsInfo": true
   },

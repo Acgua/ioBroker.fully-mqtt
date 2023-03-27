@@ -31,20 +31,6 @@ class RestApiFully {
   constructor(adapter) {
     this.adapter = adapter;
   }
-  async getInfo(ip) {
-    try {
-      const device = this.adapter.fullys[ip];
-      const result = await this.axiosGetInfoOrSendCmd(device, "getInfo");
-      if (result.status && result.infoObj !== void 0) {
-        return result.infoObj;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      this.adapter.log.error(`[REST] ${this.adapter.fullys[ip].name}: ${this.adapter.err2Str(e)}`);
-      return false;
-    }
-  }
   async sendCmd(device, cmd, val) {
     try {
       const cmds = {

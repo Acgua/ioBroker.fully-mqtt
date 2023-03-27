@@ -1,3 +1,8 @@
+/**
+ * REST API Class
+ * Purpose: sending commands to Fully, since sending via MQTT is not supported by Fully.
+ */
+
 import axios from 'axios';
 import { FullyMqtt } from '../main';
 import { IDevice } from './interfaces';
@@ -25,6 +30,7 @@ export class RestApiFully {
      * @param ip - IP Address
      * @returns info object, or false in case of error
      */
+    /* ----- NO LONGER USED since v0.1.0 ---
     public async getInfo(ip: string): Promise<{ [k: string]: any } | false> {
         try {
             const device = this.adapter.fullys[ip];
@@ -39,6 +45,7 @@ export class RestApiFully {
             return false;
         }
     }
+    */
 
     /**
      * Send a command to Fully
@@ -92,6 +99,9 @@ export class RestApiFully {
      * @param urlParam - if 'sendCmd': URL parameter like "cmd=screenOff"
      * @returns if what='getInfo': false if error, device info object if true
      *          if what='sendCmd': false if error, true if successful
+     *
+     * TODO: Remove 'getInfo' since no longer used from version 0.1.0
+     *
      */
     private async axiosGetInfoOrSendCmd(device: IDevice, what: 'getInfo' | 'sendCmd', cmd?: string, urlParam?: string): Promise<{ status: true | false; infoObj?: { [k: string]: any } }> {
         // Base URL
