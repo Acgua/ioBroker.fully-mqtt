@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "fully-mqtt",
-    "version": "0.0.12",
+    "version": "0.1.0",
     "news": {
+      "0.1.0": {
+        "en": "**Breaking Change**: Using MQTT is required, and removed option to deactivate MQTT. Reasons: 1. requesting info thru REST API is redundant and simply not needed since MQTT is available, 2. It does not make sense to not use MQTT since it provides live updates of states.\n**Breaking Change**: Object 'mqttActivated' ('fully-mqtt.x.yyy.mqttActivated') is no longer used. Feel free to delete these objects if you update from a previous version as these will not be deleted automatically.\nRemoved all REST API info requests, as MQTT use is now required\nCode improvements",
+        "de": "*Breaking Change*: Die Verwendung von MQTT ist erforderlich und entfernte Option, um MQTT zu deaktivieren. Gründe: 1. Anfragen an info thru REST API ist redundant und einfach nicht benötigt, da MQTT verfügbar ist, 2. Es macht keinen Sinn, MQTT nicht zu verwenden, da es Live-Updates von Zuständen bietet.\n*Breaking Change*: Objekt mqtActivated (ful-mqtt.x.yyyy.mqtActivated) wird nicht mehr verwendet. Fühlen Sie sich frei, diese Objekte zu löschen, wenn Sie von einer vorherigen Version aktualisieren, da diese nicht automatisch gelöscht werden.\nEntfernt alle REST API-Info-Anfragen, da MQTT jetzt verwendet wird\nVerbesserungen des Codes",
+        "ru": "*Восстановление изменений*: Использование MQTT требуется, и удаленный вариант для деактивации MQTT. Причины: 1. запрос информации thru REST API является избыточным и просто не требуется, так как MQTT доступен, 2. Это не имеет смысла не использовать MQTT, так как он предоставляет живые обновления государств.\n*Восстановление изменений*: Объект mqttActivated (fully-mqtt.x.yy.mqttActivated) больше не используется. Не стесняйтесь удалить эти объекты, если вы обновляете с предыдущей версии, поскольку они не будут удалены автоматически.\nУдалены все запросы информации о REST API, так как использование MQTT теперь требуется\nУлучшения кода",
+        "pt": "* Mudança de travagem*: O uso do MQTT é necessário e a opção removida para desativar o MQTT. Razões: 1. solicitando informações thru REST API é redundante e simplesmente não é necessário desde MQTT está disponível, 2. Não faz sentido para não usar MQTT, uma vez que fornece atualizações ao vivo de estados.\n* Mudança de travagem*: Object mqttActivated (fully-mqtt.x.yyyy.mqttActivated) não é mais usado. Sinta-se livre para excluir esses objetos se você atualizar de uma versão anterior, pois estes não serão excluídos automaticamente.\nRemovido todos os pedidos de informações da API REST, já que o uso do MQTT agora é necessário\nMelhorias de código",
+        "nl": "♪ Breaking Change ♪ Het gebruik van MQTT is vereist en verwijderde optie om MQT te deactiveren. Reasons: 1. verzoekt info RESTAPI is overbodig en simpelweg niet meer nodig sinds MQTT beschikbaar is, 2.\n♪ Breaking Change ♪ Object MqtActivated (vol-mqtt. ..y.mqttActivatie is niet meer gebruikt. Voel je vrij om deze objecten te verwijderen als je updatet van een vorige versie zoals deze niet automatisch gewist worden.\nVerwijder alle API-informatie verzoeken, zoals MQTT nu nodig heeft\nCode verbetering",
+        "fr": "*Breaking Change*: L'utilisation de MQTT est requise, et l'option supprimée pour désactiver MQTT. Motifs: 1. demander des informations thru L'API REST est redondante et tout simplement pas nécessaire puisque MQTT est disponible, 2. Il n'est pas logique de ne pas utiliser MQTT car il fournit des mises à jour en direct des états.\n*Breaking Change*: Objet mqttActivated (fully-mqtt.x.yyy.mqttActivated) n'est plus utilisé. N'hésitez pas à supprimer ces objets si vous mettez à jour depuis une version précédente car ceux-ci ne seront pas supprimés automatiquement.\nEnlevé toutes les demandes d'information de l'API REST, comme l'utilisation de MQTT est maintenant requise\nAmélioration des codes",
+        "it": "*Breaking Change*: Utilizzando MQTT è necessario, e l'opzione rimossa per disattivare MQTT. Motivi: 1. richiedendo info thru REST API è ridondante e semplicemente non necessario dal momento che MQTT è disponibile, 2. Non ha senso non utilizzare MQTT dal momento che fornisce aggiornamenti dal vivo degli stati.\n*Breaking Change*: Oggetti mqttActivated (completamente-mqtt.x.yyy.mqttActivated) non è più utilizzato. Sentitevi liberi di eliminare questi oggetti se si aggiorna da una versione precedente in quanto questi non verranno eliminati automaticamente.\nRimuovete tutte le richieste di informazioni REST API, in quanto l'uso MQTT è ora richiesto\nMiglioramento del codice",
+        "es": "*Breaking Change*: Utilizar MQTT es necesario y eliminar la opción para desactivar MQTT. Razones: 1. solicitar información a través de REST API es redundante y simplemente no es necesario ya que MQTT está disponible, 2. No tiene sentido no utilizar MQTT ya que proporciona actualizaciones en vivo de estados.\n*Breaking Change*: Objeto mqttActivated (fully-mqtt.x.yyyy.mqttActivated) ya no se utiliza. Siéntase libre de eliminar estos objetos si se actualiza de una versión anterior, ya que estos no serán eliminados automáticamente.\nQuitar todas las solicitudes de información de REST API, ya que el uso de MQTT es ahora necesario\nMejoras del Código",
+        "pl": "*Breaking Change* (ang.). Zastosowanie MQTT jest wymagane i usunięcie opcji w celu dezaktywowania MQTT. Rozum: 1. żądanie API info thru REST jest zbędne i po prostu nie potrzebne, ponieważ MQTT jest dostępny, 2. Nie ma pojęcia, aby nie korzystać z MQTT.\n*Breaking Change* (ang.). Obiekt mqttActivated (w pełni mqtt.x.yyy.mqttActivated) nie jest już używany. Uczucie wolnej usuwania tych obiektów, jeśli uaktualnisz się od poprzedniej wersji, ponieważ nie zostanie usunięta automatycznie.\nUsunął wszystkie żądania API REST, ponieważ obecnie wymagane jest użycie MQTT\nPoprawa kodu",
+        "uk": "* Зміна маршрутизації*: За допомогою MQTT необхідно і видалити опцію для деактивації MQTT. Причини: 1. Запит на інформацію про API REST є надмірним і просто не потрібно, оскільки MQTT є доступним, 2. Він не має сенсу не використовувати MQTT, оскільки він забезпечує живі оновлення станів.\n* Зміна маршрутизації*: Об'єкт mqttActivated (fully-mqtt.x.yyy.mqttActivated) не використовується. Відчуйте безкоштовно, щоб видалити ці об'єкти, якщо ви оновлення з попередньої версії, оскільки це не буде видалено автоматично.\nВилучено всі запити REST API, оскільки використання MQTT тепер потрібно\nПоліпшення коду",
+        "zh-cn": "* 改动*: 需要使用MQTT,并取消取消对MQTT进行交易的选择。 理由: 1. 要求自技合会获得以来,光是多余的,而且根本不必要。 2 由于它提供实况的最新资料,这并不意味着不使用技转中心。.\n* 改动*: 不再使用物体(原状-mqt.x.y.mqt Activ) 如果你从前一版本中更新,不自动删除这些物品,那就不能删除。.\n由于现在需要使用氢氟烷烃的用途,取消所有含铅酸酐的要求。\nA. 守则的改进"
+      },
       "0.0.12": {
         "en": "Logging improved\nInternal: test git branch",
         "de": "Protokollierung verbessert\nIntern: Test git branch",
@@ -80,19 +93,6 @@
         "pl": "Test-only of release (ang.).",
         "uk": "Тест-тільки релізу і т.д.",
         "zh-cn": "试验释放等。."
-      },
-      "0.0.6": {
-        "en": "i18n (@iobroker/adapter-dev) implemented\nusing adapter.setTimeout instead of standard setTimeout",
-        "de": "i18n (@iobroker/adapter-dev) implementiert\nmit Adapter.set Timeout statt Standard-Set Zeit",
-        "ru": "i18n (@iobroker/adapter-dev) реализован\nс помощью Adapter.set Timeout вместо стандартного набора Тайм-аут",
-        "pt": "i18n (@iobroker/adapter-dev) implementado\nusando o adaptador.set Timeout em vez de conjunto padrão Timeout",
-        "nl": "i18n (@iobroker/adapter-dev)\nmet gebruik van adapter. Time-out in plaats van standaard set Time-out",
-        "fr": "i18n (@iobroker/adapter-dev) mis en œuvre\navec adaptateur.set Timeout au lieu de série Timeout",
-        "it": "i18n (@iobroker/adapter-dev) implementato\nutilizzando adattatore.set Timeout invece del set standard Tempo",
-        "es": "i18n (@iobroker/adapter-dev) implementado\nusando adaptador.set Tiempo en lugar de conjunto estándar Timeout",
-        "pl": "i18n (@iobroker/adapter-dev) (ang.)\nzastosowanie adapter.set Czas zamiast standardowego zestawu Timeout",
-        "uk": "javascript licenses api веб-сайт go1.13.8\nза допомогою адаптера.set Перебування замість стандартного набору Розклад",
-        "zh-cn": "i18n (oiobroker/adapter-dev)\n利用适应者。 时间而非标准规定 时限"
       }
     },
     "titleLang": {
