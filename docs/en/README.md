@@ -46,7 +46,7 @@ Add Fully Browser device(s), i.e. the tablets running Fully Browser, accordingly
  * **Password**: optional
 
 ### Expert Settings: MQTT
- * **Do not process published info more than every x seconds**: Lt. [Fully-Dokumentation](https://www.fully-kiosk.com/en/#mqtt) info is published only every 60 seconds, but in my tests this happened more often, so a limit can be set with this option.
+ * **Do not process published info more than every x seconds**: Per [Fully Documentation](https://www.fully-kiosk.com/en/#mqtt), info is published only every 60 seconds, but in my tests this happened more often, so a limit can be set with this option.
  * **Always update info objects**: Normally all info sets are set/updated only if there was a change. If this option is enabled, states will always be updated (with ack:true), even if there was no change from the previous value.
  * **Client and Connection errors as info in log**: If activated, client and connection errors are always output as info and not as error in the log. This serves to keep the log clean and not to fill it unnecessarily just because a tablet logs off briefly and logs on again after a few seconds. "Longer-term" errors and warnings are always displayed in the log accordingly.
 
