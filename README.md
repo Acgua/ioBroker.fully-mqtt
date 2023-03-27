@@ -48,6 +48,12 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Acgua) Fixed starting MQTT server
+-   (Acgua) Removed info log 'MQTT is not activated in adapter instance settings.'
+
 ### 0.1.0 (2023-03-27)
 
 -   (Acgua) **Breaking Change**: Using MQTT is required, and removed option to deactivate MQTT. Reasons: 1. requesting info thru REST API is redundant and simply not needed since MQTT is available, 2. It does not make sense to not use MQTT since it provides live updates of states.

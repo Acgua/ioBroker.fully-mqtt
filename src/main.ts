@@ -32,7 +32,6 @@ export class FullyMqtt extends utils.Adapter {
     public isIpAddressValid = isIpAddressValid.bind(this);
     // MQTT
     private mqtt_Server: MqttServer | undefined;
-    public mqtt_useMqtt: true | false = false; // Is use of MQTT activated per adapter settings (each line of fully devices is checked)
 
     // REST API
     private restApi_inst = new RestApiFully(this); // RestApi Class Instance
@@ -91,10 +90,8 @@ export class FullyMqtt extends utils.Adapter {
             /**
              * Start MQTT Server
              */
-            if (this.mqtt_useMqtt) {
-                this.mqtt_Server = new MqttServer(this);
-                this.mqtt_Server.start();
-            }
+            this.mqtt_Server = new MqttServer(this);
+            this.mqtt_Server.start();
 
             /**
              * Call main() for each device
@@ -331,16 +328,7 @@ export class FullyMqtt extends utils.Adapter {
                 logConfig.restPassword = '(hidden)'; // do not show password in log !
                 this.log.debug(`Final Config: ${JSON.stringify(logConfig)}`);
                 if (lpDevice.enabled) {
-                    // if MQTT is activated, set variable to true
-                    if (lpDevice.useMQTT) {
-                        this.mqtt_useMqtt = true;
-                        this.log.info(`${finalDevice.name} (${finalDevice.ip}) MQTT is activated in adapter instance settings.`);
-                    } else {
-                        this.log.info(`${finalDevice.name} (${finalDevice.ip}) MQTT is not activated in adapter instance settings.`);
-                    }
-
                     // Finalize
-
                     this.fullys[finalDevice.ip] = finalDevice;
                     this.activeDeviceIPs.push(lpDevice.ip); // global array for all active IPs
                     this.log.info(`🗸 ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);

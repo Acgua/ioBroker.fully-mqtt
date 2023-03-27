@@ -49,7 +49,6 @@ class FullyMqtt extends utils.Adapter {
     this.cleanDeviceName = import_methods.cleanDeviceName.bind(this);
     this.getConfigValuePerKey = import_methods.getConfigValuePerKey.bind(this);
     this.isIpAddressValid = import_methods.isIpAddressValid.bind(this);
-    this.mqtt_useMqtt = false;
     this.restApi_inst = new import_restApi.RestApiFully(this);
     this.fullys = {};
     this.disabledDeviceIds = [];
@@ -68,10 +67,8 @@ class FullyMqtt extends utils.Adapter {
         this.log.error(`Adapter settings initialization failed.  ---> Please check your adapter instance settings!`);
         return;
       }
-      if (this.mqtt_useMqtt) {
-        this.mqtt_Server = new import_mqtt_server.MqttServer(this);
-        this.mqtt_Server.start();
-      }
+      this.mqtt_Server = new import_mqtt_server.MqttServer(this);
+      this.mqtt_Server.start();
       for (const ip in this.fullys) {
         await this.main(this.fullys[ip]);
       }
@@ -242,12 +239,6 @@ class FullyMqtt extends utils.Adapter {
         logConfig.restPassword = "(hidden)";
         this.log.debug(`Final Config: ${JSON.stringify(logConfig)}`);
         if (lpDevice.enabled) {
-          if (lpDevice.useMQTT) {
-            this.mqtt_useMqtt = true;
-            this.log.info(`${finalDevice.name} (${finalDevice.ip}) MQTT is activated in adapter instance settings.`);
-          } else {
-            this.log.info(`${finalDevice.name} (${finalDevice.ip}) MQTT is not activated in adapter instance settings.`);
-          }
           this.fullys[finalDevice.ip] = finalDevice;
           this.activeDeviceIPs.push(lpDevice.ip);
           this.log.info(`\u{1F5F8} ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);
