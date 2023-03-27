@@ -4,7 +4,7 @@
 
 Mit diesem Adapter kann der [Fully Kiosk Browser](https://www.fully-kiosk.com) (mit Plus-Lizenz) gesteuert werden. Über die [REST API](https://www.fully-kiosk.com/en/#rest) können diverse Befehle wie "Bildschirm an/aus", "Bildschirmschoner an/aus", etc. an den Fully gesendet werden.
 
-Zusätzlich – sofern dies in den Adapter-Optionen MQTT aktiviert ist – werden Events (wie z.B. "Bildschirm an") immer sofort an den Adapter mitgeteilt und in den entsprechenden Datenpunkten angezeigt. Außerdem sendet der Fully Browser bei aktivem [MQTT](https://www.fully-kiosk.com/en/#mqtt) sämtliche Geräteinformationen immer automatisch mindestens alle 60 Sekunden, welche entsprechend in die Info-Datenpunkte geschrieben werden. Ist MQTT deaktiviert, werden diese Infos manuell regelmäßig über die REST API abgeholt. Das Senden von Befehlen erfolgt übrigens bei aktiviertem MQTT über die REST API, da der Fully Browser das Senden über MQTT nicht unterstützt.
+Außerdem werden Events (wie z.B. "Bildschirm an") immer sofort via [MQTT](https://www.fully-kiosk.com/en/#mqtt) dem Adapter mitgeteilt und in den entsprechenden Datenpunkten angezeigt/gesetzt. Desweiteren sendet der Fully Browser via MQTT sämtliche Geräteinformationen immer automatisch mindestens alle 60 Sekunden, welche entsprechend in die Info-Datenpunkte geschrieben werden. Das Senden von Befehlen erfolgt übrigens über die REST API, da der Fully Browser das Senden über MQTT nicht unterstützt.
 
 ## Fully-Browser vorbereiten
 
@@ -42,20 +42,17 @@ Fully-Browser-Gerät(e), also die Tablets, auf denen der Fully-Browser läuft, e
 
 ### MQTT-Konfiguration
  * **Port**: Dieselbe Portnummer wie oben in den Fullybrowser MQTT-Einstellungen verwenden (z.B. `3000`).
+ * **Benutzername und Passwort nicht verifizieren**: Damit kann die Überprüfung von Benutzernamen und Passwort deaktiviert werden.
  * **Benutzername**: Optional
  * **Passwort**: Optional
- * **Benutzername und Passwort nicht verifizieren**: Damit kann die Überprüfung von Benutzernamen und Passwort deaktiviert werden.
-
-### Experten-Einstellungen: Remote Admin (REST API)
- * **Request Timeout**: Nach Anzahl dieser Millisekunden wird ein REST API Request abgebrochen, wenn nicht erfolgreich.
- * **Request Interval**: Wie oft sollen die Geräte-Infos abgefragt werden (Batteriestand, u.v.m.)? Etwa 60 Sekunden sollten locker reichen, gerne auch ein höheres Intervall vergeben. *Hinweis*: Wenn MQTT aktiviert ist, wird dies ignoriert, da per MQTT automatisch mind. alle 60 Sekunden Infos empfangen werden.
- * **Info-Datenpunkte immer aktualisieren**: Normalerweise werden alle Info-Datenpunkte nur dann neu gesetzt, wenn es eine Änderung gab. Ist dies aktiviert, werden diese immer aktualisiert (mit ack:true), auch wenn es keine Änderung zum vorherigen Wert gab.
 
 ### Experten-Einstellungen: MQTT
  * **Publizierte Infos nicht öfter als alle x Sekunden verarbeiten**: Lt. [Fully-Dokumentation](https://www.fully-kiosk.com/en/#mqtt) werden Infos nur alle 60 Sekunden publiziert, in meinen Tests erfolgte dies aber deutlich öfter, also kann hiermit ein Limit gesetzt werden.
  * **Info-Datenpunkte immer aktualisieren**: Normalerweise werden alle Info-Datenpunkte nur dann neu gesetzt, wenn es eine Änderung gab. Ist dies aktiviert, werden diese immer aktualisiert (mit ack:true), auch wenn es keine Änderung zum vorherigen Wert gab.
  * **Client- und Connection-Fehler als info im Log**: Wenn aktiviert, werden Client- und Verbindungsfehler immer als Info und nicht als Error im Log ausgegeben. Dies dient dazu, das Log sauber zu halten und nicht unnötig zu füllen, nur weil sich mal kurzzeitig ein Tablet abmeldet und nach wenigen Sekunden wieder anmeldet. Längerzeitige Fehler und Warnungen werden immer im Log entsprechend angezeigt.
 
+### Experten-Einstellungen: Remote Admin (REST API)
+ * **Request Timeout**: Nach Anzahl dieser Millisekunden wird ein REST API Request (also das Senden von Kommandos) abgebrochen, wenn nicht erfolgreich.
 
  ## Links
 

@@ -22,7 +22,7 @@
 
 This adapter controls your [Fully Kiosk Browser](https://www.fully-kiosk.com) (a Plus License is required). It provides you with a bunch of possibilites to control your tablet through ioBroker, like turning the display on/off, launch any tablet app, launch the screensaver etc. Also, it provides various information in states, like battery level of your tablet, etc. which you can use e.g. for Visualization.
 
-Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser), this adapter also supports **MQTT**.
+Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser), this adapter also supports und uses **MQTT**.
 
 ## Documentation
 

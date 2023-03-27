@@ -87,7 +87,7 @@ export class MqttServer {
                     }
 
                     const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${client.id} (IP unknown)`;
-                    this.adapter.log.info(`[MQTT] Client ${ipMsg} trys to authenticate...`);
+                    this.adapter.log.debug(`[MQTT] Client ${ipMsg} trys to authenticate...`);
                     if (ip) this.devices[client.id].ip = ip;
 
                     /**
