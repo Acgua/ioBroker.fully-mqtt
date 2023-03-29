@@ -54,83 +54,59 @@ class RestApiFully {
       } else {
         finalUrlParam = "cmd=" + cmd;
       }
-      const result = await this.axiosGetInfoOrSendCmd(device, "sendCmd", cmd, finalUrlParam);
-      return result.status;
+      const result = await this.axiosSendCmd(device, cmd, finalUrlParam);
+      return result;
     } catch (e) {
       this.adapter.log.error(`[REST] ${device.name}: ${this.adapter.err2Str(e)}`);
       return false;
     }
   }
-  async axiosGetInfoOrSendCmd(device, what, cmd, urlParam) {
+  async axiosSendCmd(device, cmd, urlParam) {
     var _a, _b, _c;
-    const baseUrl = `${device.restProtocol}://${device.ip}:${device.restPort}/?password=${this.encodePassword(device.restPassword)}&type=json`;
-    let finalUrl = "";
-    if (what === "getInfo") {
-      finalUrl = baseUrl + "&cmd=deviceInfo";
-    } else {
-      finalUrl = baseUrl + "&" + urlParam;
-    }
+    const url = `${device.restProtocol}://${device.ip}:${device.restPort}/?password=${this.encodePassword(device.restPassword)}&type=json&${urlParam}`;
     const config = {
       method: "get",
       timeout: this.adapter.config.restTimeout
     };
     try {
-      let urlHiddenPassword = finalUrl;
+      let urlHiddenPassword = url;
       urlHiddenPassword = urlHiddenPassword.replace(/password=.*&type/g, "password=(hidden)&type");
-      this.adapter.log.debug(`[REST] ${device.name}: Start ${what} ${what === "sendCmd" ? '"' + cmd + '"' : ""}, URL: ${urlHiddenPassword}`);
-      const response = await import_axios.default.get(finalUrl, config);
+      this.adapter.log.debug(`[REST] ${device.name}: Start sending command ${cmd}, URL: ${urlHiddenPassword}`);
+      const response = await import_axios.default.get(url, config);
       if (response.status !== 200) {
-        this.adapter.log.error(`[REST] ${device.name}: ${what} ${what === "sendCmd" ? cmd : ""} failed: ${response.status} - ${response.statusText}`);
-        this.adapter.onAliveChange("REST", device.ip, false, "${response.status} - ${response.statusText}");
-        return { status: false };
+        this.adapter.log.error(`[REST] ${device.name}: Sending command ${cmd} failed: ${response.status} - ${response.statusText}`);
+        return false;
       }
       if (!("status" in response)) {
-        this.adapter.log.error(`[REST] ${device.name}: ${what} ${what === "sendCmd" ? cmd : ""} failed: Response received but it does not have key 'status'`);
-        this.adapter.onAliveChange("REST", device.ip, false, "response without status key");
-        return { status: false };
+        this.adapter.log.error(`[REST] ${device.name}: Sending command ${cmd} failed: Response received but it does not have key 'status'`);
+        return false;
       }
       if (!("data" in response)) {
-        this.adapter.log.error(`[REST] ${device.name}: ${what} ${what === "sendCmd" ? cmd : ""} failed: Response received but it does not have key 'data'`);
-        this.adapter.onAliveChange("REST", device.ip, false, "response without data key");
-        return { status: false };
+        this.adapter.log.error(`[REST] ${device.name}: Sending command ${cmd} failed: Response received but it does not have key 'data'`);
+        return false;
       }
-      this.adapter.log.debug(`[REST] ${device.name}: ${what} response.data: ${JSON.stringify(response.data)}`);
-      if (what === "getInfo") {
-        this.adapter.onAliveChange("REST", device.ip, true, "information successfully received");
-        if (!("deviceName" in response.data)) {
-          this.adapter.log.error(`[REST] ${device.name}: getInfo failed: Response data received, but data does not have key 'deviceName'`);
-          return { status: false };
-        }
-        this.adapter.log.debug(`[REST] ${device.name}: getInfo was successful: Response = ${response.status} - ${response.statusText}`);
-        return { status: true, infoObj: response.data };
-      }
+      this.adapter.log.debug(`[REST] ${device.name}: Sending command ${cmd} response.data: ${JSON.stringify(response.data)}`);
       if (!("status" in response.data)) {
-        this.adapter.onAliveChange("REST", device.ip, false, "response.data without status key");
-        this.adapter.log.error(`[REST] ${device.name}: Sending ${what} failed: Response received but response.data does not have key 'status'`);
-        return { status: false };
+        this.adapter.log.error(`[REST] ${device.name}: Sending command ${cmd} failed: Response received but response.data does not have key 'status'`);
+        return false;
       }
       switch (response.data.status) {
         case "OK":
-          this.adapter.log.debug(`[REST] ${device.name}: Sending ${what} successful: - Status = "${response.data.status}", Message = "${response.data.statustext}"`);
-          this.adapter.onAliveChange("REST", device.ip, true, "successfully received response");
-          return { status: true };
+          this.adapter.log.debug(`[REST] ${device.name}: Sending command ${cmd} successful: - Status = "${response.data.status}", Message = "${response.data.statustext}"`);
+          return true;
         case "Error":
           if (response.data.statustext === "Please login") {
-            this.adapter.log.error(`[REST] ${device.name}: Error: Remote Admin Password seems to be incorrect. Sending ${what} failed.`);
-            this.adapter.onAliveChange("REST", device.ip, false, "incorrect Remote Admin password");
+            this.adapter.log.error(`[REST] ${device.name}: Error: Remote Admin Password seems to be incorrect. Sending command ${cmd} failed.`);
           } else {
-            this.adapter.log.error(`[REST] ${device.name}: Error: Sending cmd ${what} failed, received status text: ${response.data.statustext}`);
-            this.adapter.onAliveChange("REST", device.ip, false, `sending cmd ${what} failed`);
+            this.adapter.log.error(`[REST] ${device.name}: Error: Sending command ${cmd} failed, received status text: ${response.data.statustext}`);
           }
-          return { status: false };
+          return false;
         default:
-          this.adapter.log.error(`[REST] ${device.name}: Undefined response.data.status = "${response.data.status}" when sending cmd ${what}: ${response.status} - ${response.statusText}`);
-          this.adapter.onAliveChange("REST", device.ip, false, "received undefined response.data.status");
-          return { status: false };
+          this.adapter.log.error(`[REST] ${device.name}: Undefined response.data.status = "${response.data.status}" when sending command ${cmd}: ${response.status} - ${response.statusText}`);
+          return false;
       }
     } catch (err) {
-      const errTxt = `[REST] ${device.name}: Sending ${what} failed`;
-      this.adapter.onAliveChange("REST", device.ip, false, `sending ${what} failed`);
+      const errTxt = `[REST] ${device.name}: Sending command ${cmd} failed`;
       if (import_axios.default.isAxiosError(err)) {
         if (!(err == null ? void 0 : err.response)) {
           this.adapter.log.warn(`${errTxt}: No response`);
@@ -142,9 +118,9 @@ class RestApiFully {
           this.adapter.log.error(`${errTxt}: General Error`);
         }
       } else {
-        this.adapter.log.error(`[REST] ${device.name} Error: ${this.adapter.err2Str(err)}`);
+        this.adapter.log.error(`${errTxt}: Error: ${this.adapter.err2Str(err)}`);
       }
-      return { status: false };
+      return false;
     }
   }
   encodePassword(pw) {

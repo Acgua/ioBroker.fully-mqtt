@@ -4,7 +4,16 @@
 declare global {
     namespace ioBroker {
         interface AdapterConfig {
-            tableDevices: any[];
+            tableDevices: [
+                {
+                    enabled: boolean;
+                    name: string;
+                    restProtocol: string;
+                    ip: string;
+                    restPort: number;
+                    restPassword: string;
+                },
+            ];
             mqttUser: string;
             mqttPassword: string;
             mqttPort: number;

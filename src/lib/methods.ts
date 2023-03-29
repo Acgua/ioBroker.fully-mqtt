@@ -1,21 +1,8 @@
 /**
  * Methods and Tools
- * @desc    Methods and Tools
- * @author  Acgua <https://github.com/Acgua/ioBroker.fully-mqtt>
- * @license Apache License 2.0
- *
- * ----------------------------------------------------------------------------------------
- * How to implement this file in main.ts (see also https://stackoverflow.com/a/58459668)
- * ----------------------------------------------------------------------------------------
- *  1. Add "this: InstanceWatcher" as first function parameter if you need access to "this"
- *       -> no need to provide this parameter when calling the method, though!
- *  1. Add line like "import { err2Str, isEmpty } from './lib/methods';"
- *  2. Add keyword "export" before "class InstanceWatcher extends utils.Adapter"
- *  3. class InstanceWatcher: for each method, add line like: "public isEmpty = isEmpty.bind(this);"
- *           Note: use "private isEmpty..." and not "public", if you do not need to access method from this file
  */
+
 import { FullyMqtt } from '../main';
-// import { IDevice } from './interfaces';
 
 /**
  * Convert error to string

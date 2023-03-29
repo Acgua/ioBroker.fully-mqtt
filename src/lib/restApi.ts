@@ -26,28 +26,6 @@ export class RestApiFully {
     }
 
     /**
-     * Get Info Object from Fully
-     * @param ip - IP Address
-     * @returns info object, or false in case of error
-     */
-    /* ----- NO LONGER USED since v0.1.0 ---
-    public async getInfo(ip: string): Promise<{ [k: string]: any } | false> {
-        try {
-            const device = this.adapter.fullys[ip];
-            const result = await this.axiosGetInfoOrSendCmd(device, 'getInfo');
-            if (result.status && result.infoObj !== undefined) {
-                return result.infoObj;
-            } else {
-                return false;
-            }
-        } catch (e) {
-            this.adapter.log.error(`[REST] ${this.adapter.fullys[ip].name}: ${this.adapter.err2Str(e)}`);
-            return false;
-        }
-    }
-    */
-
-    /**
      * Send a command to Fully
      * @param device - device object
      * @param cmd - 'loadStartURL', 'screenOn', etc.
@@ -83,8 +61,8 @@ export class RestApiFully {
                 finalUrlParam = 'cmd=' + cmd;
             }
 
-            const result = await this.axiosGetInfoOrSendCmd(device, 'sendCmd', cmd, finalUrlParam);
-            return result.status;
+            const result = await this.axiosSendCmd(device, cmd, finalUrlParam);
+            return result;
         } catch (e) {
             this.adapter.log.error(`[REST] ${device.name}: ${this.adapter.err2Str(e)}`);
             return false;
@@ -92,26 +70,15 @@ export class RestApiFully {
     }
 
     /**
-     * Axios: Get Device Info or Send Command
+     * Axios: Send Command
      * @param device - device object
-     * @param what - 'getInfo' to get device info or 'sendCmd' to send a command
-     * @param cmd - if 'sendCmd': Command like "screenOff"
-     * @param urlParam - if 'sendCmd': URL parameter like "cmd=screenOff"
-     * @returns if what='getInfo': false if error, device info object if true
-     *          if what='sendCmd': false if error, true if successful
-     *
-     * TODO: Remove 'getInfo' since no longer used from version 0.1.0
-     *
+     * @param cmd - Command like "screenOff"
+     * @param urlParam - URL parameter like "cmd=screenOff"
+     * @returns false if error, true if successful
      */
-    private async axiosGetInfoOrSendCmd(device: IDevice, what: 'getInfo' | 'sendCmd', cmd?: string, urlParam?: string): Promise<{ status: true | false; infoObj?: { [k: string]: any } }> {
+    private async axiosSendCmd(device: IDevice, cmd: string, urlParam: string): Promise<true | false> {
         // Base URL
-        const baseUrl = `${device.restProtocol}://${device.ip}:${device.restPort}/?password=${this.encodePassword(device.restPassword)}&type=json`;
-        let finalUrl = '';
-        if (what === 'getInfo') {
-            finalUrl = baseUrl + '&cmd=deviceInfo';
-        } else {
-            finalUrl = baseUrl + '&' + urlParam;
-        }
+        const url = `${device.restProtocol}://${device.ip}:${device.restPort}/?password=${this.encodePassword(device.restPassword)}&type=json&${urlParam}`;
 
         // Axios config
         const config = {
@@ -121,72 +88,50 @@ export class RestApiFully {
 
         try {
             // Log
-            let urlHiddenPassword = finalUrl;
+            let urlHiddenPassword = url;
             urlHiddenPassword = urlHiddenPassword.replace(/password=.*&type/g, 'password=(hidden)&type');
-            this.adapter.log.debug(`[REST] ${device.name}: Start ${what} ${what === 'sendCmd' ? '"' + cmd + '"' : ''}, URL: ${urlHiddenPassword}`);
+            this.adapter.log.debug(`[REST] ${device.name}: Start sending command ${cmd}, URL: ${urlHiddenPassword}`);
 
             // Axios: Send command
-            const response = await axios.get(finalUrl, config);
+            const response = await axios.get(url, config);
 
             // Errors
             if (response.status !== 200) {
-                this.adapter.log.error(`[REST] ${device.name}: ${what} ${what === 'sendCmd' ? cmd : ''} failed: ${response.status} - ${response.statusText}`);
-                this.adapter.onAliveChange('REST', device.ip, false, '${response.status} - ${response.statusText}'); // Update isAlive
-                return { status: false };
+                this.adapter.log.error(`[REST] ${device.name}: Sending command ${cmd} failed: ${response.status} - ${response.statusText}`);
+                return false;
             }
             if (!('status' in response)) {
-                this.adapter.log.error(`[REST] ${device.name}: ${what} ${what === 'sendCmd' ? cmd : ''} failed: Response received but it does not have key 'status'`);
-                this.adapter.onAliveChange('REST', device.ip, false, 'response without status key'); // Update isAlive
-                return { status: false };
+                this.adapter.log.error(`[REST] ${device.name}: Sending command ${cmd} failed: Response received but it does not have key 'status'`);
+                return false;
             }
             if (!('data' in response)) {
-                this.adapter.log.error(`[REST] ${device.name}: ${what} ${what === 'sendCmd' ? cmd : ''} failed: Response received but it does not have key 'data'`);
-                this.adapter.onAliveChange('REST', device.ip, false, 'response without data key'); // Update isAlive
-                return { status: false };
+                this.adapter.log.error(`[REST] ${device.name}: Sending command ${cmd} failed: Response received but it does not have key 'data'`);
+                return false;
             }
-            this.adapter.log.debug(`[REST] ${device.name}: ${what} response.data: ${JSON.stringify(response.data)}`);
+            this.adapter.log.debug(`[REST] ${device.name}: Sending command ${cmd} response.data: ${JSON.stringify(response.data)}`);
 
-            // Handle Device Info
-            if (what === 'getInfo') {
-                this.adapter.onAliveChange('REST', device.ip, true, 'information successfully received'); // Update isAlive
-                if (!('deviceName' in response.data)) {
-                    // we check if info object is ok by checking for deviceName, could also use any other key like screenOn etc.
-                    this.adapter.log.error(`[REST] ${device.name}: getInfo failed: Response data received, but data does not have key 'deviceName'`);
-                    return { status: false };
-                }
-                this.adapter.log.debug(`[REST] ${device.name}: getInfo was successful: Response = ${response.status} - ${response.statusText}`);
-                return { status: true, infoObj: response.data };
-            }
-
-            // Handle all other commands
             if (!('status' in response.data)) {
-                this.adapter.onAliveChange('REST', device.ip, false, 'response.data without status key'); // Update isAlive
-                this.adapter.log.error(`[REST] ${device.name}: Sending ${what} failed: Response received but response.data does not have key 'status'`);
-                return { status: false };
+                this.adapter.log.error(`[REST] ${device.name}: Sending command ${cmd} failed: Response received but response.data does not have key 'status'`);
+                return false;
             }
             switch (response.data.status) {
                 case 'OK':
-                    this.adapter.log.debug(`[REST] ${device.name}: Sending ${what} successful: - Status = "${response.data.status}", Message = "${response.data.statustext}"`);
-                    this.adapter.onAliveChange('REST', device.ip, true, 'successfully received response'); // Update isAlive
-                    return { status: true };
+                    this.adapter.log.debug(`[REST] ${device.name}: Sending command ${cmd} successful: - Status = "${response.data.status}", Message = "${response.data.statustext}"`);
+                    return true;
                 case 'Error':
                     if (response.data.statustext === 'Please login') {
-                        this.adapter.log.error(`[REST] ${device.name}: Error: Remote Admin Password seems to be incorrect. Sending ${what} failed.`);
-                        this.adapter.onAliveChange('REST', device.ip, false, 'incorrect Remote Admin password'); // Update isAlive
+                        this.adapter.log.error(`[REST] ${device.name}: Error: Remote Admin Password seems to be incorrect. Sending command ${cmd} failed.`);
                     } else {
-                        this.adapter.log.error(`[REST] ${device.name}: Error: Sending cmd ${what} failed, received status text: ${response.data.statustext}`);
-                        this.adapter.onAliveChange('REST', device.ip, false, `sending cmd ${what} failed`); // Update isAlive
+                        this.adapter.log.error(`[REST] ${device.name}: Error: Sending command ${cmd} failed, received status text: ${response.data.statustext}`);
                     }
-                    return { status: false };
+                    return false;
                 default:
                     // Unexpected
-                    this.adapter.log.error(`[REST] ${device.name}: Undefined response.data.status = "${response.data.status}" when sending cmd ${what}: ${response.status} - ${response.statusText}`);
-                    this.adapter.onAliveChange('REST', device.ip, false, 'received undefined response.data.status');
-                    return { status: false };
+                    this.adapter.log.error(`[REST] ${device.name}: Undefined response.data.status = "${response.data.status}" when sending command ${cmd}: ${response.status} - ${response.statusText}`);
+                    return false;
             }
         } catch (err) {
-            const errTxt = `[REST] ${device.name}: Sending ${what} failed`;
-            this.adapter.onAliveChange('REST', device.ip, false, `sending ${what} failed`); // Update isAlive
+            const errTxt = `[REST] ${device.name}: Sending command ${cmd} failed`;
             if (axios.isAxiosError(err)) {
                 if (!err?.response) {
                     this.adapter.log.warn(`${errTxt}: No response`);
@@ -198,9 +143,9 @@ export class RestApiFully {
                     this.adapter.log.error(`${errTxt}: General Error`);
                 }
             } else {
-                this.adapter.log.error(`[REST] ${device.name} Error: ${this.adapter.err2Str(err)}`);
+                this.adapter.log.error(`${errTxt}: Error: ${this.adapter.err2Str(err)}`);
             }
-            return { status: false };
+            return false;
         }
     }
 

@@ -2,6 +2,7 @@ export interface IDevice {
     name: string; // e.g. "Tablet Hallway Entry"
     id: string; // e.g. "Tablet-Hallway-Entry" (meets ioBroker state convention)
     ip: string;
+    enabled: true | false;
     restProtocol: 'http' | 'https';
     restPort: number;
     restPassword: string;

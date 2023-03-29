@@ -45,7 +45,7 @@ class MqttServer {
         this.adapter.log.warn(`DEVELOPER: Port changed to ${this.port} as we are in DEV Environment! If you see this log message, please open an issue on Github.`);
       }
       this.server.listen(this.port, () => {
-        this.adapter.log.info(`[MQTT]\u{1F680} Server started and listening on port ${this.port}`);
+        this.adapter.log.info(`\u{1F680} MQTT Server started and is listening on port ${this.port}.`);
       });
       this.aedes.authenticate = (client, username, password, callback) => {
         try {
@@ -63,7 +63,7 @@ class MqttServer {
             if (!this.adapter.isIpAddressValid(ip))
               ip === void 0;
           }
-          if (ip && !this.adapter.activeDeviceIPs.includes(ip)) {
+          if (ip && !Object.keys(this.adapter.fullys).includes(ip)) {
             this.adapter.log.error(`[MQTT] Client ${client.id} not authorized: ${ip} is not an active Fully device IP per adapter settings.`);
             this.notAuthorizedClients.push(client.id);
             callback(null, false);
@@ -75,17 +75,17 @@ class MqttServer {
             this.devices[client.id].ip = ip;
           if (!this.adapter.config.mqttDoNotVerifyUserPw) {
             if (username !== this.adapter.config.mqttUser) {
-              this.adapter.log.warn(`[MQTT] Client ${ipMsg} Authorization rejected: received user name '${username}' does not match '${this.adapter.config.mqttUser}' in adapter settings.`);
+              this.adapter.log.warn(`MQTT Client ${ipMsg} Authorization rejected: received user name '${username}' does not match '${this.adapter.config.mqttUser}' in adapter settings.`);
               callback(null, false);
               return;
             }
             if (password.toString() !== this.adapter.config.mqttPassword) {
-              this.adapter.log.warn(`[MQTT] Client ${ipMsg} Authorization rejected: received password does not match with password in adapter settings.`);
+              this.adapter.log.warn(`MQTT Client ${ipMsg} Authorization rejected: received password does not match with password in adapter settings.`);
               callback(null, false);
               return;
             }
           }
-          this.adapter.log.info(`[MQTT]\u{1F511} Client ${ipMsg} successfully authenticated.`);
+          this.adapter.log.info(`\u{1F511} MQTT Client ${ipMsg} successfully authenticated.`);
           callback(null, true);
         } catch (e) {
           this.adapter.log.error(this.adapter.err2Str(e));
@@ -126,7 +126,7 @@ class MqttServer {
             }
             const ip = info.ip4;
             const devMsg = `${this.adapter.fullys[ip].name} (${ip})`;
-            if (!this.adapter.activeDeviceIPs.includes(ip)) {
+            if (!Object.keys(this.adapter.fullys).includes(ip)) {
               this.adapter.log.error(`[MQTT] Client ${devMsg} Packet rejected: IP is not allowed per adapter settings. ${client.id}`);
               return;
             }
@@ -247,7 +247,7 @@ class MqttServer {
     this.devices[clientId].isActive = isAlive;
     const ip = (_a = this.devices[clientId]) == null ? void 0 : _a.ip;
     if (ip) {
-      this.adapter.onAliveChange("MQTT", ip, isAlive, msg);
+      this.adapter.onMqttAlive(ip, isAlive, msg);
       if (isAlive) {
         this.scheduleCheckIfStillActive(clientId);
       } else {

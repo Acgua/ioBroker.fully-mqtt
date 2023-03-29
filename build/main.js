@@ -51,9 +51,9 @@ class FullyMqtt extends utils.Adapter {
     this.isIpAddressValid = import_methods.isIpAddressValid.bind(this);
     this.restApi_inst = new import_restApi.RestApiFully(this);
     this.fullys = {};
-    this.disabledDeviceIds = [];
-    this.activeDeviceIPs = [];
-    this.onAliveChange_EverBeenCalledBefore = false;
+    this.fullysNotEnabled = {};
+    this.fullysAll = {};
+    this.onMqttAlive_EverBeenCalledBefore = false;
     this.on("ready", this.onReady.bind(this));
     this.on("stateChange", this.onStateChange.bind(this));
     this.on("unload", this.onUnload.bind(this));
@@ -67,20 +67,27 @@ class FullyMqtt extends utils.Adapter {
         this.log.error(`Adapter settings initialization failed.  ---> Please check your adapter instance settings!`);
         return;
       }
+      for (const ip in this.fullys) {
+        const res = await this.createFullyDeviceObjects(this.fullys[ip]);
+        if (res)
+          await this.subscribeStatesAsync(this.fullys[ip].id + ".Commands.*");
+        this.setState(this.fullys[ip].id + ".enabled", { val: true, ack: true });
+      }
+      for (const ip in this.fullysNotEnabled) {
+        this.setState(this.fullysNotEnabled[ip].id + ".enabled", { val: false, ack: true });
+        this.setState(this.fullysNotEnabled[ip].id + ".alive", { val: null, ack: true });
+      }
       this.mqtt_Server = new import_mqtt_server.MqttServer(this);
       this.mqtt_Server.start();
-      for (const ip in this.fullys) {
-        await this.main(this.fullys[ip]);
-      }
       this.deleteRemovedDeviceObjects();
     } catch (e) {
       this.log.error(this.err2Str(e));
       return;
     }
   }
-  async main(device) {
+  async createFullyDeviceObjects(device) {
     try {
-      this.log.debug(`Start main() - ${device.name} (${device.ip})\u2026`);
+      this.log.debug(`Start createFullyDeviceObjects() - ${device.name} (${device.ip})\u2026`);
       await this.setObjectNotExistsAsync(device.id, {
         type: "device",
         common: {
@@ -104,7 +111,8 @@ class FullyMqtt extends utils.Adapter {
         native: {}
       });
       await this.setObjectNotExistsAsync(device.id + ".lastInfoUpdate", { type: "state", common: { name: "Last information update", desc: "Date/time of last information update from Fully Browser", type: "number", role: "value.time", read: true, write: false }, native: {} });
-      await this.setObjectNotExistsAsync(device.id + ".Commands", { type: "channel", common: { name: "Commands (REST API)" }, native: {} });
+      await this.setObjectNotExistsAsync(device.id + ".enabled", { type: "state", common: { name: "Is device enabled in adapter settings?", desc: "If this device is enabled in the adapter settings", type: "boolean", role: "indicator", read: true, write: false }, native: {} });
+      await this.setObjectNotExistsAsync(device.id + ".Commands", { type: "channel", common: { name: "Commands" }, native: {} });
       const allCommands = import_constants.CONST.cmds.concat(import_constants.CONST.cmdsSwitches);
       for (const cmdObj of allCommands) {
         let lpRole = "";
@@ -120,12 +128,12 @@ class FullyMqtt extends utils.Adapter {
       }
       await this.setObjectNotExistsAsync(device.id + ".Events", { type: "channel", common: { name: "MQTT Events" }, native: {} });
       for (const event of import_constants.CONST.mqttEvents) {
-        await this.setObjectNotExistsAsync(device.id + ".Events." + event, { type: "state", common: { name: "MQTT Event: " + event, type: "boolean", role: "switch", read: true, write: false }, native: {} });
+        await this.setObjectNotExistsAsync(device.id + ".Events." + event, { type: "state", common: { name: "Event: " + event, type: "boolean", role: "switch", read: true, write: false }, native: {} });
       }
-      await this.subscribeStatesAsync(device.id + ".Commands.*");
+      return true;
     } catch (e) {
       this.log.error(this.err2Str(e));
-      return;
+      return false;
     }
   }
   async deleteRemovedDeviceObjects() {
@@ -141,11 +149,11 @@ class FullyMqtt extends utils.Adapter {
             allObjectDeviceIds.push(deviceId);
         }
       }
+      const allConfigDeviceIds = [];
+      for (const ip in this.fullysAll) {
+        allConfigDeviceIds.push(this.fullysAll[ip].id);
+      }
       for (const id of allObjectDeviceIds) {
-        const allConfigDeviceIds = this.disabledDeviceIds;
-        for (const ip in this.fullys) {
-          allConfigDeviceIds.push(this.fullys[ip].id);
-        }
         if (!allConfigDeviceIds.includes(id)) {
           await this.delObjectAsync(id, { recursive: true });
           this.log.info(`Cleanup: Deleted no longer defined device objects of '${id}'.`);
@@ -182,6 +190,7 @@ class FullyMqtt extends utils.Adapter {
           name: "",
           id: "",
           ip: "",
+          enabled: false,
           mqttInfoObjectsCreated: false,
           mqttInfoKeys: [],
           restProtocol: "http",
@@ -235,17 +244,17 @@ class FullyMqtt extends utils.Adapter {
         } else {
           finalDevice.restPassword = lpDevice.restPassword;
         }
+        finalDevice.enabled = lpDevice.enabled ? true : false;
         const logConfig = { ...finalDevice };
         logConfig.restPassword = "(hidden)";
         this.log.debug(`Final Config: ${JSON.stringify(logConfig)}`);
+        this.fullysAll[finalDevice.ip] = finalDevice;
         if (lpDevice.enabled) {
           this.fullys[finalDevice.ip] = finalDevice;
-          this.activeDeviceIPs.push(lpDevice.ip);
           this.log.info(`\u{1F5F8} ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);
         } else {
-          this.disabledDeviceIds.push(finalDevice.id);
-          this.log.debug(`Device ${finalDevice.name} (${finalDevice.ip}) is not enabled, so skip it.`);
-          continue;
+          this.fullysNotEnabled[finalDevice.ip] = finalDevice;
+          this.log.info(`${finalDevice.name} (${finalDevice.ip}) is not enabled in adapter settings, so it will not be used by adapter.`);
         }
       }
       if (Object.keys(this.fullys).length === 0) {
@@ -258,18 +267,18 @@ class FullyMqtt extends utils.Adapter {
       return false;
     }
   }
-  async onAliveChange(source, ip, isAlive, msg) {
+  async onMqttAlive(ip, isAlive, msg) {
     try {
       const prevIsAlive = this.fullys[ip].isAlive;
       this.fullys[ip].isAlive = isAlive;
-      const calledBefore = this.onAliveChange_EverBeenCalledBefore;
-      this.onAliveChange_EverBeenCalledBefore = true;
+      const calledBefore = this.onMqttAlive_EverBeenCalledBefore;
+      this.onMqttAlive_EverBeenCalledBefore = true;
       if (!calledBefore && isAlive === true || prevIsAlive !== isAlive) {
         this.setState(this.fullys[ip].id + ".alive", { val: isAlive, ack: true });
         if (isAlive) {
-          this.log.info(`${this.fullys[ip].name} is alive (${source}: ${msg})`);
+          this.log.info(`${this.fullys[ip].name} is alive (MQTT: ${msg})`);
         } else {
-          this.log.warn(`${this.fullys[ip].name} is not alive! (${source}: ${msg})`);
+          this.log.warn(`${this.fullys[ip].name} is not alive! (MQTT: ${msg})`);
         }
       } else {
       }
@@ -292,7 +301,7 @@ class FullyMqtt extends utils.Adapter {
   }
   async onMqttInfo(obj) {
     try {
-      this.log.debug(`[MQTT]\u{1F4E1} ${this.fullys[obj.ip].name} published info, topic: ${obj.topic}`);
+      this.log.debug(`[MQTT] ${this.fullys[obj.ip].name} published info, topic: ${obj.topic}`);
       const formerInfoKeysLength = this.fullys[obj.ip].mqttInfoKeys.length;
       const newInfoKeysAdded = [];
       for (const key in obj.infoObj) {
@@ -387,7 +396,7 @@ class FullyMqtt extends utils.Adapter {
           throw `onStateChange() - ${stateId}: fullyCmd could not be determined!`;
         const sendCommand = await this.restApi_inst.sendCmd(fully, cmdToSend, stateObj.val);
         if (sendCommand) {
-          this.log.info(`${fully.name}: ${cmd} successfully set to ${stateObj.val}`);
+          this.log.info(`\u{1F5F8} ${fully.name}: Command ${cmd} successfully set to ${stateObj.val}`);
           if (switchConf !== void 0) {
             const onOrOffCmdVal = cmd === switchConf.cmdOn ? true : false;
             await this.setStateAsync(`${pth}.${switchConf.id}`, { val: onOrOffCmdVal, ack: true });
@@ -445,11 +454,13 @@ class FullyMqtt extends utils.Adapter {
       return -1;
     }
   }
-  onUnload(callback) {
+  async onUnload(callback) {
     try {
-      if (this.fullys) {
-        for (const ip in this.fullys) {
-          this.setState(this.fullys[ip].id + ".alive", { val: false, ack: true });
+      if (this.fullysAll) {
+        for (const ip in this.fullysAll) {
+          if (await this.getObjectAsync(this.fullysAll[ip].id)) {
+            this.setState(this.fullysAll[ip].id + ".alive", { val: null, ack: true });
+          }
         }
       }
       if (this.mqtt_Server) {

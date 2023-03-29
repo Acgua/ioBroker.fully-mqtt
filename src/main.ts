@@ -30,40 +30,35 @@ export class FullyMqtt extends utils.Adapter {
     public cleanDeviceName = cleanDeviceName.bind(this);
     public getConfigValuePerKey = getConfigValuePerKey.bind(this);
     public isIpAddressValid = isIpAddressValid.bind(this);
-    // MQTT
+
+    // MQTT Server
     private mqtt_Server: MqttServer | undefined;
 
     // REST API
-    private restApi_inst = new RestApiFully(this); // RestApi Class Instance
+    private restApi_inst = new RestApiFully(this);
 
     /**
-     * Active Fullys: IP as key, and object per IDevice
+     * Fullys: IP as key, and object per IDevice
      * {
      *    '192.168.10.20': {name: 'Tablet Kitchen', id:'Tablet-Kitchen', ip:'192.168.10.20', ...},
      *    '192.168.10.30': {name: 'Tablet Hallway', id:'Tablet-Hallway', ip:'192.168.10.30', ...},
      * }
-     * Use this.getFullyPerKey() to get fully object per provided key
+     * Note: we can use this.getFullyPerKey() to get fully object per provided key
      */
-    public fullys: { [ip: string]: IDevice } = {};
+    public fullys: { [ip: string]: IDevice } = {}; // enabled Fullys only
+    public fullysNotEnabled: { [ip: string]: IDevice } = {}; // not enabled Fullys only
+    public fullysAll: { [ip: string]: IDevice } = {}; // enabled and not enabled Fullys
 
-    // array of device ids, which are not activated
-    public disabledDeviceIds = [] as string[];
-    // All active IP addresses
-    public activeDeviceIPs = [] as string[]; // for MQTT server to verify IP
-
-    // Has onAliveChange() ever been called before?
-    private onAliveChange_EverBeenCalledBefore = false;
+    // Has onMqttAlive() ever been called before?
+    private onMqttAlive_EverBeenCalledBefore = false;
 
     /**
      * Constructor
      */
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({ ...options, name: 'fully-mqtt' });
-
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
-        // this.on('objectChange', this.onObjectChange.bind(this));
-        // this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
 
@@ -78,7 +73,7 @@ export class FullyMqtt extends utils.Adapter {
             this.setState('info.connection', { val: false, ack: true });
 
             /**
-             * Init configuration
+             * Verify and init configuration
              */
             if (await this.initConfig()) {
                 this.log.debug(`Adapter settings successfully verified and initialized.`);
@@ -87,18 +82,25 @@ export class FullyMqtt extends utils.Adapter {
                 return;
             }
 
+            for (const ip in this.fullys) {
+                // Create Fully device objects
+                const res = await this.createFullyDeviceObjects(this.fullys[ip]);
+                // REST API: Subscribe to command state changes
+                if (res) await this.subscribeStatesAsync(this.fullys[ip].id + '.Commands.*');
+                // Set enabled state
+                this.setState(this.fullys[ip].id + '.enabled', { val: true, ack: true });
+            }
+            // Not enabled fullys: 1. Enabled state to false; 2. alive to null
+            for (const ip in this.fullysNotEnabled) {
+                this.setState(this.fullysNotEnabled[ip].id + '.enabled', { val: false, ack: true });
+                this.setState(this.fullysNotEnabled[ip].id + '.alive', { val: null, ack: true });
+            }
+
             /**
              * Start MQTT Server
              */
             this.mqtt_Server = new MqttServer(this);
             this.mqtt_Server.start();
-
-            /**
-             * Call main() for each device
-             */
-            for (const ip in this.fullys) {
-                await this.main(this.fullys[ip]);
-            }
 
             /**
              * Delete device object tree(s) if deleted or renamed in config
@@ -111,12 +113,13 @@ export class FullyMqtt extends utils.Adapter {
     }
 
     /**
-     * main function for each Fully Browser Device
+     * Create Fully Browser Device ioBroker state objects
      * @param device Fully Browser Device Object
+     * @returns true if successful, false if error
      */
-    private async main(device: IDevice): Promise<void> {
+    private async createFullyDeviceObjects(device: IDevice): Promise<true | false> {
         try {
-            this.log.debug(`Start main() - ${device.name} (${device.ip})…`);
+            this.log.debug(`Start createFullyDeviceObjects() - ${device.name} (${device.ip})…`);
 
             /**
              * Create device object(s)
@@ -133,7 +136,7 @@ export class FullyMqtt extends utils.Adapter {
             });
             await this.setObjectNotExistsAsync(device.id + '.Info', { type: 'channel', common: { name: 'Device Information' }, native: {} });
 
-            // Alive and info update
+            // Alive
             await this.setObjectNotExistsAsync(device.id + '.alive', {
                 type: 'state',
                 common: {
@@ -147,10 +150,12 @@ export class FullyMqtt extends utils.Adapter {
                 },
                 native: {},
             });
+            // Last info update, and if enabled in adapter settings
             await this.setObjectNotExistsAsync(device.id + '.lastInfoUpdate', { type: 'state', common: { name: 'Last information update', desc: 'Date/time of last information update from Fully Browser', type: 'number', role: 'value.time', read: true, write: false }, native: {} });
+            await this.setObjectNotExistsAsync(device.id + '.enabled', { type: 'state', common: { name: 'Is device enabled in adapter settings?', desc: 'If this device is enabled in the adapter settings', type: 'boolean', role: 'indicator', read: true, write: false }, native: {} });
 
             // REST API Commands Objects
-            await this.setObjectNotExistsAsync(device.id + '.Commands', { type: 'channel', common: { name: 'Commands (REST API)' }, native: {} });
+            await this.setObjectNotExistsAsync(device.id + '.Commands', { type: 'channel', common: { name: 'Commands' }, native: {} });
             const allCommands = CONST.cmds.concat(CONST.cmdsSwitches); // join both arrays
             for (const cmdObj of allCommands) {
                 let lpRole = '';
@@ -165,16 +170,12 @@ export class FullyMqtt extends utils.Adapter {
             // More states are created once a new Event is received.
             await this.setObjectNotExistsAsync(device.id + '.Events', { type: 'channel', common: { name: 'MQTT Events' }, native: {} });
             for (const event of CONST.mqttEvents) {
-                await this.setObjectNotExistsAsync(device.id + '.Events.' + event, { type: 'state', common: { name: 'MQTT Event: ' + event, type: 'boolean', role: 'switch', read: true, write: false }, native: {} });
+                await this.setObjectNotExistsAsync(device.id + '.Events.' + event, { type: 'state', common: { name: 'Event: ' + event, type: 'boolean', role: 'switch', read: true, write: false }, native: {} });
             }
-
-            /**
-             * REST API: Subscribe to command state changes
-             */
-            await this.subscribeStatesAsync(device.id + '.Commands.*');
+            return true;
         } catch (e) {
             this.log.error(this.err2Str(e));
-            return;
+            return false;
         }
     }
 
@@ -199,15 +200,13 @@ export class FullyMqtt extends utils.Adapter {
                 }
             }
 
-            // process all adapter object devices ['Tablet-Kitchen', 'Tablet-Hallway', ...] accordingly
+            // Get all adapter configuration device ids (enabled and disabled), like ['Tablet-Kitchen', 'Tablet-Hallway', ...]
+            const allConfigDeviceIds: string[] = [];
+            for (const ip in this.fullysAll) {
+                allConfigDeviceIds.push(this.fullysAll[ip].id);
+            }
+            // Delete
             for (const id of allObjectDeviceIds) {
-                // We handle both disabled devices and enabled devices
-                const allConfigDeviceIds = this.disabledDeviceIds; // add all disabled ids first
-                // now add all active ones
-                for (const ip in this.fullys) {
-                    allConfigDeviceIds.push(this.fullys[ip].id);
-                }
-
                 if (!allConfigDeviceIds.includes(id)) {
                     await this.delObjectAsync(id, { recursive: true });
                     this.log.info(`Cleanup: Deleted no longer defined device objects of '${id}'.`);
@@ -259,6 +258,7 @@ export class FullyMqtt extends utils.Adapter {
                     name: '',
                     id: '',
                     ip: '',
+                    enabled: false,
                     mqttInfoObjectsCreated: false,
                     mqttInfoKeys: [],
                     restProtocol: 'http',
@@ -324,19 +324,22 @@ export class FullyMqtt extends utils.Adapter {
                     finalDevice.restPassword = lpDevice.restPassword;
                 }
 
+                // Enabled status
+                finalDevice.enabled = lpDevice.enabled ? true : false;
+
+                // Debug log of config
                 const logConfig = { ...finalDevice }; // copy object using spread
                 logConfig.restPassword = '(hidden)'; // do not show password in log !
                 this.log.debug(`Final Config: ${JSON.stringify(logConfig)}`);
+
+                // Finalize
+                this.fullysAll[finalDevice.ip] = finalDevice;
                 if (lpDevice.enabled) {
-                    // Finalize
                     this.fullys[finalDevice.ip] = finalDevice;
-                    this.activeDeviceIPs.push(lpDevice.ip); // global array for all active IPs
                     this.log.info(`🗸 ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);
                 } else {
-                    // Skip if not enabled. (but we did verification anyway!)
-                    this.disabledDeviceIds.push(finalDevice.id);
-                    this.log.debug(`Device ${finalDevice.name} (${finalDevice.ip}) is not enabled, so skip it.`);
-                    continue;
+                    this.fullysNotEnabled[finalDevice.ip] = finalDevice;
+                    this.log.info(`${finalDevice.name} (${finalDevice.ip}) is not enabled in adapter settings, so it will not be used by adapter.`);
                 }
             }
 
@@ -353,16 +356,16 @@ export class FullyMqtt extends utils.Adapter {
 
     /**
      * On Alive Changes
-     * for both REST API and MQTT
+     * MQTT is being used only, REST API not.
      */
-    public async onAliveChange(source: 'MQTT' | 'REST', ip: string, isAlive: true | false, msg: string): Promise<void> {
+    public async onMqttAlive(ip: string, isAlive: true | false, msg: string): Promise<void> {
         try {
             const prevIsAlive = this.fullys[ip].isAlive;
             this.fullys[ip].isAlive = isAlive;
 
             // Has this function ever been called before? If adapter is restarted, we ensure log, etc.
-            const calledBefore = this.onAliveChange_EverBeenCalledBefore; // Keep old value
-            this.onAliveChange_EverBeenCalledBefore = true; // Now it was called
+            const calledBefore = this.onMqttAlive_EverBeenCalledBefore; // Keep old value
+            this.onMqttAlive_EverBeenCalledBefore = true; // Now it was called
 
             /***********
              * 1 - Fully Device
@@ -374,9 +377,9 @@ export class FullyMqtt extends utils.Adapter {
 
                 // log
                 if (isAlive) {
-                    this.log.info(`${this.fullys[ip].name} is alive (${source}: ${msg})`);
+                    this.log.info(`${this.fullys[ip].name} is alive (MQTT: ${msg})`);
                 } else {
-                    this.log.warn(`${this.fullys[ip].name} is not alive! (${source}: ${msg})`);
+                    this.log.warn(`${this.fullys[ip].name} is not alive! (MQTT: ${msg})`);
                 }
             } else {
                 // No change
@@ -408,7 +411,7 @@ export class FullyMqtt extends utils.Adapter {
     public async onMqttInfo(obj: { clientId: string; ip: string; topic: string; infoObj: { [k: string]: any } }): Promise<void> {
         try {
             // log
-            this.log.debug(`[MQTT]📡 ${this.fullys[obj.ip].name} published info, topic: ${obj.topic}`);
+            this.log.debug(`[MQTT] ${this.fullys[obj.ip].name} published info, topic: ${obj.topic}`);
             //this.log.debug(`[MQTT] Client ${obj.ip} Publish Info: Details: ${JSON.stringify(obj.infoObj)}`);
 
             // Create info objects if not yet existing
@@ -544,7 +547,7 @@ export class FullyMqtt extends utils.Adapter {
                  */
                 const sendCommand = await this.restApi_inst.sendCmd(fully, cmdToSend, stateObj.val);
                 if (sendCommand) {
-                    this.log.info(`${fully.name}: ${cmd} successfully set to ${stateObj.val}`);
+                    this.log.info(`🗸 ${fully.name}: Command ${cmd} successfully set to ${stateObj.val}`);
                     /**
                      * Confirm with ack:true
                      */
@@ -636,12 +639,15 @@ export class FullyMqtt extends utils.Adapter {
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      */
-    private onUnload(callback: () => void): void {
+    private async onUnload(callback: () => void): Promise<void> {
         try {
-            if (this.fullys) {
-                for (const ip in this.fullys) {
-                    // Set alive status to false
-                    this.setState(this.fullys[ip].id + '.alive', { val: false, ack: true });
+            // All Fullys: Set alive status to null
+            if (this.fullysAll) {
+                for (const ip in this.fullysAll) {
+                    // We check first if object exists, as there were errors in log on when updating adpater via Github (related to missing objects)
+                    if (await this.getObjectAsync(this.fullysAll[ip].id)) {
+                        this.setState(this.fullysAll[ip].id + '.alive', { val: null, ack: true });
+                    }
                 }
             }
 
