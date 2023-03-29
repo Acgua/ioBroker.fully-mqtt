@@ -72,6 +72,7 @@ class FullyMqtt extends utils.Adapter {
         if (res)
           await this.subscribeStatesAsync(this.fullys[ip].id + ".Commands.*");
         this.setState(this.fullys[ip].id + ".enabled", { val: true, ack: true });
+        this.setState(this.fullysNotEnabled[ip].id + ".alive", { val: false, ack: true });
       }
       for (const ip in this.fullysNotEnabled) {
         this.setState(this.fullysNotEnabled[ip].id + ".enabled", { val: false, ack: true });
@@ -87,7 +88,6 @@ class FullyMqtt extends utils.Adapter {
   }
   async createFullyDeviceObjects(device) {
     try {
-      this.log.debug(`Start createFullyDeviceObjects() - ${device.name} (${device.ip})\u2026`);
       await this.setObjectNotExistsAsync(device.id, {
         type: "device",
         common: {

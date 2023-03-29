@@ -87,8 +87,10 @@ export class FullyMqtt extends utils.Adapter {
                 const res = await this.createFullyDeviceObjects(this.fullys[ip]);
                 // REST API: Subscribe to command state changes
                 if (res) await this.subscribeStatesAsync(this.fullys[ip].id + '.Commands.*');
-                // Set enabled state
+                // Set enabled state to true
                 this.setState(this.fullys[ip].id + '.enabled', { val: true, ack: true });
+                // Set alive state to false initially
+                this.setState(this.fullysNotEnabled[ip].id + '.alive', { val: false, ack: true });
             }
             // Not enabled fullys: 1. Enabled state to false; 2. alive to null
             for (const ip in this.fullysNotEnabled) {
@@ -119,8 +121,6 @@ export class FullyMqtt extends utils.Adapter {
      */
     private async createFullyDeviceObjects(device: IDevice): Promise<true | false> {
         try {
-            this.log.debug(`Start createFullyDeviceObjects() - ${device.name} (${device.ip})…`);
-
             /**
              * Create device object(s)
              */
