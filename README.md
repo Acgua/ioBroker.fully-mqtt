@@ -48,8 +48,7 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-
-### **WORK IN PROGRESS**
+### 0.2.0 (2023-03-30)
 
 -   (Acgua) Fixed starting MQTT server
 -   (Acgua) Code cleanup
