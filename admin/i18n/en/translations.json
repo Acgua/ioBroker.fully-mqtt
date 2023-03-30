@@ -4,6 +4,8 @@
     "Always update info objects, even if value did not change": "Always update info objects, even if value did not change",
     "Always update info states": "Always update info states",
     "Client and Connection errors as info in log": "Client and Connection errors as info in log",
+    "Create default event objects (facesDetected, hideKeyboard, etc.) at the first adapter startup": "Create default event objects (facesDetected, hideKeyboard, etc.) at the first adapter startup",
+    "Create default event objects at adapter start": "Create default event objects at adapter start",
     "Device Name": "Device Name",
     "Do not process published info more than every x seconds": "Do not process published info more than every x seconds",
     "Do not verify user and password": "Do not verify user and password",

@@ -4,6 +4,8 @@
     "Always update info objects, even if value did not change": "Werk info-objecten altijd bij, zelfs als de waarde niet is gewijzigd",
     "Always update info states": "Update de infostatussen altijd",
     "Client and Connection errors as info in log": "Client- en verbindingsfouten als info in logboek",
+    "Create default event objects (facesDetected, hideKeyboard, etc.) at the first adapter startup": "Maak standaardgebeurtenisobjecten (facesDetected, hideKeyboard, enz.) bij de eerste keer opstarten van de adapter",
+    "Create default event objects at adapter start": "Maak standaardgebeurtenisobjecten bij het starten van de adapter",
     "Device Name": "Toestelnaam",
     "Do not process published info more than every x seconds": "Verwerk gepubliceerde informatie niet vaker dan elke x seconden",
     "Do not verify user and password": "Verifieer de gebruiker en het wachtwoord niet",

@@ -1,211 +1,211 @@
 {
-  "common": {
-    "name": "fully-mqtt",
-    "version": "0.1.0",
-    "news": {
-      "0.1.0": {
-        "en": "**Breaking Change**: Using MQTT is required, and removed option to deactivate MQTT. Reasons: 1. requesting info thru REST API is redundant and simply not needed since MQTT is available, 2. It does not make sense to not use MQTT since it provides live updates of states.\n**Breaking Change**: Object 'mqttActivated' ('fully-mqtt.x.yyy.mqttActivated') is no longer used. Feel free to delete these objects if you update from a previous version as these will not be deleted automatically.\nRemoved all REST API info requests, as MQTT use is now required\nCode improvements",
-        "de": "*Breaking Change*: Die Verwendung von MQTT ist erforderlich und entfernte Option, um MQTT zu deaktivieren. Gründe: 1. Anfragen an info thru REST API ist redundant und einfach nicht benötigt, da MQTT verfügbar ist, 2. Es macht keinen Sinn, MQTT nicht zu verwenden, da es Live-Updates von Zuständen bietet.\n*Breaking Change*: Objekt mqtActivated (ful-mqtt.x.yyyy.mqtActivated) wird nicht mehr verwendet. Fühlen Sie sich frei, diese Objekte zu löschen, wenn Sie von einer vorherigen Version aktualisieren, da diese nicht automatisch gelöscht werden.\nEntfernt alle REST API-Info-Anfragen, da MQTT jetzt verwendet wird\nVerbesserungen des Codes",
-        "ru": "*Восстановление изменений*: Использование MQTT требуется, и удаленный вариант для деактивации MQTT. Причины: 1. запрос информации thru REST API является избыточным и просто не требуется, так как MQTT доступен, 2. Это не имеет смысла не использовать MQTT, так как он предоставляет живые обновления государств.\n*Восстановление изменений*: Объект mqttActivated (fully-mqtt.x.yy.mqttActivated) больше не используется. Не стесняйтесь удалить эти объекты, если вы обновляете с предыдущей версии, поскольку они не будут удалены автоматически.\nУдалены все запросы информации о REST API, так как использование MQTT теперь требуется\nУлучшения кода",
-        "pt": "* Mudança de travagem*: O uso do MQTT é necessário e a opção removida para desativar o MQTT. Razões: 1. solicitando informações thru REST API é redundante e simplesmente não é necessário desde MQTT está disponível, 2. Não faz sentido para não usar MQTT, uma vez que fornece atualizações ao vivo de estados.\n* Mudança de travagem*: Object mqttActivated (fully-mqtt.x.yyyy.mqttActivated) não é mais usado. Sinta-se livre para excluir esses objetos se você atualizar de uma versão anterior, pois estes não serão excluídos automaticamente.\nRemovido todos os pedidos de informações da API REST, já que o uso do MQTT agora é necessário\nMelhorias de código",
-        "nl": "♪ Breaking Change ♪ Het gebruik van MQTT is vereist en verwijderde optie om MQT te deactiveren. Reasons: 1. verzoekt info RESTAPI is overbodig en simpelweg niet meer nodig sinds MQTT beschikbaar is, 2.\n♪ Breaking Change ♪ Object MqtActivated (vol-mqtt. ..y.mqttActivatie is niet meer gebruikt. Voel je vrij om deze objecten te verwijderen als je updatet van een vorige versie zoals deze niet automatisch gewist worden.\nVerwijder alle API-informatie verzoeken, zoals MQTT nu nodig heeft\nCode verbetering",
-        "fr": "*Breaking Change*: L'utilisation de MQTT est requise, et l'option supprimée pour désactiver MQTT. Motifs: 1. demander des informations thru L'API REST est redondante et tout simplement pas nécessaire puisque MQTT est disponible, 2. Il n'est pas logique de ne pas utiliser MQTT car il fournit des mises à jour en direct des états.\n*Breaking Change*: Objet mqttActivated (fully-mqtt.x.yyy.mqttActivated) n'est plus utilisé. N'hésitez pas à supprimer ces objets si vous mettez à jour depuis une version précédente car ceux-ci ne seront pas supprimés automatiquement.\nEnlevé toutes les demandes d'information de l'API REST, comme l'utilisation de MQTT est maintenant requise\nAmélioration des codes",
-        "it": "*Breaking Change*: Utilizzando MQTT è necessario, e l'opzione rimossa per disattivare MQTT. Motivi: 1. richiedendo info thru REST API è ridondante e semplicemente non necessario dal momento che MQTT è disponibile, 2. Non ha senso non utilizzare MQTT dal momento che fornisce aggiornamenti dal vivo degli stati.\n*Breaking Change*: Oggetti mqttActivated (completamente-mqtt.x.yyy.mqttActivated) non è più utilizzato. Sentitevi liberi di eliminare questi oggetti se si aggiorna da una versione precedente in quanto questi non verranno eliminati automaticamente.\nRimuovete tutte le richieste di informazioni REST API, in quanto l'uso MQTT è ora richiesto\nMiglioramento del codice",
-        "es": "*Breaking Change*: Utilizar MQTT es necesario y eliminar la opción para desactivar MQTT. Razones: 1. solicitar información a través de REST API es redundante y simplemente no es necesario ya que MQTT está disponible, 2. No tiene sentido no utilizar MQTT ya que proporciona actualizaciones en vivo de estados.\n*Breaking Change*: Objeto mqttActivated (fully-mqtt.x.yyyy.mqttActivated) ya no se utiliza. Siéntase libre de eliminar estos objetos si se actualiza de una versión anterior, ya que estos no serán eliminados automáticamente.\nQuitar todas las solicitudes de información de REST API, ya que el uso de MQTT es ahora necesario\nMejoras del Código",
-        "pl": "*Breaking Change* (ang.). Zastosowanie MQTT jest wymagane i usunięcie opcji w celu dezaktywowania MQTT. Rozum: 1. żądanie API info thru REST jest zbędne i po prostu nie potrzebne, ponieważ MQTT jest dostępny, 2. Nie ma pojęcia, aby nie korzystać z MQTT.\n*Breaking Change* (ang.). Obiekt mqttActivated (w pełni mqtt.x.yyy.mqttActivated) nie jest już używany. Uczucie wolnej usuwania tych obiektów, jeśli uaktualnisz się od poprzedniej wersji, ponieważ nie zostanie usunięta automatycznie.\nUsunął wszystkie żądania API REST, ponieważ obecnie wymagane jest użycie MQTT\nPoprawa kodu",
-        "uk": "* Зміна маршрутизації*: За допомогою MQTT необхідно і видалити опцію для деактивації MQTT. Причини: 1. Запит на інформацію про API REST є надмірним і просто не потрібно, оскільки MQTT є доступним, 2. Він не має сенсу не використовувати MQTT, оскільки він забезпечує живі оновлення станів.\n* Зміна маршрутизації*: Об'єкт mqttActivated (fully-mqtt.x.yyy.mqttActivated) не використовується. Відчуйте безкоштовно, щоб видалити ці об'єкти, якщо ви оновлення з попередньої версії, оскільки це не буде видалено автоматично.\nВилучено всі запити REST API, оскільки використання MQTT тепер потрібно\nПоліпшення коду",
-        "zh-cn": "* 改动*: 需要使用MQTT,并取消取消对MQTT进行交易的选择。 理由: 1. 要求自技合会获得以来,光是多余的,而且根本不必要。 2 由于它提供实况的最新资料,这并不意味着不使用技转中心。.\n* 改动*: 不再使用物体(原状-mqt.x.y.mqt Activ) 如果你从前一版本中更新,不自动删除这些物品,那就不能删除。.\n由于现在需要使用氢氟烷烃的用途,取消所有含铅酸酐的要求。\nA. 守则的改进"
-      },
-      "0.0.12": {
-        "en": "Logging improved\nInternal: test git branch",
-        "de": "Protokollierung verbessert\nIntern: Test git branch",
-        "ru": "Улучшается вход\nВнутреннее: test git Branch",
-        "pt": "Melhorar o registo\nInterna: ramo git de teste",
-        "nl": "Logging verbeterd\nVertaling:",
-        "fr": "Logging improved\nInterne: branche git test",
-        "it": "Registrazione migliorata\nInterno: ramo di prova",
-        "es": "Mejoramiento de los registros\nInterno: rama de punto de prueba",
-        "pl": "Logging poprawił\nWewnątrz: test gimnazjum",
-        "uk": "Удосконалено рухи\nВнутрішня: тест git branch",
-        "zh-cn": "B. 后勤改善\n内部:试验室"
-      },
-      "0.0.11": {
-        "en": "Fix: Remote admin password issue\nImproved debug and error log when sending REST API commands",
-        "de": "Fix: Remote Admin Passwort Problem\nVerbesserte Debug- und Fehlerprotokolle beim Senden von REST API-Befehlen",
-        "ru": "Исправление: Удаленный пароль admin\nУлучшена отладка и ошибка лога при отправке команд REST API",
-        "pt": "Corrigir: Problema de senha de administrador remoto\nRegistro melhorado de depuração e erro ao enviar comandos de API REST",
-        "nl": "Verwijder het wachtwoord\nImproviseerde debug en fouten logboek als ze de API commando's sturen",
-        "fr": "Correction : Problème de mot de passe administrateur distant\nDébug amélioré et journal d'erreur lors de l'envoi de commandes API REST",
-        "it": "Risolvere il problema della password di amministratore remoto\nMigliorato il debug e il log degli errori quando si inviano i comandi REST API",
-        "es": "Corrección: Problema de contraseña de administración remota\nMejor depuración y registro de errores al enviar comandos REST API",
-        "pl": "Fix: Remote admin password\nImprowed debug and error log, gdy wysłano komendy API REST",
-        "uk": "Виправлення: Віддалене видалення пароля адміністратора\nУдосконалено дебат і журнал помилок при надсиланні команд API REST",
-        "zh-cn": "Fix:遥感密码问题\n在派遣区域采购计划指挥员时,改进了降解和错误的逻辑"
-      },
-      "0.0.10": {
-        "en": "Do not show Remote Admin Password in debug log ([#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14))",
-        "de": "Nicht anzeigen Remote Admin Passwort in debug log [#14](https://github.com/Acgua/ioBroker.ful-mqt/issues/14)",
-        "ru": "Не показывать Remote Admin Password в журнале debug [#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14)",
-        "pt": "Não mostre Senha de Administrador Remoto no log de depuração [#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14)",
-        "nl": "Laat Remote Admin Pasword niet zien in debug log 14:",
-        "fr": "Ne pas afficher Remote Admin Password in debug log [#14](https://github.com/Acgua/ioBroker.fully-mqt/issues/14)",
-        "it": "Non mostrare la password di amministratore remoto nel registro di debug [#14](https://github.com/Acgua/ioBroker.fully-mqt/issues/14)",
-        "es": "No mostrar contraseña de administrador remoto en el registro de depuración [#14](https://github.com/Acgua/ioBroker.fully-mqt/issues/14)",
-        "pl": "Nie pokazuje Remote Admin Password w debug log #14(https:/github.com/Acgua/ioBroker.ful-mqtt/issues/14)",
-        "uk": "Не показувати пароль віддаленого адміністратора в журналі debug [#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14)",
-        "zh-cn": "不要在德布格逻辑(第14号)中展示遥感词(http://github.com/Acgua/ioBroker.ful-mqt/issues/14)。"
-      },
-      "0.0.9": {
-        "en": "**Breaking Change** If you update from a previous version: In Adapter config, device table: disable and enable your all of your devices, and save options afterwards.\nBug fix: enabled devices in config were skipped\nEnglish adapter documentation added.\nAdapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))\nVerified that device objects are removed when device was deleted or renamed in config",
-        "de": "**Breaking Change** If you update from a previous version: In Adapter config, device table: disable and enable your all of your devices, and save options afterwards.\nBug fix: enabled devices in config were skipped\nEnglish adapter documentation added.\nAdapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))\nVerified that device objects are removed when device was deleted or renamed in config",
-        "ru": "*Восхождение изменения* Если вы обновляете из предыдущей версии: В адаптере config, таблица устройств: отключите и включите все ваши устройства и сохраните опции после.\nИсправление баг: включенные устройства в конфиг были пропущены\nДобавлена английская документация адаптера.\nАдаптер добавлен в Weblate [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nПроверено, что объекты устройства удаляются, когда устройство было удалено или переименовано в config",
-        "pt": "* Mudança de travagem* Se você atualizar de uma versão anterior: Na configuração do adaptador, tabela do dispositivo: desabilite e ative todos os seus dispositivos e salve opções depois.\nCorreção de Bug: dispositivos habilitados em config foram ignorados\nDocumentação do adaptador inglês adicionada.\nAdapter foi adicionado ao Weblate [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nVerificado que os objetos do dispositivo são removidos quando o dispositivo foi excluído ou renomeado em config",
-        "nl": "♪ Breaking Change ♪ Als je update van een vorige versie: In Adapter Config, apparaattafel, uitschakelen en je apparatuur inschakelen, en daarna opties sparen.\nBug reparatie: gehandicapte apparaten in het leger zijn overgeslagen\nEngelse papieren toegevoegd.\nAdapter werd toegevoegd aan Weblate £108\nVertaald door:",
-        "fr": "*Breaking Change* Si vous mettez à jour à partir d'une version précédente: Dans la configuration d'adaptateur, tableau de périphériques : désactivez et activez tous vos appareils, et enregistrez des options après.\nCorrection de bug: les dispositifs activés dans la configuration ont été ignorés\nLa documentation de l'adaptateur anglais a été ajoutée.\nL ' adaptateur a été ajouté à Weblate [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nVérifié que les objets de périphérique sont enlevés lorsque le dispositif a été supprimé ou renommé dans la configuration",
-        "it": "*Breaking Change* Se si aggiorna da una versione precedente: Nella configurazione dell'adattatore, tabella del dispositivo: disabilitare e abilitare tutti i dispositivi e salvare le opzioni dopo.\nCorrezione bug: i dispositivi abilitati in configurazione sono stati saltati\nDocumentazione adattatore inglese aggiunto.\nAdattatore è stato aggiunto a Weblate [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nVerifica che gli oggetti del dispositivo vengano rimossi quando il dispositivo è stato cancellato o rinominato in configurazione",
-        "es": "*Breaking Change* Si se actualiza de una versión anterior: En el config Adapter, tabla de dispositivos: deshabilitar y activar todos sus dispositivos, y guardar opciones después.\nCorrección de errores: dispositivos habilitados en config fueron saltados\nDocumentación de adaptador en inglés.\nEl adaptador se añadió a la página web [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nVerificado que los objetos de dispositivo se eliminan cuando el dispositivo fue eliminado o renombrado en config",
-        "pl": "*Breaking Change* (ang.). Jeśli uaktualnisz się z poprzedniej wersji: W Adapter config znajduje się tablica urządzenie: zdyskwalifikowana i umożliwiająca wszystkie swoje urządzenia i zachowane opcje.\nUruchomienie Bugu: umożliwiane urządzenia w konfigunie\nAngielska dokumentacja adaptacyjna.\nAdapter został dodany do Weblate #108(https:/github.com/ioBrokerTranslator/requests/issues/108)\nWeryfikowano, że obiekty urządzenia są usuwane, gdy urządzenie zostało usunięte lub przemianowane na config",
-        "uk": "* Зміна трафіку* Якщо ви оновлення з попередньої версії: У налаштуваннях адаптера, таблиці пристрою: відключити і увімкнути всі пристрої, і зберегти параметри після.\nВиправлення помилок: ввімкнені пристрої в конфігурації\nДодана документація англійською мовою.\nДодано адаптер в Weblate [#108](https://github.com/ioBrokerTranslator/requests/products/108)\nПеревірено, що пристрої видаляються при видаленні пристрою або перейменовані в налаштування",
-        "zh-cn": "* 改动* 如果你从以前的版本更新: 在阿达佩特,装置表:可区别,使你的所有装置得以使用,并挽救后的选择。.\nBug fix:破裂的装置被焚化\n英文适应文件增加。.\n添加到以下网址:www.github.com/ioBrokertranslator/requests/issues/108\n在装置被删除或改装时,清除了该装置的物品。"
-      },
-      "0.0.8": {
-        "en": "Github Workflow Deploy - try to fix GitHub release failed with status: 403 undefined ([Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128))",
-        "de": "Github Workflow Deploy - versuchen, GitHub-Release mit dem Status zu beheben: 403 undefiniert [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
-        "ru": "Github Workflow Deploy - попробуйте исправить GitHub релиз не удалось со статусом: 403 undefined [Ссылка](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
-        "pt": "Github Workflow Deploy - tentar corrigir a versão GitHub falhou com o status: 403 indefinido [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
-        "nl": "Github Workflow Deploy - proberen GitHub vrijlating te repareren gefaald met status: 403 onbepaalde [Link ) [Ghtub /com/ / 12-g-g-g-g-g-g-g-g-g-b-b-b-b-b-b-b-b-b-b-b-b-b-b-b-b-b-p-p- /12-b",
-        "fr": "Github Workflow Deploy - essayer de réparer GitHub release failed with status: 403 undefined [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
-        "it": "Github Workflow Deploy - cercare di risolvere GitHub rilascio fallito con stato: 403 non definito [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
-        "es": "Github Workflow Deploy - try to fix GitHub release failed with status: 403 un defined [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
-        "pl": "Github Workflow Deploy – próba naprawy GitHub nie powiodła się ze statusem: 403 niedefiniowane Link(https:/github.com/softprops/action-gh-release/issues/236#comment-11500128",
-        "uk": "Github Workflow Deploy - спробувати виправити реліз GitHub не вдалося з статусом: 403 undefined [Link](https://github.com/softprops/action-gh-release/issues/236#productcomment-1150530128)",
-        "zh-cn": "Gthub工作流程Deploy——试图确定GitHub的释放没有地位:403个未界定的[Link](http://github.com/softs/action-gh-release/issues/236#issuecomment-1150530128)"
-      },
-      "0.0.7": {
-        "en": "Test-only of release etc.",
-        "de": "Test-only of release etc.",
-        "ru": "Тест-только релиза и т.д.",
-        "pt": "Test-only da liberação etc.",
-        "nl": "Test-only of release etc.",
-        "fr": "Test-only of release etc.",
-        "it": "Test-solo di rilascio ecc.",
-        "es": "Prueba solo de liberación, etc.",
-        "pl": "Test-only of release (ang.).",
-        "uk": "Тест-тільки релізу і т.д.",
-        "zh-cn": "试验释放等。."
-      }
+    "common": {
+        "name": "fully-mqtt",
+        "version": "0.1.0",
+        "news": {
+            "0.1.0": {
+                "en": "**Breaking Change**: Using MQTT is required, and removed option to deactivate MQTT. Reasons: 1. requesting info thru REST API is redundant and simply not needed since MQTT is available, 2. It does not make sense to not use MQTT since it provides live updates of states.\n**Breaking Change**: Object 'mqttActivated' ('fully-mqtt.x.yyy.mqttActivated') is no longer used. Feel free to delete these objects if you update from a previous version as these will not be deleted automatically.\nRemoved all REST API info requests, as MQTT use is now required\nCode improvements",
+                "de": "*Breaking Change*: Die Verwendung von MQTT ist erforderlich und entfernte Option, um MQTT zu deaktivieren. Gründe: 1. Anfragen an info thru REST API ist redundant und einfach nicht benötigt, da MQTT verfügbar ist, 2. Es macht keinen Sinn, MQTT nicht zu verwenden, da es Live-Updates von Zuständen bietet.\n*Breaking Change*: Objekt mqtActivated (ful-mqtt.x.yyyy.mqtActivated) wird nicht mehr verwendet. Fühlen Sie sich frei, diese Objekte zu löschen, wenn Sie von einer vorherigen Version aktualisieren, da diese nicht automatisch gelöscht werden.\nEntfernt alle REST API-Info-Anfragen, da MQTT jetzt verwendet wird\nVerbesserungen des Codes",
+                "ru": "*Восстановление изменений*: Использование MQTT требуется, и удаленный вариант для деактивации MQTT. Причины: 1. запрос информации thru REST API является избыточным и просто не требуется, так как MQTT доступен, 2. Это не имеет смысла не использовать MQTT, так как он предоставляет живые обновления государств.\n*Восстановление изменений*: Объект mqttActivated (fully-mqtt.x.yy.mqttActivated) больше не используется. Не стесняйтесь удалить эти объекты, если вы обновляете с предыдущей версии, поскольку они не будут удалены автоматически.\nУдалены все запросы информации о REST API, так как использование MQTT теперь требуется\nУлучшения кода",
+                "pt": "* Mudança de travagem*: O uso do MQTT é necessário e a opção removida para desativar o MQTT. Razões: 1. solicitando informações thru REST API é redundante e simplesmente não é necessário desde MQTT está disponível, 2. Não faz sentido para não usar MQTT, uma vez que fornece atualizações ao vivo de estados.\n* Mudança de travagem*: Object mqttActivated (fully-mqtt.x.yyyy.mqttActivated) não é mais usado. Sinta-se livre para excluir esses objetos se você atualizar de uma versão anterior, pois estes não serão excluídos automaticamente.\nRemovido todos os pedidos de informações da API REST, já que o uso do MQTT agora é necessário\nMelhorias de código",
+                "nl": "♪ Breaking Change ♪ Het gebruik van MQTT is vereist en verwijderde optie om MQT te deactiveren. Reasons: 1. verzoekt info RESTAPI is overbodig en simpelweg niet meer nodig sinds MQTT beschikbaar is, 2.\n♪ Breaking Change ♪ Object MqtActivated (vol-mqtt. ..y.mqttActivatie is niet meer gebruikt. Voel je vrij om deze objecten te verwijderen als je updatet van een vorige versie zoals deze niet automatisch gewist worden.\nVerwijder alle API-informatie verzoeken, zoals MQTT nu nodig heeft\nCode verbetering",
+                "fr": "*Breaking Change*: L'utilisation de MQTT est requise, et l'option supprimée pour désactiver MQTT. Motifs: 1. demander des informations thru L'API REST est redondante et tout simplement pas nécessaire puisque MQTT est disponible, 2. Il n'est pas logique de ne pas utiliser MQTT car il fournit des mises à jour en direct des états.\n*Breaking Change*: Objet mqttActivated (fully-mqtt.x.yyy.mqttActivated) n'est plus utilisé. N'hésitez pas à supprimer ces objets si vous mettez à jour depuis une version précédente car ceux-ci ne seront pas supprimés automatiquement.\nEnlevé toutes les demandes d'information de l'API REST, comme l'utilisation de MQTT est maintenant requise\nAmélioration des codes",
+                "it": "*Breaking Change*: Utilizzando MQTT è necessario, e l'opzione rimossa per disattivare MQTT. Motivi: 1. richiedendo info thru REST API è ridondante e semplicemente non necessario dal momento che MQTT è disponibile, 2. Non ha senso non utilizzare MQTT dal momento che fornisce aggiornamenti dal vivo degli stati.\n*Breaking Change*: Oggetti mqttActivated (completamente-mqtt.x.yyy.mqttActivated) non è più utilizzato. Sentitevi liberi di eliminare questi oggetti se si aggiorna da una versione precedente in quanto questi non verranno eliminati automaticamente.\nRimuovete tutte le richieste di informazioni REST API, in quanto l'uso MQTT è ora richiesto\nMiglioramento del codice",
+                "es": "*Breaking Change*: Utilizar MQTT es necesario y eliminar la opción para desactivar MQTT. Razones: 1. solicitar información a través de REST API es redundante y simplemente no es necesario ya que MQTT está disponible, 2. No tiene sentido no utilizar MQTT ya que proporciona actualizaciones en vivo de estados.\n*Breaking Change*: Objeto mqttActivated (fully-mqtt.x.yyyy.mqttActivated) ya no se utiliza. Siéntase libre de eliminar estos objetos si se actualiza de una versión anterior, ya que estos no serán eliminados automáticamente.\nQuitar todas las solicitudes de información de REST API, ya que el uso de MQTT es ahora necesario\nMejoras del Código",
+                "pl": "*Breaking Change* (ang.). Zastosowanie MQTT jest wymagane i usunięcie opcji w celu dezaktywowania MQTT. Rozum: 1. żądanie API info thru REST jest zbędne i po prostu nie potrzebne, ponieważ MQTT jest dostępny, 2. Nie ma pojęcia, aby nie korzystać z MQTT.\n*Breaking Change* (ang.). Obiekt mqttActivated (w pełni mqtt.x.yyy.mqttActivated) nie jest już używany. Uczucie wolnej usuwania tych obiektów, jeśli uaktualnisz się od poprzedniej wersji, ponieważ nie zostanie usunięta automatycznie.\nUsunął wszystkie żądania API REST, ponieważ obecnie wymagane jest użycie MQTT\nPoprawa kodu",
+                "uk": "* Зміна маршрутизації*: За допомогою MQTT необхідно і видалити опцію для деактивації MQTT. Причини: 1. Запит на інформацію про API REST є надмірним і просто не потрібно, оскільки MQTT є доступним, 2. Він не має сенсу не використовувати MQTT, оскільки він забезпечує живі оновлення станів.\n* Зміна маршрутизації*: Об'єкт mqttActivated (fully-mqtt.x.yyy.mqttActivated) не використовується. Відчуйте безкоштовно, щоб видалити ці об'єкти, якщо ви оновлення з попередньої версії, оскільки це не буде видалено автоматично.\nВилучено всі запити REST API, оскільки використання MQTT тепер потрібно\nПоліпшення коду",
+                "zh-cn": "* 改动*: 需要使用MQTT,并取消取消对MQTT进行交易的选择。 理由: 1. 要求自技合会获得以来,光是多余的,而且根本不必要。 2 由于它提供实况的最新资料,这并不意味着不使用技转中心。.\n* 改动*: 不再使用物体(原状-mqt.x.y.mqt Activ) 如果你从前一版本中更新,不自动删除这些物品,那就不能删除。.\n由于现在需要使用氢氟烷烃的用途,取消所有含铅酸酐的要求。\nA. 守则的改进"
+            },
+            "0.0.12": {
+                "en": "Logging improved\nInternal: test git branch",
+                "de": "Protokollierung verbessert\nIntern: Test git branch",
+                "ru": "Улучшается вход\nВнутреннее: test git Branch",
+                "pt": "Melhorar o registo\nInterna: ramo git de teste",
+                "nl": "Logging verbeterd\nVertaling:",
+                "fr": "Logging improved\nInterne: branche git test",
+                "it": "Registrazione migliorata\nInterno: ramo di prova",
+                "es": "Mejoramiento de los registros\nInterno: rama de punto de prueba",
+                "pl": "Logging poprawił\nWewnątrz: test gimnazjum",
+                "uk": "Удосконалено рухи\nВнутрішня: тест git branch",
+                "zh-cn": "B. 后勤改善\n内部:试验室"
+            },
+            "0.0.11": {
+                "en": "Fix: Remote admin password issue\nImproved debug and error log when sending REST API commands",
+                "de": "Fix: Remote Admin Passwort Problem\nVerbesserte Debug- und Fehlerprotokolle beim Senden von REST API-Befehlen",
+                "ru": "Исправление: Удаленный пароль admin\nУлучшена отладка и ошибка лога при отправке команд REST API",
+                "pt": "Corrigir: Problema de senha de administrador remoto\nRegistro melhorado de depuração e erro ao enviar comandos de API REST",
+                "nl": "Verwijder het wachtwoord\nImproviseerde debug en fouten logboek als ze de API commando's sturen",
+                "fr": "Correction : Problème de mot de passe administrateur distant\nDébug amélioré et journal d'erreur lors de l'envoi de commandes API REST",
+                "it": "Risolvere il problema della password di amministratore remoto\nMigliorato il debug e il log degli errori quando si inviano i comandi REST API",
+                "es": "Corrección: Problema de contraseña de administración remota\nMejor depuración y registro de errores al enviar comandos REST API",
+                "pl": "Fix: Remote admin password\nImprowed debug and error log, gdy wysłano komendy API REST",
+                "uk": "Виправлення: Віддалене видалення пароля адміністратора\nУдосконалено дебат і журнал помилок при надсиланні команд API REST",
+                "zh-cn": "Fix:遥感密码问题\n在派遣区域采购计划指挥员时,改进了降解和错误的逻辑"
+            },
+            "0.0.10": {
+                "en": "Do not show Remote Admin Password in debug log ([#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14))",
+                "de": "Nicht anzeigen Remote Admin Passwort in debug log [#14](https://github.com/Acgua/ioBroker.ful-mqt/issues/14)",
+                "ru": "Не показывать Remote Admin Password в журнале debug [#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14)",
+                "pt": "Não mostre Senha de Administrador Remoto no log de depuração [#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14)",
+                "nl": "Laat Remote Admin Pasword niet zien in debug log 14:",
+                "fr": "Ne pas afficher Remote Admin Password in debug log [#14](https://github.com/Acgua/ioBroker.fully-mqt/issues/14)",
+                "it": "Non mostrare la password di amministratore remoto nel registro di debug [#14](https://github.com/Acgua/ioBroker.fully-mqt/issues/14)",
+                "es": "No mostrar contraseña de administrador remoto en el registro de depuración [#14](https://github.com/Acgua/ioBroker.fully-mqt/issues/14)",
+                "pl": "Nie pokazuje Remote Admin Password w debug log #14(https:/github.com/Acgua/ioBroker.ful-mqtt/issues/14)",
+                "uk": "Не показувати пароль віддаленого адміністратора в журналі debug [#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14)",
+                "zh-cn": "不要在德布格逻辑(第14号)中展示遥感词(http://github.com/Acgua/ioBroker.ful-mqt/issues/14)。"
+            },
+            "0.0.9": {
+                "en": "**Breaking Change** If you update from a previous version: In Adapter config, device table: disable and enable your all of your devices, and save options afterwards.\nBug fix: enabled devices in config were skipped\nEnglish adapter documentation added.\nAdapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))\nVerified that device objects are removed when device was deleted or renamed in config",
+                "de": "**Breaking Change** If you update from a previous version: In Adapter config, device table: disable and enable your all of your devices, and save options afterwards.\nBug fix: enabled devices in config were skipped\nEnglish adapter documentation added.\nAdapter was added to Weblate ([#108](https://github.com/ioBrokerTranslator/requests/issues/108))\nVerified that device objects are removed when device was deleted or renamed in config",
+                "ru": "*Восхождение изменения* Если вы обновляете из предыдущей версии: В адаптере config, таблица устройств: отключите и включите все ваши устройства и сохраните опции после.\nИсправление баг: включенные устройства в конфиг были пропущены\nДобавлена английская документация адаптера.\nАдаптер добавлен в Weblate [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nПроверено, что объекты устройства удаляются, когда устройство было удалено или переименовано в config",
+                "pt": "* Mudança de travagem* Se você atualizar de uma versão anterior: Na configuração do adaptador, tabela do dispositivo: desabilite e ative todos os seus dispositivos e salve opções depois.\nCorreção de Bug: dispositivos habilitados em config foram ignorados\nDocumentação do adaptador inglês adicionada.\nAdapter foi adicionado ao Weblate [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nVerificado que os objetos do dispositivo são removidos quando o dispositivo foi excluído ou renomeado em config",
+                "nl": "♪ Breaking Change ♪ Als je update van een vorige versie: In Adapter Config, apparaattafel, uitschakelen en je apparatuur inschakelen, en daarna opties sparen.\nBug reparatie: gehandicapte apparaten in het leger zijn overgeslagen\nEngelse papieren toegevoegd.\nAdapter werd toegevoegd aan Weblate £108\nVertaald door:",
+                "fr": "*Breaking Change* Si vous mettez à jour à partir d'une version précédente: Dans la configuration d'adaptateur, tableau de périphériques : désactivez et activez tous vos appareils, et enregistrez des options après.\nCorrection de bug: les dispositifs activés dans la configuration ont été ignorés\nLa documentation de l'adaptateur anglais a été ajoutée.\nL ' adaptateur a été ajouté à Weblate [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nVérifié que les objets de périphérique sont enlevés lorsque le dispositif a été supprimé ou renommé dans la configuration",
+                "it": "*Breaking Change* Se si aggiorna da una versione precedente: Nella configurazione dell'adattatore, tabella del dispositivo: disabilitare e abilitare tutti i dispositivi e salvare le opzioni dopo.\nCorrezione bug: i dispositivi abilitati in configurazione sono stati saltati\nDocumentazione adattatore inglese aggiunto.\nAdattatore è stato aggiunto a Weblate [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nVerifica che gli oggetti del dispositivo vengano rimossi quando il dispositivo è stato cancellato o rinominato in configurazione",
+                "es": "*Breaking Change* Si se actualiza de una versión anterior: En el config Adapter, tabla de dispositivos: deshabilitar y activar todos sus dispositivos, y guardar opciones después.\nCorrección de errores: dispositivos habilitados en config fueron saltados\nDocumentación de adaptador en inglés.\nEl adaptador se añadió a la página web [#108](https://github.com/ioBrokerTranslator/requests/issues/108)\nVerificado que los objetos de dispositivo se eliminan cuando el dispositivo fue eliminado o renombrado en config",
+                "pl": "*Breaking Change* (ang.). Jeśli uaktualnisz się z poprzedniej wersji: W Adapter config znajduje się tablica urządzenie: zdyskwalifikowana i umożliwiająca wszystkie swoje urządzenia i zachowane opcje.\nUruchomienie Bugu: umożliwiane urządzenia w konfigunie\nAngielska dokumentacja adaptacyjna.\nAdapter został dodany do Weblate #108(https:/github.com/ioBrokerTranslator/requests/issues/108)\nWeryfikowano, że obiekty urządzenia są usuwane, gdy urządzenie zostało usunięte lub przemianowane na config",
+                "uk": "* Зміна трафіку* Якщо ви оновлення з попередньої версії: У налаштуваннях адаптера, таблиці пристрою: відключити і увімкнути всі пристрої, і зберегти параметри після.\nВиправлення помилок: ввімкнені пристрої в конфігурації\nДодана документація англійською мовою.\nДодано адаптер в Weblate [#108](https://github.com/ioBrokerTranslator/requests/products/108)\nПеревірено, що пристрої видаляються при видаленні пристрою або перейменовані в налаштування",
+                "zh-cn": "* 改动* 如果你从以前的版本更新: 在阿达佩特,装置表:可区别,使你的所有装置得以使用,并挽救后的选择。.\nBug fix:破裂的装置被焚化\n英文适应文件增加。.\n添加到以下网址:www.github.com/ioBrokertranslator/requests/issues/108\n在装置被删除或改装时,清除了该装置的物品。"
+            },
+            "0.0.8": {
+                "en": "Github Workflow Deploy - try to fix GitHub release failed with status: 403 undefined ([Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128))",
+                "de": "Github Workflow Deploy - versuchen, GitHub-Release mit dem Status zu beheben: 403 undefiniert [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+                "ru": "Github Workflow Deploy - попробуйте исправить GitHub релиз не удалось со статусом: 403 undefined [Ссылка](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+                "pt": "Github Workflow Deploy - tentar corrigir a versão GitHub falhou com o status: 403 indefinido [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+                "nl": "Github Workflow Deploy - proberen GitHub vrijlating te repareren gefaald met status: 403 onbepaalde [Link ) [Ghtub /com/ / 12-g-g-g-g-g-g-g-g-g-b-b-b-b-b-b-b-b-b-b-b-b-b-b-b-b-b-p-p- /12-b",
+                "fr": "Github Workflow Deploy - essayer de réparer GitHub release failed with status: 403 undefined [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+                "it": "Github Workflow Deploy - cercare di risolvere GitHub rilascio fallito con stato: 403 non definito [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+                "es": "Github Workflow Deploy - try to fix GitHub release failed with status: 403 un defined [Link](https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128)",
+                "pl": "Github Workflow Deploy – próba naprawy GitHub nie powiodła się ze statusem: 403 niedefiniowane Link(https:/github.com/softprops/action-gh-release/issues/236#comment-11500128",
+                "uk": "Github Workflow Deploy - спробувати виправити реліз GitHub не вдалося з статусом: 403 undefined [Link](https://github.com/softprops/action-gh-release/issues/236#productcomment-1150530128)",
+                "zh-cn": "Gthub工作流程Deploy——试图确定GitHub的释放没有地位:403个未界定的[Link](http://github.com/softs/action-gh-release/issues/236#issuecomment-1150530128)"
+            },
+            "0.0.7": {
+                "en": "Test-only of release etc.",
+                "de": "Test-only of release etc.",
+                "ru": "Тест-только релиза и т.д.",
+                "pt": "Test-only da liberação etc.",
+                "nl": "Test-only of release etc.",
+                "fr": "Test-only of release etc.",
+                "it": "Test-solo di rilascio ecc.",
+                "es": "Prueba solo de liberación, etc.",
+                "pl": "Test-only of release (ang.).",
+                "uk": "Тест-тільки релізу і т.д.",
+                "zh-cn": "试验释放等。."
+            }
+        },
+        "titleLang": {
+            "en": "Fully Kiosk Browser (MQTT)",
+            "de": "Fully Kiosk Browser (MQTT)",
+            "ru": "Fully Kiosk Browser (MQTT)",
+            "pt": "Fully Kiosk Browser (MQTT)",
+            "nl": "Fully Kiosk Browser (MQTT)",
+            "fr": "Fully Kiosk Browser (MQTT)",
+            "it": "Fully Kiosk Browser (MQTT)",
+            "es": "Fully Kiosk Browser (MQTT)",
+            "pl": "Fully Kiosk Browser (MQTT)",
+            "uk": "Fully Kiosk Browser (MQTT)",
+            "zh-cn": "Fully Kiosk Browser (MQTT)"
+        },
+        "desc": {
+            "en": "Control Fully Kiosk Browser",
+            "de": "Fully Browser steuern",
+            "ru": "Полный контроль браузера киоска",
+            "pt": "Controle totalmente o navegador de quiosque",
+            "nl": "Controle Volledig Kiosk Browser",
+            "fr": "Contrôlez entièrement le navigateur Kiosk",
+            "it": "Controlla completamente il browser Kiosk",
+            "es": "Navegador de quiosco de control completo",
+            "pl": "Kontroluj w pełni przeglądarkę kiosku",
+            "uk": "Control Fully Kiosk Browser",
+            "zh-cn": "完全控制 Kiosk 浏览器"
+        },
+        "authors": [
+            "Acgua <no@mail.com>"
+        ],
+        "keywords": [
+            "fully",
+            "kiosk",
+            "browser",
+            "tablet",
+            "mqtt"
+        ],
+        "license": "Apache-2.0",
+        "platform": "Javascript/Node.js",
+        "main": "build/main.js",
+        "icon": "fully-mqtt.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/Acgua/ioBroker.fully-mqtt/main/admin/fully-mqtt.png",
+        "readme": "https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "multimedia",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "docs": {
+            "en": [
+                "docs/en/README.md"
+            ],
+            "de": [
+                "docs/de/README.md"
+            ]
+        },
+        "globalDependencies": [
+            {
+                "admin": ">=6.0.0"
+            }
+        ],
+        "dependencies": [
+            {
+                "js-controller": ">=4.0.15"
+            }
+        ]
     },
-    "titleLang": {
-      "en": "Fully Kiosk Browser (MQTT)",
-      "de": "Fully Kiosk Browser (MQTT)",
-      "ru": "Fully Kiosk Browser (MQTT)",
-      "pt": "Fully Kiosk Browser (MQTT)",
-      "nl": "Fully Kiosk Browser (MQTT)",
-      "fr": "Fully Kiosk Browser (MQTT)",
-      "it": "Fully Kiosk Browser (MQTT)",
-      "es": "Fully Kiosk Browser (MQTT)",
-      "pl": "Fully Kiosk Browser (MQTT)",
-      "uk": "Fully Kiosk Browser (MQTT)",
-      "zh-cn": "Fully Kiosk Browser (MQTT)"
+    "native": {
+        "tableDevices": [],
+        "restUseHttps": false,
+        "restTimeout": 2000,
+        "mqttUser": "",
+        "mqttPassword": "",
+        "mqttPort": 3000,
+        "mqttPublishedInfoDelay": 30,
+        "mqttDoNotVerifyUserPw": true,
+        "mqttUpdateUnchangedObjects": false,
+        "mqttConnErrorsAsInfo": true
     },
-    "desc": {
-      "en": "Control Fully Kiosk Browser",
-      "de": "Fully Browser steuern",
-      "ru": "Полный контроль браузера киоска",
-      "pt": "Controle totalmente o navegador de quiosque",
-      "nl": "Controle Volledig Kiosk Browser",
-      "fr": "Contrôlez entièrement le navigateur Kiosk",
-      "it": "Controlla completamente il browser Kiosk",
-      "es": "Navegador de quiosco de control completo",
-      "pl": "Kontroluj w pełni przeglądarkę kiosku",
-      "uk": "Control Fully Kiosk Browser",
-      "zh-cn": "完全控制 Kiosk 浏览器"
-    },
-    "authors": [
-      "Acgua <no@mail.com>"
+    "encryptedNative": [
+        "mqttPassword"
     ],
-    "keywords": [
-      "fully",
-      "kiosk",
-      "browser",
-      "tablet",
-      "mqtt"
+    "protectedNative": [
+        "mqttPassword"
     ],
-    "license": "Apache-2.0",
-    "platform": "Javascript/Node.js",
-    "main": "build/main.js",
-    "icon": "fully-mqtt.png",
-    "enabled": true,
-    "extIcon": "https://raw.githubusercontent.com/Acgua/ioBroker.fully-mqtt/main/admin/fully-mqtt.png",
-    "readme": "https://github.com/Acgua/ioBroker.fully-mqtt/blob/main/README.md",
-    "loglevel": "info",
-    "mode": "daemon",
-    "type": "multimedia",
-    "compact": true,
-    "connectionType": "local",
-    "dataSource": "poll",
-    "adminUI": {
-      "config": "json"
-    },
-    "docs": {
-      "en": [
-        "docs/en/README.md"
-      ],
-      "de": [
-        "docs/de/README.md"
-      ]
-    },
-    "globalDependencies": [
-      {
-        "admin": ">=6.0.0"
-      }
-    ],
-    "dependencies": [
-      {
-        "js-controller": ">=4.0.15"
-      }
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
     ]
-  },
-  "native": {
-    "tableDevices": [],
-    "restUseHttps": false,
-    "restTimeout": 2000,
-    "mqttUser": "",
-    "mqttPassword": "",
-    "mqttPort": 3000,
-    "mqttPublishedInfoDelay": 30,
-    "mqttDoNotVerifyUserPw": true,
-    "mqttUpdateUnchangedObjects": false,
-    "mqttConnErrorsAsInfo": true
-  },
-  "encryptedNative": [
-    "mqttPassword"
-  ],
-  "protectedNative": [
-    "mqttPassword"
-  ],
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "Device or service connected",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    }
-  ]
 }

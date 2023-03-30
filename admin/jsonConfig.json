@@ -167,7 +167,7 @@
                     "label": "Do not verify user and password",
                     "help": "This disables the username and password verification",
                     "default": true
-                },                
+                },
                 "mqttUser": {
                     "type": "text",
                     "label": "User name",
@@ -178,7 +178,7 @@
                     "type": "password",
                     "label": "Password",
                     "help": "MQTT Password",
-                    "hidden": "data.mqttDoNotVerifyUserPw"                    
+                    "hidden": "data.mqttDoNotVerifyUserPw"
                 }
             }
         },
@@ -219,6 +219,15 @@
                     "md": 7,
                     "lg": 5
                 },
+                "mqttCreateDefaultEventObjects": {
+                    "type": "checkbox",
+                    "label": "Create default event objects at adapter start",
+                    "help": "Create default event objects (facesDetected, hideKeyboard, etc.) at the first adapter startup",
+                    "default": true,
+                    "sm": 12,
+                    "md": 7,
+                    "lg": 5
+                },
                 "header_RESTAPI": {
                     "newLine": "true",
                     "type": "header",
@@ -235,7 +244,7 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 3
-                }                
+                }
             }
         }
     }

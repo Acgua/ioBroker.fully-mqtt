@@ -63,13 +63,13 @@ class MqttServer {
             if (!this.adapter.isIpAddressValid(ip))
               ip === void 0;
           }
-          if (ip && !Object.keys(this.adapter.fullys).includes(ip)) {
+          if (ip && !Object.keys(this.adapter.fullysEnbl).includes(ip)) {
             this.adapter.log.error(`[MQTT] Client ${client.id} not authorized: ${ip} is not an active Fully device IP per adapter settings.`);
             this.notAuthorizedClients.push(client.id);
             callback(null, false);
             return;
           }
-          const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${client.id} (IP unknown)`;
+          const ipMsg = ip ? `${this.adapter.fullysEnbl[ip].name} (${ip})` : `${client.id} (IP unknown)`;
           this.adapter.log.debug(`[MQTT] Client ${ipMsg} trys to authenticate...`);
           if (ip)
             this.devices[client.id].ip = ip;
@@ -99,7 +99,7 @@ class MqttServer {
           if (!this.devices[client.id])
             this.devices[client.id] = {};
           const ip = this.devices[client.id].ip;
-          const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${client.id} (IP unknown)`;
+          const ipMsg = ip ? `${this.adapter.fullysEnbl[ip].name} (${ip})` : `${client.id} (IP unknown)`;
           this.adapter.log.debug(`[MQTT] Client ${ipMsg} connected to broker ${this.aedes.id}`);
           this.adapter.log.info(`[MQTT]\u{1F517} Client ${ipMsg} successfully connected.`);
           this.setIsAlive(client.id, true, "client connected");
@@ -125,8 +125,8 @@ class MqttServer {
               return;
             }
             const ip = info.ip4;
-            const devMsg = `${this.adapter.fullys[ip].name} (${ip})`;
-            if (!Object.keys(this.adapter.fullys).includes(ip)) {
+            const devMsg = `${this.adapter.fullysEnbl[ip].name} (${ip})`;
+            if (!Object.keys(this.adapter.fullysEnbl).includes(ip)) {
               this.adapter.log.error(`[MQTT] Client ${devMsg} Packet rejected: IP is not allowed per adapter settings. ${client.id}`);
               return;
             }
@@ -142,7 +142,7 @@ class MqttServer {
             }
             this.devices[client.id].previousInfoPublishTime = Date.now();
             if (!this.devices[client.id].mqttFirstReceived) {
-              this.adapter.log.debug(`[MQTT] Client ${client.id} = ${this.adapter.fullys[ip].name} = ${ip}`);
+              this.adapter.log.debug(`[MQTT] Client ${client.id} = ${this.adapter.fullysEnbl[ip].name} = ${ip}`);
               this.devices[client.id].mqttFirstReceived = true;
             }
             const result = {
@@ -180,7 +180,7 @@ class MqttServer {
               cmd: msg.event
             };
             if (!this.devices[client.id].mqttFirstReceived) {
-              this.adapter.log.info(`[MQTT] \u{1F517} Client ${client.id} = ${this.adapter.fullys[ip].name} (${ip})`);
+              this.adapter.log.info(`[MQTT] \u{1F517} Client ${client.id} = ${this.adapter.fullysEnbl[ip].name} (${ip})`);
               this.devices[client.id].mqttFirstReceived = true;
             }
             this.adapter.onMqttEvent(result);
@@ -194,7 +194,7 @@ class MqttServer {
       });
       this.aedes.on("clientDisconnect", (client) => {
         const ip = this.devices[client.id].ip;
-        const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+        const logMsgName = ip ? this.adapter.fullysEnbl[ip].name : client.id;
         if (this.adapter.config.mqttConnErrorsAsInfo) {
           this.adapter.log.info(`[MQTT] Client ${logMsgName} disconnected.`);
         } else {
@@ -206,7 +206,7 @@ class MqttServer {
         if (this.notAuthorizedClients.includes(client.id))
           return;
         const ip = this.devices[client.id].ip;
-        const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+        const logMsgName = ip ? this.adapter.fullysEnbl[ip].name : client.id;
         if (this.adapter.config.mqttConnErrorsAsInfo) {
           this.adapter.log.info(`[MQTT] ${logMsgName}: Client error - ${e.message}`);
         } else {
@@ -217,7 +217,7 @@ class MqttServer {
       });
       this.aedes.on("connectionError", (client, e) => {
         const ip = this.devices[client.id].ip;
-        const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+        const logMsgName = ip ? this.adapter.fullysEnbl[ip].name : client.id;
         if (this.adapter.config.mqttConnErrorsAsInfo) {
           this.adapter.log.info(`[MQTT] ${logMsgName}: Connection error - ${e.message}`);
         } else {
@@ -261,7 +261,7 @@ class MqttServer {
   async scheduleCheckIfStillActive(clientId) {
     try {
       const ip = this.devices[clientId].ip;
-      const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${clientId} (IP unknown)`;
+      const ipMsg = ip ? `${this.adapter.fullysEnbl[ip].name} (${ip})` : `${clientId} (IP unknown)`;
       if (this.devices[clientId].timeoutNoUpdate)
         this.adapter.clearTimeout(this.devices[clientId].timeoutNoUpdate);
       if (!this.devices[clientId])

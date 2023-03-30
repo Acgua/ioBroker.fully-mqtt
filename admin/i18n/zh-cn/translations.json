@@ -4,6 +4,8 @@
     "Always update info objects, even if value did not change": "始终更新信息对象，即使值没有改变",
     "Always update info states": "始终更新信息状态",
     "Client and Connection errors as info in log": "客户端和连接错误作为日志中的信息",
+    "Create default event objects (facesDetected, hideKeyboard, etc.) at the first adapter startup": "在第一次适配器启动时创建默认事件对象（facesDetected、hideKeyboard 等）",
+    "Create default event objects at adapter start": "在适配器启动时创建默认事件对象",
     "Device Name": "设备名称",
     "Do not process published info more than every x seconds": "不要超过每 x 秒处理一次发布的信息",
     "Do not verify user and password": "不验证用户和密码",

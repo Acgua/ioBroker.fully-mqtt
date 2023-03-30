@@ -79,14 +79,14 @@ export class MqttServer {
                         if (!this.adapter.isIpAddressValid(ip)) ip === undefined;
                     }
                     // Check if IP is an active device IP
-                    if (ip && !Object.keys(this.adapter.fullys).includes(ip)) {
+                    if (ip && !Object.keys(this.adapter.fullysEnbl).includes(ip)) {
                         this.adapter.log.error(`[MQTT] Client ${client.id} not authorized: ${ip} is not an active Fully device IP per adapter settings.`);
                         this.notAuthorizedClients.push(client.id);
                         callback(null, false);
                         return;
                     }
 
-                    const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${client.id} (IP unknown)`;
+                    const ipMsg = ip ? `${this.adapter.fullysEnbl[ip].name} (${ip})` : `${client.id} (IP unknown)`;
                     this.adapter.log.debug(`[MQTT] Client ${ipMsg} trys to authenticate...`);
                     if (ip) this.devices[client.id].ip = ip;
 
@@ -127,7 +127,7 @@ export class MqttServer {
 
                     // IP
                     const ip = this.devices[client.id].ip;
-                    const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${client.id} (IP unknown)`;
+                    const ipMsg = ip ? `${this.adapter.fullysEnbl[ip].name} (${ip})` : `${client.id} (IP unknown)`;
 
                     this.adapter.log.debug(`[MQTT] Client ${ipMsg} connected to broker ${this.aedes.id}`);
                     this.adapter.log.info(`[MQTT]🔗 Client ${ipMsg} successfully connected.`);
@@ -177,9 +177,9 @@ export class MqttServer {
 
                         // IP
                         const ip = info.ip4;
-                        const devMsg = `${this.adapter.fullys[ip].name} (${ip})`;
+                        const devMsg = `${this.adapter.fullysEnbl[ip].name} (${ip})`;
                         // Check IP - already done in this.aedes.authenticate, but just in case we were unable to get ip there
-                        if (!Object.keys(this.adapter.fullys).includes(ip)) {
+                        if (!Object.keys(this.adapter.fullysEnbl).includes(ip)) {
                             this.adapter.log.error(`[MQTT] Client ${devMsg} Packet rejected: IP is not allowed per adapter settings. ${client.id}`);
                             return;
                         }
@@ -203,7 +203,7 @@ export class MqttServer {
                          */
                         if (!this.devices[client.id].mqttFirstReceived) {
                             // show only once
-                            this.adapter.log.debug(`[MQTT] Client ${client.id} = ${this.adapter.fullys[ip].name} = ${ip}`);
+                            this.adapter.log.debug(`[MQTT] Client ${client.id} = ${this.adapter.fullysEnbl[ip].name} = ${ip}`);
                             // set to true
                             this.devices[client.id].mqttFirstReceived = true;
                         }
@@ -261,7 +261,7 @@ export class MqttServer {
                         };
                         if (!this.devices[client.id].mqttFirstReceived) {
                             // show only once
-                            this.adapter.log.info(`[MQTT] 🔗 Client ${client.id} = ${this.adapter.fullys[ip].name} (${ip})`);
+                            this.adapter.log.info(`[MQTT] 🔗 Client ${client.id} = ${this.adapter.fullysEnbl[ip].name} (${ip})`);
                             this.devices[client.id].mqttFirstReceived = true;
                         }
                         /**
@@ -283,7 +283,7 @@ export class MqttServer {
              */
             this.aedes.on('clientDisconnect', (client) => {
                 const ip = this.devices[client.id].ip;
-                const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+                const logMsgName = ip ? this.adapter.fullysEnbl[ip].name : client.id;
                 if (this.adapter.config.mqttConnErrorsAsInfo) {
                     this.adapter.log.info(`[MQTT] Client ${logMsgName} disconnected.`);
                 } else {
@@ -298,7 +298,7 @@ export class MqttServer {
             this.aedes.on('clientError', (client, e) => {
                 if (this.notAuthorizedClients.includes(client.id)) return; // Error msg was already thrown in aedes.authenticate() before
                 const ip = this.devices[client.id].ip;
-                const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+                const logMsgName = ip ? this.adapter.fullysEnbl[ip].name : client.id;
                 if (this.adapter.config.mqttConnErrorsAsInfo) {
                     this.adapter.log.info(`[MQTT] ${logMsgName}: Client error - ${e.message}`);
                 } else {
@@ -310,7 +310,7 @@ export class MqttServer {
 
             this.aedes.on('connectionError', (client, e) => {
                 const ip = this.devices[client.id].ip;
-                const logMsgName = ip ? this.adapter.fullys[ip].name : client.id;
+                const logMsgName = ip ? this.adapter.fullysEnbl[ip].name : client.id;
                 if (this.adapter.config.mqttConnErrorsAsInfo) {
                     this.adapter.log.info(`[MQTT] ${logMsgName}: Connection error - ${e.message}`);
                 } else {
@@ -369,7 +369,7 @@ export class MqttServer {
     private async scheduleCheckIfStillActive(clientId: string): Promise<void> {
         try {
             const ip = this.devices[clientId].ip;
-            const ipMsg = ip ? `${this.adapter.fullys[ip].name} (${ip})` : `${clientId} (IP unknown)`;
+            const ipMsg = ip ? `${this.adapter.fullysEnbl[ip].name} (${ip})` : `${clientId} (IP unknown)`;
             // this.adapter.log.debug(`[MQTT] ${ipMsg}: - Start scheduleCheckIfStillActive`);
 
             // @ts-expect-error "Type 'null' is not assignable to type 'Timeout'.ts(2345)" - we check for not being null via "if"

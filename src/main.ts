@@ -45,8 +45,8 @@ export class FullyMqtt extends utils.Adapter {
      * }
      * Note: we can use this.getFullyPerKey() to get fully object per provided key
      */
-    public fullys: { [ip: string]: IDevice } = {}; // enabled Fullys only
-    public fullysNotEnabled: { [ip: string]: IDevice } = {}; // not enabled Fullys only
+    public fullysEnbl: { [ip: string]: IDevice } = {}; // enabled Fullys only
+    public fullysDisbl: { [ip: string]: IDevice } = {}; // not enabled Fullys only
     public fullysAll: { [ip: string]: IDevice } = {}; // enabled and not enabled Fullys
 
     // Has onMqttAlive() ever been called before?
@@ -82,20 +82,23 @@ export class FullyMqtt extends utils.Adapter {
                 return;
             }
 
-            for (const ip in this.fullys) {
+            for (const ip in this.fullysEnbl) {
                 // Create Fully device objects
-                const res = await this.createFullyDeviceObjects(this.fullys[ip]);
+                const res = await this.createFullyDeviceObjects(this.fullysEnbl[ip]);
+
                 // REST API: Subscribe to command state changes
-                if (res) await this.subscribeStatesAsync(this.fullys[ip].id + '.Commands.*');
-                // Set enabled state to true
-                this.setState(this.fullys[ip].id + '.enabled', { val: true, ack: true });
-                // Set alive state to false initially
-                this.setState(this.fullysNotEnabled[ip].id + '.alive', { val: false, ack: true });
+                if (res) await this.subscribeStatesAsync(this.fullysEnbl[ip].id + '.Commands.*');
+
+                // Set enabled and alive states
+                this.setState(this.fullysEnbl[ip].id + '.enabled', { val: true, ack: true });
+                this.setState(this.fullysEnbl[ip].id + '.alive', { val: false, ack: true });
             }
-            // Not enabled fullys: 1. Enabled state to false; 2. alive to null
-            for (const ip in this.fullysNotEnabled) {
-                this.setState(this.fullysNotEnabled[ip].id + '.enabled', { val: false, ack: true });
-                this.setState(this.fullysNotEnabled[ip].id + '.alive', { val: null, ack: true });
+            // Not enabled fullys (if object exists at all): 1. Enabled state to false; 2. alive to null
+            for (const ip in this.fullysDisbl) {
+                if (await this.getObjectAsync(this.fullysAll[ip].id)) {
+                    this.setState(this.fullysDisbl[ip].id + '.enabled', { val: false, ack: true });
+                    this.setState(this.fullysDisbl[ip].id + '.alive', { val: null, ack: true });
+                }
             }
 
             /**
@@ -167,10 +170,12 @@ export class FullyMqtt extends utils.Adapter {
             }
 
             // Create MQTT Events Objects
-            // More states are created once a new Event is received.
+            // Any not yet created objects are created once a new Event is received.
             await this.setObjectNotExistsAsync(device.id + '.Events', { type: 'channel', common: { name: 'MQTT Events' }, native: {} });
-            for (const event of CONST.mqttEvents) {
-                await this.setObjectNotExistsAsync(device.id + '.Events.' + event, { type: 'state', common: { name: 'Event: ' + event, type: 'boolean', role: 'switch', read: true, write: false }, native: {} });
+            if (this.config.mqttCreateDefaultEventObjects) {
+                for (const event of CONST.mqttEvents) {
+                    await this.setObjectNotExistsAsync(device.id + '.Events.' + event, { type: 'state', common: { name: 'Event: ' + event, type: 'boolean', role: 'switch', read: true, write: false }, native: {} });
+                }
             }
             return true;
         } catch (e) {
@@ -335,15 +340,15 @@ export class FullyMqtt extends utils.Adapter {
                 // Finalize
                 this.fullysAll[finalDevice.ip] = finalDevice;
                 if (lpDevice.enabled) {
-                    this.fullys[finalDevice.ip] = finalDevice;
+                    this.fullysEnbl[finalDevice.ip] = finalDevice;
                     this.log.info(`🗸 ${finalDevice.name} (${finalDevice.ip}): Config successfully verified.`);
                 } else {
-                    this.fullysNotEnabled[finalDevice.ip] = finalDevice;
-                    this.log.info(`${finalDevice.name} (${finalDevice.ip}) is not enabled in adapter settings, so it will not be used by adapter.`);
+                    this.fullysDisbl[finalDevice.ip] = finalDevice;
+                    this.log.info(`${finalDevice.name} (${finalDevice.ip}) is not enabled in settings, so it will not be used by adapter.`);
                 }
             }
 
-            if (Object.keys(this.fullys).length === 0) {
+            if (Object.keys(this.fullysEnbl).length === 0) {
                 this.log.error(`No active devices with correct configuration found.`);
                 return false;
             }
@@ -360,8 +365,8 @@ export class FullyMqtt extends utils.Adapter {
      */
     public async onMqttAlive(ip: string, isAlive: true | false, msg: string): Promise<void> {
         try {
-            const prevIsAlive = this.fullys[ip].isAlive;
-            this.fullys[ip].isAlive = isAlive;
+            const prevIsAlive = this.fullysEnbl[ip].isAlive;
+            this.fullysEnbl[ip].isAlive = isAlive;
 
             // Has this function ever been called before? If adapter is restarted, we ensure log, etc.
             const calledBefore = this.onMqttAlive_EverBeenCalledBefore; // Keep old value
@@ -373,13 +378,13 @@ export class FullyMqtt extends utils.Adapter {
             // if alive status changed
             if ((!calledBefore && isAlive === true) || prevIsAlive !== isAlive) {
                 // Set Device isAlive Status - we could also use setStateChanged()...
-                this.setState(this.fullys[ip].id + '.alive', { val: isAlive, ack: true });
+                this.setState(this.fullysEnbl[ip].id + '.alive', { val: isAlive, ack: true });
 
                 // log
                 if (isAlive) {
-                    this.log.info(`${this.fullys[ip].name} is alive (MQTT: ${msg})`);
+                    this.log.info(`${this.fullysEnbl[ip].name} is alive (MQTT: ${msg})`);
                 } else {
-                    this.log.warn(`${this.fullys[ip].name} is not alive! (MQTT: ${msg})`);
+                    this.log.warn(`${this.fullysEnbl[ip].name} is not alive! (MQTT: ${msg})`);
                 }
             } else {
                 // No change
@@ -390,9 +395,9 @@ export class FullyMqtt extends utils.Adapter {
              ***********/
             let countAll = 0;
             let countAlive = 0;
-            for (const lpIpAddr in this.fullys) {
+            for (const lpIpAddr in this.fullysEnbl) {
                 countAll++;
-                if (this.fullys[lpIpAddr].isAlive) {
+                if (this.fullysEnbl[lpIpAddr].isAlive) {
                     countAlive++;
                 }
             }
@@ -411,41 +416,41 @@ export class FullyMqtt extends utils.Adapter {
     public async onMqttInfo(obj: { clientId: string; ip: string; topic: string; infoObj: { [k: string]: any } }): Promise<void> {
         try {
             // log
-            this.log.debug(`[MQTT] ${this.fullys[obj.ip].name} published info, topic: ${obj.topic}`);
+            this.log.debug(`[MQTT] ${this.fullysEnbl[obj.ip].name} published info, topic: ${obj.topic}`);
             //this.log.debug(`[MQTT] Client ${obj.ip} Publish Info: Details: ${JSON.stringify(obj.infoObj)}`);
 
             // Create info objects if not yet existing
-            const formerInfoKeysLength: number = this.fullys[obj.ip].mqttInfoKeys.length;
+            const formerInfoKeysLength: number = this.fullysEnbl[obj.ip].mqttInfoKeys.length;
             const newInfoKeysAdded: string[] = [];
             for (const key in obj.infoObj) {
                 const val = obj.infoObj[key];
                 const valType = typeof val;
                 // only accept certain types
                 if (valType !== 'string' && valType !== 'boolean' && valType !== 'object' && valType !== 'number') {
-                    this.log.warn(`[MQTT] ${this.fullys[obj.ip].name}: Unknown type ${valType} of key '${key}' in info object`);
+                    this.log.warn(`[MQTT] ${this.fullysEnbl[obj.ip].name}: Unknown type ${valType} of key '${key}' in info object`);
                     continue;
                 }
                 // Create info object if not yet seen - this check is used for increasing performance by not unnesserily call setObjectNotExistsAsync() every time new info package comes in
-                if (!this.fullys[obj.ip].mqttInfoKeys.includes(key)) {
-                    this.fullys[obj.ip].mqttInfoKeys.push(key);
+                if (!this.fullysEnbl[obj.ip].mqttInfoKeys.includes(key)) {
+                    this.fullysEnbl[obj.ip].mqttInfoKeys.push(key);
                     newInfoKeysAdded.push(key);
-                    await this.setObjectNotExistsAsync(`${this.fullys[obj.ip].id}.Info.${key}`, { type: 'state', common: { name: 'Info: ' + key, type: valType, role: 'value', read: true, write: false }, native: {} });
+                    await this.setObjectNotExistsAsync(`${this.fullysEnbl[obj.ip].id}.Info.${key}`, { type: 'state', common: { name: 'Info: ' + key, type: valType, role: 'value', read: true, write: false }, native: {} });
                 }
             }
-            if (formerInfoKeysLength === 0) this.log.debug(`[MQTT] ${this.fullys[obj.ip].name}: Initially create states for ${newInfoKeysAdded.length} info items (if not yet existing)`);
-            if (formerInfoKeysLength > 0 && newInfoKeysAdded.length > 0) this.log.info(`[MQTT] ${this.fullys[obj.ip].name}: Created new info object(s) as not seen before (if object(s) did not exist): ${newInfoKeysAdded.join(', ')}`);
+            if (formerInfoKeysLength === 0) this.log.debug(`[MQTT] ${this.fullysEnbl[obj.ip].name}: Initially create states for ${newInfoKeysAdded.length} info items (if not yet existing)`);
+            if (formerInfoKeysLength > 0 && newInfoKeysAdded.length > 0) this.log.info(`[MQTT] ${this.fullysEnbl[obj.ip].name}: Created new info object(s) as not seen before (if object(s) did not exist): ${newInfoKeysAdded.join(', ')}`);
 
             // Set info objects
             for (const key in obj.infoObj) {
                 const newVal = typeof obj.infoObj[key] === 'object' ? JSON.stringify(obj.infoObj[key]) : obj.infoObj[key]; // https://forum.iobroker.net/post/628870 - https://forum.iobroker.net/post/960260
                 if (this.config.mqttUpdateUnchangedObjects) {
-                    this.setState(`${this.fullys[obj.ip].id}.Info.${key}`, { val: newVal, ack: true });
+                    this.setState(`${this.fullysEnbl[obj.ip].id}.Info.${key}`, { val: newVal, ack: true });
                 } else {
-                    this.setStateChanged(`${this.fullys[obj.ip].id}.Info.${key}`, { val: newVal, ack: true });
+                    this.setStateChanged(`${this.fullysEnbl[obj.ip].id}.Info.${key}`, { val: newVal, ack: true });
                 }
             }
-            this.setState(this.fullys[obj.ip].id + '.lastInfoUpdate', { val: Date.now(), ack: true });
-            this.setState(this.fullys[obj.ip].id + '.alive', { val: true, ack: true });
+            this.setState(this.fullysEnbl[obj.ip].id + '.lastInfoUpdate', { val: Date.now(), ack: true });
+            this.setState(this.fullysEnbl[obj.ip].id + '.alive', { val: true, ack: true });
         } catch (e) {
             this.log.error(this.err2Str(e));
             return;
@@ -458,22 +463,22 @@ export class FullyMqtt extends utils.Adapter {
     public async onMqttEvent(obj: { clientId: string; ip: string; topic: string; cmd: string }): Promise<void> {
         try {
             // log
-            this.log.debug(`[MQTT] 📡 ${this.fullys[obj.ip].name} published event, topic: ${obj.topic}, cmd: ${obj.cmd}`);
+            this.log.debug(`[MQTT] 📡 ${this.fullysEnbl[obj.ip].name} published event, topic: ${obj.topic}, cmd: ${obj.cmd}`);
 
             /**
              * Set Event State
              */
-            const pthEvent = `${this.fullys[obj.ip].id}.Events.${obj.cmd}`;
+            const pthEvent = `${this.fullysEnbl[obj.ip].id}.Events.${obj.cmd}`;
             if (!(await this.getObjectAsync(pthEvent))) {
-                this.log.info(`[MQTT] ${this.fullys[obj.ip].name}: Event ${obj.cmd} received but state ${pthEvent} does not exist, so we create it first`);
-                await this.setObjectNotExistsAsync(pthEvent, { type: 'state', common: { name: 'MQTT Event: ' + obj.cmd, type: 'boolean', role: 'switch', read: true, write: false }, native: {} });
+                this.log.debug(`[MQTT] ${this.fullysEnbl[obj.ip].name}: Event ${obj.cmd} received but state ${pthEvent} does not exist, so we create it first`);
+                await this.setObjectNotExistsAsync(pthEvent, { type: 'state', common: { name: 'Event: ' + obj.cmd, type: 'boolean', role: 'switch', read: true, write: false }, native: {} });
             }
             this.setState(pthEvent, { val: true, ack: true });
 
             /**
              * Confirm Command state(s) with ack: true
              */
-            const pthCmd = this.fullys[obj.ip].id + '.Commands';
+            const pthCmd = this.fullysEnbl[obj.ip].id + '.Commands';
 
             // Check if it is a switch with MQTT commands connected
             const idx = this.getIndexFromConf(CONST.cmdsSwitches, ['mqttOn', 'mqttOff'], obj.cmd);
@@ -491,7 +496,7 @@ export class FullyMqtt extends utils.Adapter {
                     // We have a button, so set it to true
                     await this.setStateAsync(`${pthCmd}.${obj.cmd}`, { val: true, ack: true });
                 } else {
-                    this.log.silly(`[MQTT] ${this.fullys[obj.ip].name}: Event cmd ${obj.cmd} - no REST API command is existing, so skip confirmation with with ack:true`);
+                    this.log.silly(`[MQTT] ${this.fullysEnbl[obj.ip].name}: Event cmd ${obj.cmd} - no REST API command is existing, so skip confirmation with with ack:true`);
                 }
             }
         } catch (e) {
@@ -601,13 +606,13 @@ export class FullyMqtt extends utils.Adapter {
      * @returns - fully object or false if not found
      */
     private getFullyByKey(keyId: string, value: any): IDevice | false {
-        for (const ip in this.fullys) {
-            if (keyId in this.fullys[ip]) {
+        for (const ip in this.fullysEnbl) {
+            if (keyId in this.fullysEnbl[ip]) {
                 const lpKeyId = keyId as string;
                 // Wow, what a line. Due to: https://bobbyhadz.com/blog/typescript-element-implicitly-has-any-type-expression
-                const lpVal = this.fullys[ip][lpKeyId as keyof (typeof this.fullys)[typeof ip]];
+                const lpVal = this.fullysEnbl[ip][lpKeyId as keyof (typeof this.fullysEnbl)[typeof ip]];
                 if (lpVal === value) {
-                    return this.fullys[ip];
+                    return this.fullysEnbl[ip];
                 }
             }
         }

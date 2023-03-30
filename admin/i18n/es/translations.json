@@ -4,6 +4,8 @@
     "Always update info objects, even if value did not change": "Siempre actualice los objetos de información, incluso si el valor no cambió",
     "Always update info states": "Actualizar siempre los estados de información",
     "Client and Connection errors as info in log": "Errores de cliente y conexión como información en el registro",
+    "Create default event objects (facesDetected, hideKeyboard, etc.) at the first adapter startup": "Cree objetos de eventos predeterminados (facesDetected, hideKeyboard, etc.) en el primer inicio del adaptador",
+    "Create default event objects at adapter start": "Crear objetos de eventos predeterminados al inicio del adaptador",
     "Device Name": "Nombre del dispositivo",
     "Do not process published info more than every x seconds": "No procesar información publicada más de cada x segundos",
     "Do not verify user and password": "No verificar usuario y contraseña",

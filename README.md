@@ -56,6 +56,7 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 -   (Acgua) Removed info log 'MQTT is not activated in adapter instance settings.'
 -   (Acgua) New object 'enabled' ('fully-mqtt.x.[Device Name].enabled') to indicate if the device is enabled in the adapter settings
 -   (Acgua) 'alive' state is set to null if device is not enabled (to not show connection/disconnection symbols in device object 'fully-mqtt.x.[Device Name])
+-   (Acgua) New option "Create default event objects at adapter start"
 
 ### 0.1.0 (2023-03-27)
 

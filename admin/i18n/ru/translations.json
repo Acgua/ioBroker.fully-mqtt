@@ -4,6 +4,8 @@
     "Always update info objects, even if value did not change": "Всегда обновлять информационные объекты, даже если значение не изменилось",
     "Always update info states": "Всегда обновлять информационные статусы",
     "Client and Connection errors as info in log": "Ошибки клиента и подключения как информация в журнале",
+    "Create default event objects (facesDetected, hideKeyboard, etc.) at the first adapter startup": "Создавать объекты событий по умолчанию (facesDetected, hideKeyboard и т. д.) при первом запуске адаптера.",
+    "Create default event objects at adapter start": "Создавать объекты событий по умолчанию при запуске адаптера",
     "Device Name": "Имя устройства",
     "Do not process published info more than every x seconds": "Не обрабатывать опубликованную информацию чаще, чем каждые x секунд",
     "Do not verify user and password": "Не проверять пользователя и пароль",

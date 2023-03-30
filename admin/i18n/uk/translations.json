@@ -4,6 +4,8 @@
     "Always update info objects, even if value did not change": "Завжди оновлюйте інформаційні об’єкти, навіть якщо значення не змінилося",
     "Always update info states": "Завжди оновлюйте статуси інформації",
     "Client and Connection errors as info in log": "Помилки клієнта та підключення як інформація в журналі",
+    "Create default event objects (facesDetected, hideKeyboard, etc.) at the first adapter startup": "Створення об’єктів подій за замовчуванням (facesDetected, hideKeyboard тощо) під час першого запуску адаптера",
+    "Create default event objects at adapter start": "Створюйте об’єкти подій за замовчуванням під час запуску адаптера",
     "Device Name": "Ім'я пристрою",
     "Do not process published info more than every x seconds": "Не обробляйте опубліковану інформацію частіше ніж кожні x секунд",
     "Do not verify user and password": "Не перевіряйте користувача та пароль",

@@ -21,6 +21,7 @@ declare global {
             mqttDoNotVerifyUserPw: true | false;
             mqttUpdateUnchangedObjects: true | false;
             mqttConnErrorsAsInfo: true | false;
+            mqttCreateDefaultEventObjects: true | false;
             restTimeout: number;
         }
     }
