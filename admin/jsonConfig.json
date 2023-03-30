@@ -244,6 +244,15 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 3
+                },
+                "restCommandLogAsDebug": {
+                    "type": "checkbox",
+                    "label": "Successful commands as debug in log",
+                    "help": "Log '... Command xxx successfully set to x' as 'debug' and not 'info'",
+                    "default": false,
+                    "sm": 12,
+                    "md": 7,
+                    "lg": 5
                 }
             }
         }

@@ -400,7 +400,11 @@ class FullyMqtt extends utils.Adapter {
           throw `onStateChange() - ${stateId}: fullyCmd could not be determined!`;
         const sendCommand = await this.restApi_inst.sendCmd(fully, cmdToSend, stateObj.val);
         if (sendCommand) {
-          this.log.info(`\u{1F5F8} ${fully.name}: Command ${cmd} successfully set to ${stateObj.val}`);
+          if (this.config.restCommandLogAsDebug) {
+            this.log.debug(`\u{1F5F8} ${fully.name}: Command ${cmd} successfully set to ${stateObj.val}`);
+          } else {
+            this.log.info(`\u{1F5F8} ${fully.name}: Command ${cmd} successfully set to ${stateObj.val}`);
+          }
           if (switchConf !== void 0) {
             const onOrOffCmdVal = cmd === switchConf.cmdOn ? true : false;
             await this.setStateAsync(`${pth}.${switchConf.id}`, { val: onOrOffCmdVal, ack: true });

@@ -130,7 +130,7 @@ export class MqttServer {
                     const ipMsg = ip ? `${this.adapter.fullysEnbl[ip].name} (${ip})` : `${client.id} (IP unknown)`;
 
                     this.adapter.log.debug(`[MQTT] Client ${ipMsg} connected to broker ${this.aedes.id}`);
-                    this.adapter.log.info(`[MQTT]🔗 Client ${ipMsg} successfully connected.`);
+                    this.adapter.log.info(`🔗 MQTT Client ${ipMsg} successfully connected.`);
                     //this.adapter.log.debug(inspect(client)); //https://stackoverflow.com/a/31557814
 
                     // set isAlive
@@ -285,7 +285,7 @@ export class MqttServer {
                 const ip = this.devices[client.id].ip;
                 const logMsgName = ip ? this.adapter.fullysEnbl[ip].name : client.id;
                 if (this.adapter.config.mqttConnErrorsAsInfo) {
-                    this.adapter.log.info(`[MQTT] Client ${logMsgName} disconnected.`);
+                    this.adapter.log.info(`MQTT Client ${logMsgName} disconnected.`);
                 } else {
                     this.adapter.log.error(`[MQTT] Client ${logMsgName} disconnected.`);
                 }

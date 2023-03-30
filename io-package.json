@@ -170,13 +170,15 @@
         "tableDevices": [],
         "restUseHttps": false,
         "restTimeout": 2000,
+        "restCommandLogAsDebug": false,
         "mqttUser": "",
         "mqttPassword": "",
         "mqttPort": 3000,
         "mqttPublishedInfoDelay": 30,
         "mqttDoNotVerifyUserPw": true,
         "mqttUpdateUnchangedObjects": false,
-        "mqttConnErrorsAsInfo": true
+        "mqttConnErrorsAsInfo": true,
+        "mqttCreateDefaultEventObjects": true
     },
     "encryptedNative": [
         "mqttPassword"

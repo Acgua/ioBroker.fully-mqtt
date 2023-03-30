@@ -23,6 +23,7 @@ declare global {
             mqttConnErrorsAsInfo: true | false;
             mqttCreateDefaultEventObjects: true | false;
             restTimeout: number;
+            restCommandLogAsDebug: true | false;
         }
     }
 }

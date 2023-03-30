@@ -552,7 +552,11 @@ export class FullyMqtt extends utils.Adapter {
                  */
                 const sendCommand = await this.restApi_inst.sendCmd(fully, cmdToSend, stateObj.val);
                 if (sendCommand) {
-                    this.log.info(`🗸 ${fully.name}: Command ${cmd} successfully set to ${stateObj.val}`);
+                    if (this.config.restCommandLogAsDebug) {
+                        this.log.debug(`🗸 ${fully.name}: Command ${cmd} successfully set to ${stateObj.val}`);
+                    } else {
+                        this.log.info(`🗸 ${fully.name}: Command ${cmd} successfully set to ${stateObj.val}`);
+                    }
                     /**
                      * Confirm with ack:true
                      */
