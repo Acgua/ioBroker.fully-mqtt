@@ -51,7 +51,7 @@ export class FullyMqtt extends utils.Adapter {
 
     // Has onMqttAlive() ever been called before?
     private onMqttAlive_EverBeenCalledBefore = false;
-
+    //
     /**
      * Constructor
      */
