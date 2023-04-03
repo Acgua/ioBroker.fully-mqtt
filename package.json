@@ -22,7 +22,7 @@
     "url": "https://github.com/Acgua/ioBroker.fully-mqtt"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.6.7",
+    "@iobroker/adapter-core": "^2.6.8",
     "aedes": "^0.48.1",
     "axios": "^1.3.3",
     "net": "^1.0.2"
