@@ -26,16 +26,17 @@ Unlike [ioBroker.fullybrowser](https://github.com/arteck/ioBroker.fullybrowser),
 
 ## Documentation
 
-* [🇬🇧 English Documentation](./docs/en/README.md)
-* [🇩🇪 Deutsche Dokumentation](./docs/de/README.md)
+-   [🇬🇧 English Documentation](./docs/en/README.md)
+-   [🇩🇪 Deutsche Dokumentation](./docs/de/README.md)
 
 ## Discussion and Questions
 
-* [ioBroker Forum](https://forum.iobroker.net/topic/63705/)
+-   [ioBroker Forum](https://forum.iobroker.net/topic/63705/)
 
 ## To Do and/or In Progress
-* In Progress: Add Adapter to Latest Repository for beta testing (requested, [PR #2184](https://github.com/ioBroker/ioBroker.repositories/pull/2184))
-* In Progress: Add [Sentry](https://github.com/ioBroker/plugin-sentry) (requested, [#213](https://github.com/ioBroker/plugin-sentry/issues/213))
+
+-   In Progress: Add Adapter to Latest Repository for beta testing (requested, [PR #2184](https://github.com/ioBroker/ioBroker.repositories/pull/2184))
+-   In Progress: Add [Sentry](https://github.com/ioBroker/plugin-sentry) (requested, [#213](https://github.com/ioBroker/plugin-sentry/issues/213))
 
 ## Credits
 
@@ -48,6 +49,11 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+
+-   (Acgua) Updated several dependencies
+
 ### 0.2.0 (2023-03-30)
 
 -   (Acgua) Fixed starting MQTT server
@@ -70,10 +76,12 @@ Once this ioBroker.fully-mqtt adapter is tested accordingly and runs stable, I w
 -   (Acgua) Internal: test git branch
 
 ### 0.0.11 (2023-03-24)
+
 -   (Acgua) Fix: Remote admin password issue
 -   (Acgua) Improved debug and error log when sending REST API commands
 
 ### 0.0.10 (2023-03-22)
+
 -   (Acgua) Do not show Remote Admin Password in debug log ([#14](https://github.com/Acgua/ioBroker.fully-mqtt/issues/14))
 
 ### 0.0.9 (2023-03-22)
