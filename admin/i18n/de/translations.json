@@ -24,7 +24,7 @@
     "Protocol": "Protokoll",
     "Remote Admin Password": "Remote Admin Passwort",
     "Successful commands as debug in log": "Erfolgreich gesendete Kommandos als Debug im Log",
-    "This disables the username and password verification": "Die Überprüfung von Benutzername und Passwort wird damit deaktiviert",
+    "This disables the username and password verification": "Die Überprüfung von Benutzername und Passwort wird hiermit deaktiviert",
     "User name": "Benutzername",
     "Welcome to Fully MQTT adapter": "Willkommen beim Fully-MQTT Adapter",
     "in milliseconds (500-15000, default: 6000)": "in Millisekunden (500-15000, Default: 6000)",
